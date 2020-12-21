@@ -1,0 +1,92 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% load widget_tweaks %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/registration.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="counter">
+        <div class="counter_background" style="background-image:url({% static 'images/counter_background.jpg' %})"></div>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="counter_content">
+                        <h2 class="counter_title">Welcome to GoGoEdu!</h2>
+                        <div class="counter_text"><p>Simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry’s standard dumy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p></div>
+
+                        <!-- Milestones -->
+
+                        <div class="milestones d-flex flex-md-row flex-column align-items-center justify-content-between">
+                            
+                            <!-- Milestone -->
+                            <div class="milestone">
+                                <div class="milestone_counter" data-end-value="15">0</div>
+                                <div class="milestone_text">Days</div>
+                            </div>
+
+                            <!-- Milestone -->
+                            <div class="milestone">
+                                <div class="milestone_counter" data-end-value="1" data-sign-after="k">0</div>
+                                <div class="milestone_text">Members</div>
+                            </div>
+
+                            <!-- Milestone -->
+                            <div class="milestone">
+                                <div class="milestone_counter" data-end-value="40" data-sign-after="+">0</div>
+                                <div class="milestone_text">Lessons</div>
+                            </div>
+
+                            <!-- Milestone -->
+                            <div class="milestone">
+                                <div class="milestone_counter" data-end-value="600">0</div>
+                                <div class="milestone_text">Wors</div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="counter_form">
+            {% if form.errors %}
+                <div class="alert alert-danger" role="alert">
+                    {% trans "Your username and password didn't match. Please try again." %}
+                </div>
+            {% endif %}
+            {% if next %}
+                {% if user.is_authenticated %}
+                    <div class="alert alert-danger" role="alert">
+                    {% trans "Your account doesn't have access to this page. To proceed,please login with an account that has access." %}
+                    </div>
+                {% else %}
+<!--                    <div class="alert alert-danger" role="alert">-->
+<!--                    {% trans "Please login to see this page." %}-->
+
+<!--                    </div>-->
+                    <p></p>
+                {% endif %}
+            {% endif %}
+                <div class="row fill_height">
+                    <div class="col fill_height">
+                        <form class="counter_form_content d-flex flex-column align-items-center justify-content-center" method="post" action="{% url 'login' %}">
+                            {% csrf_token %}
+                            <div class="counter_form_title">{% trans "Sign in to learn" %}</div>
+                            {% render_field form.username placeholder=form.username.label class+="counter_input" %}
+                            {% render_field form.password placeholder=form.password.label class+="counter_input" %}
+                            <input type="submit" class="counter_form_button" value="{% trans 'Sign in' %}" />
+                            <input type="hidden" name="next" value="{{ next }}" />
+                            <a class="mt-2" href="{% url 'password_reset' %}">{% trans "Lost password?" %}</a>
+                            <p  class="mt-3"> {% trans "Not a member ?" %} </p>
+                                <a href="">{% trans "Register" %}</a> 
+                            
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+{%endblock%}

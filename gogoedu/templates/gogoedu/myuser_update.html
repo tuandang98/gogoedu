@@ -1,0 +1,77 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load static %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'styles/bootstrap4/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/myuser_profile.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="home">
+    <div class="container emp-profile" style="margin-top: 200px">
+        {% csrf_token %}
+        <div class="row">
+            <div class="col-md-4">
+                <div class="profile-img">
+                    <img src="{{ avatar }}" alt=""/>
+                </div>
+            </div>
+            <div class="col-md-8">
+                <form class="counter_form_content d-flex flex-column" action="" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if form.errors %}
+                        {% for field in form %}
+                            {% if field.errors %}{{field.name}}{% endif %}
+                            {% for error in field.errors %}
+                            <div class="form-alert text-center mb-2 w-100">
+                                <strong>{{ error|escape }}</strong>
+                            </div>
+                            {% endfor %}
+                        {% endfor %}
+                        {% for error in form.non_field_errors %}
+                        <div class="form-alert text-center mb-2 w-100">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="counter_form_title">Update your profile</div>
+                    {% endif %}
+                    <div class="form-group row w-70">
+                        <div class="col-md-7">
+                            <label for="first_name"><b>First name:</b></label>
+                            <input type="text" id="first_name" name="first_name" value="{{ request.user.first_name }}" class="counter_input">
+                        </div>
+                        <div class="col-md-5">
+                            <label for="last_name"><b>Lastname:</b></label>
+                            <input type="text" id="last_name" name="last_name" value="{{ request.user.last_name }}" class="counter_input">
+                        </div>
+                    </div>
+                    <div class="form-group row w-70">
+                        <div class="col-md-12">
+                            <label for="username"><b>Username:</b></label>
+                            <input type="text" id="username" name="username" value="{{ request.user.username }}" class="counter_input" placeholder="Username">
+                        </div>
+                    </div>
+                    <div class="form-group row w-70">
+                        <div class="col-md-12">
+                            <label for="email"><b>Email address:</b></label>
+                            <input type="email" id="email" name="email" value="{{ request.user.email }}" class="counter_input" placeholder="Email">
+                        </div>
+                    </div>
+                    <div class="form-group row w-70">
+                        <div class="col-md-12 custom-file">
+                            <label for="email"><b>Profile image:</b></label>
+                            <input type="file" id="avatar" name="avatar" class="counter_input">
+                            <label class="custom-file-label" for="avatar" aria-describedby="inputGroupFileAddon02">Choose file</label>
+                        </div>
+                    </div>
+                    <div class="form-group row w-70">
+                        <div class="col-md-3"><button type="submit" class="counter_form_button">Save</button></div>
+                        <div class="col-md-3"><button type="reset"  class="counter_form_button">Cancel</button></div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

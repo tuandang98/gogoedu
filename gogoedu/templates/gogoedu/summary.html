@@ -1,0 +1,226 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load static %}
+{% block css %}
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="Unicat project">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<link rel="stylesheet" type="text/css" href="{% static 'styles/bootstrap4/bootstrap.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'plugins/font-awesome-4.7.0/css/font-awesome.min.css' %}" >
+<link rel="stylesheet" type="text/css" href="{% static 'plugins/colorbox/colorbox.css' %}" >
+<link rel="stylesheet" type="text/css" href="{% static 'styles/lesson.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/course_responsive.css' %}">
+<style type="text/css">
+        nav {height: 20px; }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="team" style="margin-top: 140px;">
+    <div class="team_background parallax-window" data-parallax="scroll" data-image-src="{% static 'images/team_background.jpg'%}" data-speed="0.8"></div>
+    <div class="container">
+        <div class="course_tabs_container">
+            <div class="tabs d-flex flex-row align-items-center justify-content-start">
+                <div class="tab active">
+                    {% trans 'Learned Word' %}
+                </div>
+                <div class="tab ">
+                    {% trans 'Memoried Word' %}
+                </div>
+                <div class="tab">
+                    {% trans 'Tests' %}
+                </div>
+            </div>
+            <div class="tab_panels">
+
+            <!-- Learned Word -->
+            <div class="tab_panel active">
+                <div class="tab_panel_title">Learned Word &emsp;  Total Learned Word : {{total_learned|length}}</div>
+                
+                <div class="tab_panel_content">
+                    <div class="accordions">
+                            
+                        <div class="elements_accordions">
+                        {%for word_learned in list_learned%}
+                            <div class="accordion_container">
+                                <div class="accordion d-flex flex-row align-items-center">
+                                <div>{{word_learned.word}}</div>
+                                </div>
+                                <div class="accordion_panel">
+                                    <p> {{word_learned.word.mean}} </p>
+                                </div>
+                            </div>
+                        {%endfor%}
+                        </div>
+                        <nav aria-label="Page navigation example">
+                        <ul class="pagination pull-right">
+
+                            {% if list_learned.has_previous %}
+                            <li class="mr-1"><a href="?page={{ list_learned.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                            <li class="disabled mr-1"><span>&laquo;</span></li>
+                            {% endif %}
+
+                            {% if list_learned.number > 5 %}
+                            <li><a href="?page=1"><i>1</i></a></li>
+                            {% endif %}
+
+                            {% for i in list_learned.paginator.page_range %}
+                            {% if i > list_learned.number|add:"-5" %}
+                                {% if i < list_learned.number|add:"5" %}
+                                    {% if list_learned.number == i %}
+                            <li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                            <li class="mr-1"><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if list_learned.number < list_learned.paginator.num_pages|add:"-5" %}
+                            <li class="mr-1"><a href="?page={{ list_learned.paginator.num_pages }}"><i>{{ list_learned.paginator.num_pages }}</i></a></li>
+                            {% endif %}
+
+                            {% if list_learned.has_next %}
+                            <li><a href="?page={{ list_learned.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- Curriculum -->
+            <div class="tab_panel tab_panel_2">
+                <div class="tab_panel_title">Memoried Word  &emsp;  Total Memoried Word : {{total_memoried|length}}</div>
+                
+                <div class="tab_panel_content">
+                    <div class="accordions">
+                            
+                        <div class="elements_accordions">
+                        {%for word_memoried in list_memoried%}
+                            <div class="accordion_container">
+                                <div class="accordion d-flex flex-row align-items-center">
+                                <div>{{word_memoried.word}}</div>
+                                </div>
+                                <div class="accordion_panel">
+                                    <p> {{word_memoried.word.mean}} </p>
+                                </div>
+
+                            </div>
+                        {%endfor%}
+                        </div>  
+                        <nav aria-label="Page navigation example">
+                        <ul class="pagination pull-right">
+
+                            {% if list_memoried.has_previous %}
+                            <li class="mr-1"><a href="?page={{ list_memoried.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                            <li class="disabled mr-1"><span>&laquo;</span></li>
+                            {% endif %}
+
+                            {% if list_memoried.number > 5 %}
+                            <li class="mr-1"><a href="?page=1"><i>1</i></a></li>
+                            {% endif %}
+
+                            {% for i in list_memoried.paginator.page_range %}
+                            {% if i > list_memoried.number|add:"-5" %}
+                                {% if i < list_memoried.number|add:"5" %}
+                                    {% if list_memoried.number == i %}
+                            <li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                            <li class="mr-1"><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if list_memoried.number < list_memoried.paginator.num_pages|add:"-5" %}
+                            <li class="mr-1"><a href="?page={{ list_memoried.paginator.num_pages }}"><i>{{ list_memoried.paginator.num_pages }}</i></a></li>
+                            {% endif %}
+
+                            {% if list_memoried.has_next %}
+                            <li><a href="?page={{ list_memoried.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                        </nav>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Reviews -->
+            <div class="tab_panel tab_panel_3">
+                <div class="tab_panel_title">Test  &emsp;  Total Tested Tests : {{total_tested|length}}</div>
+                
+                <div class="tab_panel_content">
+                    <div class="accordions">
+                            
+                        <div class="elements_accordions">
+                        {%for test in list_tested%}
+                            <div class="accordion_container">
+                                <div class="accordion d-flex flex-row align-items-center">
+                                    <div>{{test.test}}</div>
+                                </div>
+                                <div class="accordion_panel">
+                                    <p>Correct Answers : {{test.correct_answer_num}}</p>
+                                </div>
+                            </div>
+                        {%endfor%}
+                        </div>
+                        <nav aria-label="Page navigation example">
+                        <ul class="pagination pull-right">
+
+                            {% if list_tested.has_previous %}
+                            <li class="mr-1"><a href="?page={{ list_tested.previous_page_number }}">&laquo;</a></li>
+                            {% else %}
+                            <li class="disabled mr-1"><span>&laquo;</span></li>
+                            {% endif %}
+
+                            {% if list_tested.number > 5 %}
+                            <li class="mr-1"><a href="?page=1"><i>1</i></a></li>
+                            {% endif %}
+
+                            {% for i in list_tested.paginator.page_range %}
+                            {% if i > list_tested.number|add:"-5" %}
+                                {% if i < list_tested.number|add:"5" %}
+                                    {% if list_tested.number == i %}
+                            <li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+                                    {% else %}
+                            <li class="mr-1"><a href="?page={{ i }}">{{ i }}</a></li>
+                                    {% endif %}
+                                {% endif %}
+                            {% endif %}
+                            {% endfor %}
+
+                            {% if list_tested.number < list_tested.paginator.num_pages|add:"-5" %}
+                            <li class="mr-1"><a href="?page={{ list_tested.paginator.num_pages }}"><i>{{ list_tested.paginator.num_pages }}</i></a></li>
+                            {% endif %}
+
+                            {% if list_tested.has_next %}
+                            <li ><a href="?page={{ list_tested.next_page_number }}">&raquo;</a></li>
+                            {% else %}
+                            <li class="disabled"><span>&raquo;</span></li>
+                            {% endif %}
+                        </ul>
+                        </nav>  
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+    <script src="{% static 'styles/bootstrap4/popper.js'%}"></script>
+    <script src="{% static 'styles/bootstrap4/bootstrap.min.js'%}"></script>
+    <script src="{% static 'plugins/OwlCarousel2-2.2.1/owl.carousel.js'%}"></script>
+    <script src="{% static 'plugins/easing/easing.js'%}"></script>
+    <script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
+    <script src="{% static 'plugins/colorbox/jquery.colorbox-min.js'%}"></script>
+    <script src="{% static 'js/course.js'%}"></script>
+{% endblock %}

@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        h1{ color: blue; }
+    </style>
+</head>
+    <body>
+        {% autoescape off %}
+            <h1>Hi {{ user.username }},</h1><br>
+            <h2>Please click on the link to confirm your registration,</h2>
+            <a href="http://{{ domain }}{% url 'activate' uidb64=uid token=token %}">Activation link</a>
+<!--http://{{ domain }}{% url 'activate' uidb64=uid token=token %}-->
+        {% endautoescape %}
+    </body>
+</html>

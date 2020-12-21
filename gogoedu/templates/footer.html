@@ -1,0 +1,98 @@
+{% load static %}	
+{% load i18n %}
+<footer class="footer">
+	<div class="footer_background" style="background-image:url({% static 'images/footer_background.png' %})"></div>
+	<div class="container">
+		<div class="row footer_row">
+			<div class="col">
+				<div class="footer_content">
+					<div class="row">
+
+						<div class="col-lg-3 footer_col">
+				
+							<!-- Footer About -->
+							<div class="footer_section footer_about">
+								<div class="footer_logo_container">
+									<a href="#">
+										<div class="footer_logo_text">Gogo<span>edu</span></div>
+									</a>
+								</div>
+								<div class="footer_about_text">
+									<p>Lorem ipsum dolor sit ametium, consectetur adipiscing elit.</p>
+								</div>
+								<div class="footer_social">
+									<ul>
+										<li><a href="#"><i class="fa fa-facebook" aria-hidden="true"></i></a></li>
+										<li><a href="#"><i class="fa fa-google-plus" aria-hidden="true"></i></a></li>
+										<li><a href="#"><i class="fa fa-instagram" aria-hidden="true"></i></a></li>
+										<li><a href="#"><i class="fa fa-twitter" aria-hidden="true"></i></a></li>
+									</ul>
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="col-lg-3 footer_col">
+				
+							<!-- Footer Contact -->
+							<div class="footer_section footer_contact">
+								<div class="footer_title">{% trans 'Contact Us' %}</div>
+								<div class="footer_contact_info">
+									<ul>
+										<li>{% trans 'Email: gogoedu@gmail.com' %}</li>
+										<li>{% trans 'Phone:  +(84) 914674590' %}</li>
+										<li>{% trans 'stage 11, Handico tower, Pham Hung street, Nam Tu Liem distric, Hanoi, Vietnam' %} </li>
+									</ul>
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="col-lg-3 footer_col">
+				
+							<!-- Footer links -->
+							<div class="footer_section footer_links">
+								<div class="footer_title">{% trans 'Menu' %}</div>
+								<div class="footer_links_container">
+									<ul>
+										<li><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+										<li><a href="{% url 'catagory' %}">{% trans 'Catagory' %}</a></li>
+										<li><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
+										<li><a href="{% url 'about' %}">{% trans 'About' %}</a></li>
+									</ul>
+								</div>
+							</div>
+							
+						</div>
+
+						<div class="col-lg-3 footer_col clearfix">
+				
+							<!-- Footer links -->
+							<div class="footer_section footer_mobile">
+								<div class="footer_title">Mobile</div>
+								<div class="footer_mobile_content">
+									<div class="footer_image"><a href="#"><img src="{% static 'images/mobile_1.png'%}" alt=""></a></div>
+									<div class="footer_image"><a href="#"><img src="{% static 'images/mobile_2.png'%}" alt=""></a></div>
+								</div>
+							</div>
+							
+						</div>
+
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="row copyright_row">
+			<div class="col">
+				<div class="copyright d-flex flex-lg-row flex-column align-items-center justify-content-start">
+					<div class="ml-lg-auto cr_links">
+						<ul class="cr_list">
+							<li><a href="{% url 'privacy' %}">{% trans 'Privacy Policy' %}</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</footer>

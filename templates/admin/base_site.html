@@ -1,0 +1,46 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans 'Admin' %}{% endblock %}
+
+{% block branding %}
+<a href="{% url 'index' %}">
+    <div class="head">
+        <h1 id="name" style="font-family: 'Roboto Slab', serif;font-size: 30px;font-weight: 700;color: #384158!important;">{% trans 'Gogo' %}
+        	<span style="color: #14bdee!important;">{% trans 'Edu' %}
+        	</span>
+        </h1>
+    </div>
+</a>
+{% endblock %}
+
+{% block nav-global %}
+    <img class="brand_img" src="{% static 'images/mobile_1.png'%}" alt="logo">
+{% endblock %}
+
+{% block usertools %}
+{% if has_permission %}
+<div id="user-tools" style="font-size: 15px!important;">
+    {% block welcome-msg %}
+    {% endblock %}
+	{% block userlinks %}
+	<div style="margin-left: 500px!important;">
+	    {% if site_url %}
+	        <a href="{{ site_url }}" >{% trans 'Home page' %}</a> /
+	    {% endif %}
+	    {% if user.is_active and user.is_staff %}
+	        {% url 'django-admindocs-docroot' as docsroot %}
+	        {% if docsroot %}
+	            <a href="{{ docsroot }}">{% trans 'Documentation' %}</a> /
+	        {% endif %}
+	    {% endif %}
+	    {% if user.has_usable_password %}
+	    <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a> /
+	    {% endif %}
+	    <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+	</div>
+	{% endblock %}
+</div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="team" style="margin-top: 120px;">
+    <div class="team_background parallax-window" data-parallax="scroll"
+         data-image-src="{% static 'images/team_background.jpg'%}" data-speed="0.8"></div>
+    <div class="container d-flex justify-content-center">
+        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+
+            <div class="box-part text-center">
+                <i class="fa fa-check-circle-o fa-5x" aria-hidden="true"></i>
+                <div class="title">
+                    <h4>{{ score }} {% trans 'true answers' %}</h4>
+                </div>
+                <a href="{{ test.get_test_url }}">{% trans 'Try again'%}</a>
+            </div>
+            <div id="page-wrap">
+                <ol>
+                    <h1 class="text-center">{{test.name}}</h1>
+                    <form class="mt-5" action="" method="POST" id="quiz">
+                        {% csrf_token %}
+                        {% for question in test.question_set.all %}
+                        <li style="font-size: 1.2rem;">
+                            <h3 class="mb-2"><strong>{{question}}</strong></h3>
+                            {% for choice in question.choice_set.all %}
+                            <label class="radio" for="" {% if choice.correct%} style="color:green;text-decoration: underline;" {%endif%}>
+                                <input type="radio" disabled="disabled"
+                                       {% if choice in choices%} checked="checked" {%endif%}>
+                                {{choice}}
+                            </label>
+                            <br>
+                            {% endfor %}
+                        </li>
+                        {% endfor %}
+                    </form>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+{% endblock %}

@@ -1,0 +1,118 @@
+{% extends "base_generic.html" %}
+{% load i18n %}
+{% load static %}
+{% block css %}
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/bootstrap4/bootstrap.min.css' %}">
+    <link rel="stylesheet" id="bootstrap-css" href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="../../static/styles/myuser_profile.css">
+{% endblock %}
+
+{% block content %}
+    <div class="home">
+        <div class="container emp-profile" style="margin-top: 200px">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="profile-img">
+                        <img src="{{ myuser.avatar.url }}"
+                             alt=""/>
+                        <!--                        <div class="file btn btn-lg btn-primary" id="change_avatar" style="border-radius: 10rem;">-->
+                        <!--                            {% trans 'Change avatar' %}-->
+                        <!--                            <input type="file" id="get_avatar" onchange="GFG_Fun()" name="avatar"/>-->
+                        <!--                        </div>-->
+                        <!--                        <input type="submit" class="file btn btn-lg btn-primary" id="save_avatar"-->
+                        <!--                                style="border-radius: 10rem;"-->
+                        <!--                            value="{% trans 'Save' %}">-->
+                        <!--                        <input type="reset" class="file btn btn-lg btn-primary" id="cancel_avatar"-->
+                        <!--                                style="border-radius: 10rem;"-->
+                        <!--                            value="{% trans 'Cancel' %}">-->
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="row">
+                        <div class="profile-head">
+                            <h5>
+                                {{user.username}}
+                            </h5>
+                            <h6>
+                                {{user.email}}
+                            </h6>
+                            <p class="proile-rating"></p>
+                            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab"
+                                       aria-controls="home" aria-selected="true">{% trans 'About' %}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
+                                       aria-controls="profile" aria-selected="false">{% trans 'Learned word' %}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="tab-content profile-tab" id="myTabContent">
+                                <div class="tab-pane fade show active" id="home" role="tabpanel"
+                                     aria-labelledby="home-tab">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>{% trans 'Name' %}</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{user.username}}</p>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <label>{% trans 'Email' %}</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <p>{{user.email}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>{% trans 'Word' %}</label>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <label>{% trans 'Lesson' %}</label>
+                                        </div>
+                                        <div class="col-md-3">
+                                            <label>{% trans 'Catagory' %}</label>
+                                        </div>
+                                    </div>
+                                    {% for userword in myuser.userword_set.all %}
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <a>{{userword.word}}</a>
+                                                </div>
+                                                {% for lesson in userword.word.lesson.all %}
+                                                    <div class="col-md-6">
+                                                        <a href="{% url 'lesson-detail' lesson.id %}">{{lesson}}</a>
+                                                    </div>
+                                                {% endfor %}
+                                                <div class="col-md-3">
+                                                    <a href="{% url 'lesson' userword.word.catagory.id %}">{{userword.word.catagory}}</a>
+                                                </div>
+                                            </div>
+                                    {% endfor %}
+                                </div>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+                {% if user.id == request.user.id %}
+                <div class="col-md-2">
+                    <a role="button" href="{% url 'profile-update' user.id %}" class="profile-edit-btn btn active" aria-pressed="true">
+                        {% trans 'Edit profile' %}
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

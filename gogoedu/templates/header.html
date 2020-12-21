@@ -1,0 +1,149 @@
+{% load static %}
+{% load i18n %}
+	<!-- Header -->
+	<header class="header">
+		<!-- Top Bar -->
+		<div class="top_bar">
+			<div class="top_bar_container d-flex flex-column justify-content-center" style="height: 3rem">
+				<div class="container">
+					<div class="row">
+						<div class="col">
+							<div class="top_bar_content d-flex flex-row align-items-center justify-content-between">
+								<ul class="top_bar_contact_list">
+									<li><div class="question">Have any questions?</div></li>
+									<li>
+										<i class="fa fa-phone" aria-hidden="true"></i>
+										<div>+84914674590</div>
+									</li>
+									<li>
+										<i class="fa fa-envelope-o" aria-hidden="true"></i>
+										<div>gogoedu@gmail.com</div>
+									</li>
+								</ul>
+								{% if request.user.is_authenticated %}
+								<div class="d-flex flex-row align-items-center justify-content-end">
+									<ul class="navbar-nav ml-auto nav-flex-icons">
+										<li class="nav-item avatar dropdown" style="color: white; cursor: pointer;">
+											<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
+											  aria-haspopup="true" aria-expanded="false">
+											  <img src="{{ request.user.avatar.url }}" class="rounded-circle z-depth-0"
+												alt="avatar image" style="height: 2.1rem; width: 2.1rem;">
+												{{request.user.username}}
+											</a>
+											<div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
+											  aria-labelledby="navbarDropdownMenuLink-55">
+											  	<a class="dropdown-item" href="{% url 'profile-detail' request.user.id %}">{% trans 'My profile' %}</a>
+												{% if request.user.is_superuser %}
+													<a class="dropdown-item" href="/admin">Admin site</a>
+												{% endif %}
+												<a class="dropdown-item" href="{% url 'show_summary'%}">Summary</a>
+											  <a class="dropdown-item" href="{% url 'logout' %}">{% trans 'Log out' %}</a>
+											</div>
+										</li>
+									</ul>
+								</div>
+								{% else %}
+								<div class="d-flex flex-row align-items-center justify-content-end">
+									<div class="top_bar_login dropdown">
+										<div class="login_button "><a href="{% url 'login' %}?next={% url 'index' %}">{% trans 'Sign in' %}</a></div>
+									</div>
+									<div class="top_bar_login ml-auto">
+										<div class="register_button"><a href="{% url 'register' %}">{% trans 'Register' %}</a></div>
+									</div>
+								</div>
+								{% endif %}
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Header Content -->
+		<div class="header_container">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="header_content d-flex flex-row align-items-center justify-content-start">
+							<div class="logo_container">
+								<a href="{% url 'index' %}">
+									<div class="logo_text">GoGo<span>Edu</span></div>
+								</a>
+							</div>
+							<nav class="main_nav_contaner ml-auto">
+								<ul class="main_nav">
+									<li class="{% if request.path == '/gogoedu/' %}active{% endif %}"><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+									<li class="{% if request.path == '/gogoedu/catagory/' %}active{% endif %}"><a href="{% url 'catagory' %}">{% trans 'Catagory' %}</a></li>
+									<!-- <li><a href="blog.html">Blog</a></li> -->
+									<!-- <li><a href="#">Page</a></li> -->
+									<li class="{% if request.path == '/gogoedu/contact/' %}active{% endif %}"><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
+									<li class="{% if request.path == '/gogoedu/about/' %}active{% endif %}"><a href="{% url 'about' %}">{% trans 'About' %}</a></li>
+									<li><form action="{% url 'change_language' %}" method="post">
+										{% csrf_token %}
+										<select class="dropdown_item_select home_search_input " name="language" style="width:8.2rem;">
+										{% get_available_languages as LANGUAGES %}
+											{% for language in LANGUAGES %}
+											<option value="{{ language.0 }}" {% if language.0 == LANGUAGE_CODE %} selected{% endif %}>
+												{{ language.0|language_name_local }} ({{ language.0 }})
+											</option>
+											{% endfor %}
+										</select>
+										<input type="submit" class="btn btn-primary" value="{% trans 'Change language' %}">
+									</form></li>
+								</ul>
+								
+								<div class="hamburger menu_mm">
+									<i class="fa fa-bars menu_mm" aria-hidden="true"></i>
+								</div>
+							</nav>
+
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- Header Search Panel -->
+		<div class="header_search_container">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="header_search_content d-flex flex-row align-items-center justify-content-end">
+							<form action="#" class="header_search_form">
+								<input type="search" class="search_input" placeholder="Search" required="required">
+								<button class="header_search_button d-flex flex-column align-items-center justify-content-center">
+									<i class="fa fa-search" aria-hidden="true"></i>
+								</button>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Menu -->
+
+	<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
+		<div class="menu_close_container">
+			<div class="menu_close">
+			</div>
+		</div>
+		<div class="search">
+			<form action="#" class="header_search_form menu_mm">
+				<input type="search" class="search_input menu_mm" placeholder="Search" required="required">
+				<button class="header_search_button d-flex flex-column align-items-center justify-content-center menu_mm">
+					<i class="fa fa-search menu_mm" aria-hidden="true"></i>
+				</button>
+			</form>
+		</div>
+		<nav class="menu_nav">
+			<ul class="menu_mm">
+				<li class="menu_mm"><a href="index.html">Home</a></li>
+				<li class="menu_mm"><a href="#">Category</a></li>
+				<li class="menu_mm"><a href="#">Contact</a></li>
+				<li class="menu_mm"><a href="#">About</a></li>
+			</ul>
+		</nav>
+	</div>

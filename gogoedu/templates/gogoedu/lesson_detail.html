@@ -1,0 +1,522 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'plugins/colorbox/colorbox.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/lesson.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/course_responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Home -->
+
+<div class="home">
+    <div class="breadcrumbs_container">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+                            <li><a href="{% url 'catagory' %}">{% trans 'Catagory' %}</a></li>
+                            <li><a href="{% url 'lesson' lesson.catagory.id%}">{{lesson.catagory.name}}</a></li>
+                            <li>{{lesson.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Course -->
+
+<div class="course">
+    <div class="container">
+        <div class="row">
+
+            <!-- Course -->
+            <div class="col-lg-8">
+                <div class="course_container">
+                    <div id="lessonName" data-id="{{lesson.id}}" class="course_title">{% trans 'Lesson' %}:
+                        {{lesson.name}}
+                    </div>
+
+                    <div class="course_info d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+
+                        <!-- Course Info Item -->
+                        <div class="course_info_item">
+                            <div class="course_info_title">{% trans 'Catagory' %}</div>
+                            <div class="course_info_text"><a href="#">{{lesson.catagory}}</a></div>
+                        </div>
+
+                    </div>
+
+                    <!-- Course Image -->
+                    <div class="course_image"><img src="{% static 'images/course_image.jpg'%}" alt=""></div>
+
+                    <!-- Course Tabs -->
+                    <div class="course_tabs_container">
+                        <div class="tabs d-flex flex-row align-items-center justify-content-start">
+                            <div class="tab">
+                                {% trans 'Lesson' %}
+                            </div>
+                            <div class="tab active">
+                                {% trans 'Words' %}
+                            </div>
+                            <div class="tab">
+                                {% trans 'Test' %}
+                            </div>
+                        </div>
+                        <div class="tab_panels">
+
+                            <!-- Description -->
+                            <div class="tab_panel">
+                                <div class="tab_panel_title">{{lesson.name}}</div>
+                                <div><a>{{lesson.description}}</a></div>
+                            </div>
+
+                            <!-- Curriculum -->
+                            <div class="tab_panel tab_panel_2 active">
+                                <div class="tab_panel_content">
+                                    <div class="row">
+                                        <div class="tab_panel_title col-md-9">{{lesson.catagory}}</div>
+                                        <div class="col-md-3">
+											<select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+													role="button" aria-haspopup="true" aria-expanded="false">
+												<optgroup label="{% trans 'Status' %}">
+													<option>{% trans 'All' %}</option>
+													<option>{% trans 'Learned' %}</option>
+													<option>{% trans 'New' %}</option>
+												</optgroup>
+												<optgroup label="{% trans 'Word type' %}">
+													<option>{% trans 'Noun' %}</option>
+													<option>{% trans 'Verb' %}</option>
+													<option>{% trans 'Adjective' %}
+													</option>
+												</optgroup>
+											</select>
+                                        </div>
+                                    </div>
+                                    <div id="wordListTab" class="tab_panel_content">
+                                        <div id="All" class="w3-container city">
+                                            {% for word in object_list %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'lesson-detail' lesson.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                                   id="id_user{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="hidden" name="word" value="{{word.id}}"
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="button" id="markButton{{word.id}}"
+                                                                   data-id="{{word.id}}" class="btn mark-button"
+                                                                   value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
+										<div id="Learned" class="w3-container city" style="display:none">
+                                            {% for word in marked_word_list %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'lesson-detail' lesson.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                                   id="id_user{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="hidden" name="word" value="{{word.id}}"
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="button" id="markButton{{word.id}}"
+                                                                   data-id="{{word.id}}" class="btn mark-button"
+                                                                   value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
+										<div id="New" class="w3-container city" style="display:none">
+                                            {% for word in new_list %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'lesson-detail' lesson.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                                   id="id_user{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="hidden" name="word" value="{{word.id}}"
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="button" id="markButton{{word.id}}"
+                                                                   data-id="{{word.id}}" class="btn mark-button"
+                                                                   value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
+										<div id="Noun" class="w3-container city" style="display:none">
+                                            {% for word in object_list %}
+											{% if word.type == 'N' %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'lesson-detail' lesson.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                                   id="id_user{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="hidden" name="word" value="{{word.id}}"
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="button" id="markButton{{word.id}}"
+                                                                   data-id="{{word.id}}" class="btn mark-button"
+                                                                   value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endif %}
+											{% endfor %}
+                                        </div>
+										<div id="Verb" class="w3-container city" style="display:none">
+                                            {% for word in object_list %}
+											{% if word.type == 'V' %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'lesson-detail' lesson.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                                   id="id_user{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="hidden" name="word" value="{{word.id}}"
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="button" id="markButton{{word.id}}"
+                                                                   data-id="{{word.id}}" class="btn mark-button"
+                                                                   value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endif %}
+											{% endfor %}
+                                        </div>
+										<div id="Adjective" class="w3-container city" style="display:none">
+                                            {% for word in object_list %}
+											{% if word.type == 'Adj' %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'lesson-detail' lesson.id %}">
+                                                            {% csrf_token %}
+                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                                   id="id_user{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="hidden" name="word" value="{{word.id}}"
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                            <input type="button" id="markButton{{word.id}}"
+                                                                   data-id="{{word.id}}" class="btn mark-button"
+                                                                   value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endif %}
+											{% endfor %}
+                                        </div>
+										{% block pagination %}
+										{% if is_paginated %}
+										<div class="pagination">
+											<span class="page-links">
+												{% if page_obj.has_previous %}
+												<a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+												{% endif %}
+												<span class="page-current">
+													Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+												</span>
+												{% if page_obj.has_next %}
+												<a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+												{% endif %}
+											</span>
+										</div>
+										{% endif %}
+										{% endblock %}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Reviews -->
+                            <div class="tab_panel tab_panel_3">
+                                <div class="tab_panel_title">Test</div>
+
+                                <div class="tab_panel_content" id="test-desc">
+                                    <div class="accordions">
+
+                                        <div class="elements_accordions">
+                                            {% for test in lesson.test_set.all %}
+                                            <div class="accordion_container">
+                                                <div class="accordion d-flex flex-row align-items-center">
+                                                    <div><a target="_blank">{{test}}</a></div>
+                                                </div>
+                                                <div class="accordion_panel" id="test-detail-content" data-id="{{test.id}}">
+                                                    <p>Questions Number : {{test.question_num}}</p>
+                                                    <p>Time : {{test.time}} s</p>
+                                                    <p id="remainTime">
+                                                    {% for user_test in user_test_list %}
+                                                        {% if user_test.test is test and user_test.is_paused is true %}
+                                                            {{user_test.remain_time}}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    </p>
+                                                    <a  type="button" id="startTestBtn{{test.id}}" class="btn btn-outline-success mt-3"
+                                                        href="{{test.get_absolute_url}}" target="_blank">
+                                                           {% if test in tested_list %}{% trans 'Resume' %}{% else %}{% trans 'Start' %}{% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sidebar">
+
+                        <!-- Feature -->
+                        <div class="sidebar_section">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter -->
+
+<div class="newsletter">
+    <div class="newsletter_background"
+         style="background-image:url({% static 'images/newsletter_background.jpg' %})"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="newsletter_container d-flex flex-lg-row flex-column align-items-center justify-content-start">
+
+                    <!-- Newsletter Content -->
+                    <div class="newsletter_content text-lg-left text-center">
+                        <div class="newsletter_title">{% trans 'sign up for news and offers' %}</div>
+                        <div class="newsletter_subtitle">{% trans 'Subcribe to lastest smartphones news & great
+                            deals we offer' %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block plugin %}
+<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/popper.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/bootstrap.min.js'%}"></script>
+<script src="{% static 'plugins/OwlCarousel2-2.2.1/owl.carousel.js'%}"></script>
+<script src="{% static 'plugins/easing/easing.js'%}"></script>
+<script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
+<script src="{% static 'plugins/colorbox/jquery.colorbox-min.js'%}"></script>
+<script src="{% static 'js/course.js'%}"></script>
+{% endblock %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        var lessonId = $("#lessonName").data('id')
+        console.log($('#wordListTab').data('id'))
+
+        $('#wordListTab').on('click', '.mark-button', function () {
+            var wordId = $(this).data('id')
+            var this_ = $(this)
+
+            $.ajax({
+                url: '/gogoedu/lesson/' + lessonId + '/words/' + wordId + '/learned/',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id: wordId,
+                },
+                type: 'post',
+                success: function (response) {
+                    if (response.learned) {
+                        this_.val("{% trans 'Unmark' %}")
+                    } else {
+                        this_.val("{% trans 'Mark as learned' %}")
+                    }
+                }
+            })
+        })
+
+        $.ajax({
+            url: '/gogoedu/lesson/' + lessonId + '/tests/',
+            data: {
+                csrfmiddlewaretoken: csrfToken,
+                lesson_id: lessonId,
+                test_id: $('#test-detail-content').data('id')
+            },
+            type: 'get',
+            success: function (response) {
+                if (response.tested) {
+                    $('#remainTime').text("Remain time : " + response.my_test_remain_time + " s")
+                    $('#startTestBtn').text("Resume")
+                } else {
+                    $('#startTestBtn').text("Start")
+                }
+            }
+        })
+
+    });
+
+    function openCity() {
+        var i;
+        var x = document.getElementsByClassName("city");
+        var cityName = document.getElementById("filter-list").value
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        console.log('success')
+        document.getElementById(cityName).style.display = "block";
+    }
+</script>
+{% endblock %}

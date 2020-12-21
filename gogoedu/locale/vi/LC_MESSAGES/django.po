@@ -1,0 +1,325 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-09-01 09:10+0700\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: forms.py:12
+#, fuzzy
+#| msgid "Lost password?"
+msgid "Password"
+msgstr "Quên mật khẩu?"
+
+#: forms.py:25
+msgid "Email existed. Please try again"
+msgstr "Email đã tồn tại.Vui lòng thử lại"
+
+#: models.py:95
+msgid "email address"
+msgstr "Địa chỉ Email"
+
+#: templates/about.html:13
+msgid "We are gogo team"
+msgstr "Chúng mình là gogoedu"
+
+#: templates/about.html:14 templates/contact.html:10 templates/privacy.html:11
+msgid "we wanna bring true value to you"
+msgstr "Chúng tôi muốn mang đến giá trị cho Bạn"
+
+#: templates/about.html:26
+msgid "Team leader"
+msgstr "Nhóm Trưởng"
+
+#: templates/about.html:44 templates/about.html:62
+msgid "Developer"
+msgstr "Đội Viên"
+
+#: templates/contact.html:9
+#, fuzzy
+#| msgid "Contact"
+msgid "Contact us"
+msgstr "Liên hệ"
+
+#: templates/contact.html:16 templates/footer.html:39
+#, fuzzy
+#| msgid "Contact"
+msgid "Contact Us"
+msgstr "Liên hệ"
+
+#: templates/contact.html:19 templates/footer.html:42
+msgid "Email: gogoedu@gmail.com"
+msgstr "Thư điện tử: gogoedu@gmail.com"
+
+#: templates/contact.html:20 templates/footer.html:43
+msgid "Phone:  +(84) 914674590"
+msgstr "Số điện thoại : +(84) 914674590"
+
+#: templates/contact.html:21 templates/footer.html:44
+msgid ""
+"stage 11, Handico tower, Pham Hung street, Nam Tu Liem distric, Hanoi, "
+"Vietnam"
+msgstr "Tầng 11,tòa Handico,dường Phạm Hùng,Nam Từ Liêm,Hà Nội"
+
+#: templates/footer.html:55
+msgid "Menu"
+msgstr "Đề Mục"
+
+#: templates/footer.html:58 templates/header.html:78
+msgid "Home"
+msgstr "Trang chủ"
+
+#: templates/footer.html:59 templates/gogoedu/lesson_detail.html:28
+#: templates/gogoedu/myuser_detail.html:85 templates/header.html:79
+msgid "Catagory"
+msgstr "Thể loại"
+
+#: templates/footer.html:60 templates/header.html:82 templates/index.html:110
+msgid "Contact"
+msgstr "Liên hệ"
+
+#: templates/footer.html:61 templates/gogoedu/myuser_detail.html:45
+#: templates/header.html:83
+msgid "About"
+msgstr "Thông tin"
+
+#: templates/footer.html:91
+msgid "Privacy Policy"
+msgstr "Chính sách"
+
+#: templates/gogoedu/catagory_detail.html:5
+msgid "Search Lesson"
+msgstr "Tìm kiếm Bài Học"
+
+#: templates/gogoedu/catagory_detail.html:6
+#: templates/gogoedu/catagory_list.html:23
+msgid "Search"
+msgstr "Tìm Kiếm"
+
+#: templates/gogoedu/catagory_list.html:22
+msgid "Search Category"
+msgstr "Tìm kiếm Thể loại"
+
+#: templates/gogoedu/lesson_detail.html:22
+msgid "Lesson "
+msgstr "Bài Học"
+
+#: templates/gogoedu/lesson_detail.html:41
+#: templates/gogoedu/myuser_detail.html:82
+msgid "Lesson"
+msgstr "Bài Học"
+
+#: templates/gogoedu/lesson_detail.html:44
+msgid "Words"
+msgstr "Danh sách từ"
+
+#: templates/gogoedu/lesson_detail.html:47
+msgid "Test"
+msgstr "Kiểm Tra"
+
+#: templates/gogoedu/lesson_detail.html:65
+msgid "Status"
+msgstr "Trạng Thái"
+
+#: templates/gogoedu/lesson_detail.html:66
+msgid "All"
+msgstr "Tất cả"
+
+#: templates/gogoedu/lesson_detail.html:67
+msgid "Learned"
+msgstr "Đã Học"
+
+#: templates/gogoedu/lesson_detail.html:68
+msgid "New"
+msgstr "Từ mới"
+
+#: templates/gogoedu/lesson_detail.html:70
+msgid "Word type"
+msgstr "Loại Từ"
+
+#: templates/gogoedu/lesson_detail.html:71
+msgid "Noun"
+msgstr "Danh từ"
+
+#: templates/gogoedu/lesson_detail.html:72
+msgid "Verb"
+msgstr "Động Từ"
+
+#: templates/gogoedu/lesson_detail.html:73
+msgid "Adjective"
+msgstr "Tính từ"
+
+#: templates/gogoedu/lesson_detail.html:91
+#: templates/gogoedu/lesson_detail.html:138
+#: templates/gogoedu/lesson_detail.html:166
+#: templates/gogoedu/lesson_detail.html:195
+#: templates/gogoedu/lesson_detail.html:224
+#: templates/gogoedu/lesson_detail.html:252
+#: templates/gogoedu/lesson_detail.html:363
+msgid "Mark as learned"
+msgstr "Đánh dấu đã học"
+
+#: templates/gogoedu/lesson_detail.html:138
+#: templates/gogoedu/lesson_detail.html:361
+msgid "Unmark"
+msgstr "Bỏ đánh dấu"
+
+#: templates/gogoedu/lesson_detail.html:322
+msgid "sign up for news and offers"
+msgstr "Đăng kí để nhận tin mới và ưu đãi"
+
+#: templates/gogoedu/lesson_detail.html:323
+msgid "Subcribe to lastest smartphones news & great deals we offer"
+msgstr "Đăng kí để nhận nhiều thông tin và ưu đãi tuyệt vời"
+
+#: templates/gogoedu/myuser_detail.html:21
+#, fuzzy
+#| msgid "Change language"
+msgid "Change avatar"
+msgstr "Đổi ngôn ngữ"
+
+#: templates/gogoedu/myuser_detail.html:26
+msgid "Save"
+msgstr "Lưu"
+
+#: templates/gogoedu/myuser_detail.html:29
+msgid "Cancel"
+msgstr "Hủy"
+
+#: templates/gogoedu/myuser_detail.html:49
+msgid "Learned word"
+msgstr "Từ đã học"
+
+#: templates/gogoedu/myuser_detail.html:61
+msgid "Name"
+msgstr "Tên"
+
+#: templates/gogoedu/myuser_detail.html:69
+msgid "Email"
+msgstr "Thư điện tử"
+
+#: templates/gogoedu/myuser_detail.html:79
+msgid "Word"
+msgstr "Từ"
+
+#: templates/gogoedu/myuser_detail.html:112
+msgid "Edit profile"
+msgstr "Sửa thông tin"
+
+#: templates/gogoedu/show_results.html:13
+msgid "true answers"
+msgstr "Đáp án đúng"
+
+#: templates/gogoedu/show_results.html:15
+msgid "Try again"
+msgstr "Thử lại"
+
+#: templates/gogoedu/summary.html:26
+msgid "Learned Word"
+msgstr "Từ đã học"
+
+#: templates/gogoedu/summary.html:29
+msgid "Memoried Word"
+msgstr "Từ đã thuộc"
+
+#: templates/gogoedu/summary.html:32
+msgid "Tests"
+msgstr "Các bài kiểm tra"
+
+#: templates/gogoedu/test_detail.html:29
+msgid "Submit"
+msgstr "Đồng ý"
+
+#: templates/gogoedu/test_detail.html:47
+msgid "Time off!"
+msgstr "Hết giờoo"
+
+#: templates/header.html:35
+msgid "My profile"
+msgstr "Thông tin của tôi"
+
+#: templates/header.html:38
+msgid "Manage all"
+msgstr "Quản lý tất cả"
+
+#: templates/header.html:41
+msgid "Summary"
+msgstr "Tóm lược"
+
+#: templates/header.html:42
+#, fuzzy
+#| msgid "Logged out!"
+msgid "Log out"
+msgstr "Đã Đăng Xuất"
+
+#: templates/header.html:50
+msgid "Sign in"
+msgstr "Đăng Nhập"
+
+#: templates/header.html:53
+msgid "Register"
+msgstr "Đăng ký"
+
+#: templates/header.html:94
+msgid "Change language"
+msgstr "Đổi ngôn ngữ"
+
+#: templates/index.html:19 templates/index.html:37 templates/index.html:54
+msgid "The Gogoedu System Education"
+msgstr "Hệ thống giáo dục Gogoedu"
+
+#: templates/index.html:20 templates/index.html:38 templates/index.html:55
+msgid "Future Of Education Technology"
+msgstr "Tương lai của công nghệ giáo dục"
+
+#: templates/index.html:92
+#, fuzzy
+#| msgid "Catagory"
+msgid "Catagories"
+msgstr "Thể loại"
+
+#: templates/index.html:101
+#, fuzzy
+#| msgid "About"
+msgid "About us"
+msgstr "Thông tin"
+
+#: templates/privacy.html:10
+msgid "Privacy policy"
+msgstr "Chính sách"
+
+#~ msgid "Register or Login"
+#~ msgstr "Đăng kí hoặc Đăng Nhập"
+
+#~ msgid "Not a member ?"
+#~ msgstr "Không là thành viên?"
+
+#~ msgid "Your username and password didn't match. Please try again."
+#~ msgstr "Sai tài khoản hoặc mật khẩu.Xin thử lại"
+
+#~ msgid "Sign in to learn"
+#~ msgstr "Đăng Nhập"
+
+#~ msgid "Please login to see this page."
+#~ msgstr "Vui lòng đăng nhập để truy cập tiếp"
+
+#~ msgid ""
+#~ "Your account doesn't have access to this page. To proceed,please login "
+#~ "with an account that has access."
+#~ msgstr "Vui lòng đăng nhập"
+
+#~ msgid "Click here to login again."
+#~ msgstr "Nhấn vô đây để đăng nhập lại bạn ơi."

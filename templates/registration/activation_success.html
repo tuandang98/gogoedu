@@ -1,0 +1,54 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block title %}<title>Account Activation</title>{% endblock %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'plugins/colorbox/colorbox.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/courses.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/courses_responsive.css' %}">
+{% endblock %}
+{% block content %}
+<!-- Courses -->
+
+<div class="courses mt-5">
+    <div class="container">
+        <div class="row">
+            <div class="col-12 course_col">
+                <div class="course">
+                    <div class="course_image"><img src="" alt=""></div>
+                    <div class="course_body">
+                        <h2 class="course_title">
+                            <small>
+                                {% if  user_is_active %}
+                                    {% trans 'Thank you for your email confirmation. Now you can login your account' %}.
+                                {% else %}
+                                    {% trans 'Activation link is invalid' %}!
+                                {% endif %}
+                            </small>
+                        </h2>
+                        {% if  user_is_active %}
+                            <div class="course_text mt-5">
+                                <h3><small><em><a href="{% url 'login' %}">Login</a></em></small></h3>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+
+
+{% endblock %}
+{% block plugin %}
+<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/popper.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/bootstrap.min.js'%}"></script>
+<script src="{% static 'plugins/OwlCarousel2-2.2.1/owl.carousel.js' %}"></script>
+<script src="{% static 'plugins/easing/easing.js' %}"></script>
+<script src="{% static 'plugins/parallax-js-master/parallax.min.js' %}"></script>
+<script src="{% static 'plugins/colorbox/jquery.colorbox-min.js' %}"></script>
+<script src="{% static 'js/courses.js' %}"></script>
+{% endblock %}
