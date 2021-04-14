@@ -26,7 +26,7 @@ from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import JsonResponse
 from django.forms.models import model_to_dict
-
+from json import dumps
 from .forms import RegisterForm, UserUpdateForm
 from gogoedu.models import myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
     TestResult
@@ -168,7 +168,7 @@ class Lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin)
 
 class CatagoryListView(generic.ListView):
     model = Catagory
-    paginate_by = 2
+    paginate_by = 1
 
     def get_queryset(self, **kwargs):
         try:
@@ -184,7 +184,7 @@ class CatagoryListView(generic.ListView):
 
 class CatagoryDetailView(generic.DetailView, MultipleObjectMixin):
     model = Catagory
-    paginate_by = 1
+    paginate_by = 10
 
     def get_context_data(self, **kwargs):
         try:
@@ -386,10 +386,11 @@ def summary_detail_view(request):
     template = loader.get_template('gogoedu/summary.html')
     list_learned = UserWord.objects.filter(user=request.user.id)
     list_memoried = UserWord.objects.filter(user=request.user.id, memoried=True)
-    list_tested = UserTest.objects.filter(user=request.user.id)
+    list_tested = TestResult.objects.filter(user=request.user.id)
 
-    paginator1 = Paginator(list_tested, 5)
     page = request.GET.get('page', 1)
+    paginator1 = Paginator(list_tested, 5)
+    
     try:
         tested_paged = paginator1.page(page)
     except PageNotAnInteger:
@@ -405,7 +406,7 @@ def summary_detail_view(request):
     except EmptyPage:
         memoried_paged = paginator2.page(paginator2.num_pages)
 
-    paginator3 = Paginator(list_learned, 1)
+    paginator3 = Paginator(list_learned, 10)
     try:
         learned_paged = paginator3.page(page)
     except PageNotAnInteger:
@@ -417,7 +418,7 @@ def summary_detail_view(request):
                'list_memoried': memoried_paged,
                'total_learned': list_learned,
                'total_memoried': list_memoried,
-               'total_tested': list_tested
+               'total_tested': list_tested,
                }
     return HttpResponse(template.render(context, request))
 

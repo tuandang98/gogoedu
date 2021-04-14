@@ -54,7 +54,7 @@
 							{% for catagory in catagory_list %}
 							<div class="col-lg-4 course_col">
 								<div class="course">
-									<div class="course_image"><img src="" alt=""></div>
+									<div class="course_image"><img src="https://lh6.googleusercontent.com/X7JYEBXkxFMLWlXgsipqGbOYN6j9Lh_83FdKL-WPAtVKZsNnwrEE-VJVR83IXO73jgq4NrVuwPER2JVgkuyIpFMDMLzN3kbY1uHnD2_5enIx52yB-0IWf_VIfgFcpQBb4Yp3-an0" alt=""></div>
 									<div class="course_body">
 										<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
 										<div class="course_teacher">Mr. John Taylor</div>
@@ -134,4 +134,12 @@
 	<script src="{% static 'plugins/parallax-js-master/parallax.min.js' %}"></script>
 	<script src="{% static 'plugins/colorbox/jquery.colorbox-min.js' %}"></script>
 	<script src="{% static 'js/courses.js' %}"></script>
+	<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+      
+	<script src="{% static 'plugins/greensock/TweenMax.min.js'%}"></script>
+	<script src="{% static 'plugins/greensock/TimelineMax.min.js'%}"></script>
+	<script src="{% static 'plugins/scrollmagic/ScrollMagic.min.js'%}"></script>
+	<script src="{% static 'plugins/greensock/animation.gsap.min.js'%}"></script>
+	<script src="{% static 'plugins/greensock/ScrollToPlugin.min.js'%}"></script>
+    <script src="{% static 'js/custom.js'%}"></script>
 {% endblock %}

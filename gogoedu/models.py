@@ -148,4 +148,3 @@ class UserWord(models.Model):
 
     class Meta:
         unique_together = (("user", "word"),)
-
