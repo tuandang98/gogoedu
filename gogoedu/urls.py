@@ -20,6 +20,6 @@ urlpatterns = [
 	path('register/<int:pk>/activation', views.activation_request, name='account-activation'),
 	path('summary/', views.summary_detail_view, name='show_summary'),
 	path('contact/', views.contact_view, name='contact'),
-	path('about/', views.about_view, name='about'),
+	path('leaderboard/', views.leaderboard_view, name='leaderboard'),
 	path('privacy/', views.privacy_view, name='privacy'),
 ]

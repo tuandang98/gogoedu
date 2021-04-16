@@ -78,7 +78,7 @@
 									<!-- <li><a href="blog.html">Blog</a></li> -->
 									<!-- <li><a href="#">Page</a></li> -->
 									<li class="{% if request.path == '/gogoedu/contact/' %}active{% endif %}"><a href="{% url 'contact' %}">{% trans 'Contact' %}</a></li>
-									<li class="{% if request.path == '/gogoedu/about/' %}active{% endif %}"><a href="{% url 'about' %}">{% trans 'About' %}</a></li>
+									<li class="{% if request.path == '/gogoedu/leaderboard/' %}active{% endif %}"><a href="{% url 'leaderboard' %}">{% trans 'Leaderboard' %}</a></li>
 									<li><form action="{% url 'change_language' %}" method="post">
 										{% csrf_token %}
 										<select class="dropdown_item_select home_search_input " name="language" style="width:8.2rem;">
@@ -143,7 +143,7 @@
 				<li class="menu_mm"><a href="index.html">Home</a></li>
 				<li class="menu_mm"><a href="#">Category</a></li>
 				<li class="menu_mm"><a href="#">Contact</a></li>
-				<li class="menu_mm"><a href="#">About</a></li>
+				<li class="menu_mm"><a href="#">Leaderboard</a></li>
 			</ul>
 		</nav>
 	</div>
