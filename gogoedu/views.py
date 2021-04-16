@@ -39,7 +39,7 @@ from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from background_task import background
 from datetime import datetime, timedelta
-
+from django.db.models import Avg, Count, Min, Sum
 def index(request):
     return render(request, 'index.html')
 
@@ -427,8 +427,12 @@ def contact_view(request):
     return render(request, 'contact.html')
 
 
-def about_view(request):
-    return render(request, 'about.html')
+def leaderboard_view(request):
+    template = loader.get_template('leaderboard.html')
+    user = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-average_correct')[:3]
+    context = {"top_user": user,
+               }
+    return HttpResponse(template.render(context, request))
 
 
 def privacy_view(request):
