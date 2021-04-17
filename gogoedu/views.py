@@ -168,7 +168,7 @@ class Lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin)
 
 class CatagoryListView(generic.ListView):
     model = Catagory
-    paginate_by = 1
+    paginate_by = 3
 
     def get_queryset(self, **kwargs):
         try:
@@ -423,9 +423,26 @@ def summary_detail_view(request):
     return HttpResponse(template.render(context, request))
 
 
-def contact_view(request):
-    return render(request, 'contact.html')
+def flashcard_view(request):
+    lesson_query_set = Lesson.objects.all().order_by('name')
+    context = {'topics': lesson_query_set}  
+    return render(request, 'flashcard.html', context)
+def view_card_set(request, pk):
+    lesson = get_object_or_404(Lesson, id = pk)
+    word_list = lesson.word_set.all()
+    card_object = word_list.first()	   
+    page = request.GET.get('page', 1)
+    paginator = Paginator(word_list, 1)
+    
+    try:
+        word_list_paged = paginator.page(page)
+    except PageNotAnInteger:
+        word_list_paged = paginator.page(1)
+    except EmptyPage:
+        word_list_paged = paginator.page(paginator.num_pages)
 
+    context = {'lesson': lesson, 'card_object': word_list_paged}
+    return render(request, 'gogoedu/view_cards.html', context)
 
 def leaderboard_view(request):
     template = loader.get_template('leaderboard.html')

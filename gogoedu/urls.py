@@ -19,7 +19,8 @@ urlpatterns = [
 	path('activate/<uidb64>/<token>', views.activate, name='activate'),
 	path('register/<int:pk>/activation', views.activation_request, name='account-activation'),
 	path('summary/', views.summary_detail_view, name='show_summary'),
-	path('contact/', views.contact_view, name='contact'),
+	path('flashcard/', views.flashcard_view, name='flashcard'),
 	path('leaderboard/', views.leaderboard_view, name='leaderboard'),
 	path('privacy/', views.privacy_view, name='privacy'),
+	path('flashcard/<int:pk>', views.view_card_set, name = 'view_card_set'), 
 ]
