@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from .models import myUser
 from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord, TestResult
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
-
+from django_gamification.models import GamificationInterface,Badge,BadgeDefinition,Category,PointChange,Unlockable,UnlockableDefinition,Progression
 
 # Register your models here.
 class MyUserAdmin(admin.ModelAdmin):
@@ -103,3 +103,12 @@ class UserWordAdmin(admin.ModelAdmin):
 
 admin.site.register(UserWord, UserWordAdmin)
 admin.site.register(TestResult)
+admin.site.register(GamificationInterface)
+admin.site.register(Badge)
+admin.site.register(BadgeDefinition)
+admin.site.register(Category)
+admin.site.register(PointChange)
+admin.site.register(Unlockable)
+admin.site.register(UnlockableDefinition)
+admin.site.register(Progression)
+

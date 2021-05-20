@@ -23,4 +23,9 @@ urlpatterns = [
 	path('leaderboard/', views.leaderboard_view, name='leaderboard'),
 	path('privacy/', views.privacy_view, name='privacy'),
 	path('flashcard/<int:pk>', views.view_card_set, name = 'view_card_set'), 
+	path('flashcard/<int:pk>/test', views.flashcard_test, name = 'flashcard_test'), 
+	path('badge', views.BadgeView.as_view(), name='badge'),
+    path('badge/award-badge/<int:badge_id>/', views.AwardBadgeView.as_view(), name='award-badge'),
+    path('badge/revoke-badge/<int:badge_id>/', views.RevokeBadgeView.as_view(), name='revoke-badge'),
+	path('profile/<int:pk>/<int:badge_id>/', views.SetBadgeView.as_view(), name='set-badge'),
 ]

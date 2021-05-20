@@ -107,7 +107,7 @@
 				{% else %}
 				<li class="page-item disabled"><a class="page-link">Next</a></li>
 				{% endif %}
-				<li class="page-item"><a class="page-link" href="">Test</a></li>
+				<li class="page-item"><a class="page-link" href="{% url 'flashcard_test' lesson.id%}">Test</a></li>
 			</ul>
 		</nav>
 	
@@ -135,38 +135,4 @@
 	</div>
 </div>
 </div>
-
-<!-- <div class="tab_panel tab_panel_3">
-	<div class="tab_panel_title">Test</div>
-
-	<div class="tab_panel_content" id="test-desc">
-		<div class="accordions">
-
-			<div class="elements_accordions">
-				{% for test in lesson.test_set.all %}
-				<div class="accordion_container">
-					<div class="accordion d-flex flex-row align-items-center">
-						<div><a target="_blank">{{test}}</a></div>
-					</div>
-					<div class="accordion_panel" id="test-detail-content" data-id="{{test.id}}">
-						<p>Questions Number : {{test.question_num}}</p>
-						<p>Time : {{test.time}} s</p>
-						<p id="remainTime">
-						{% for user_test in user_test_list %}
-							{% if user_test.test is test and user_test.is_paused is true %}
-								{{user_test.remain_time}}
-							{% endif %}
-						{% endfor %} 
-						</p>
-						<a  type="button" id="startTestBtn{{test.id}}" class="btn btn-outline-success mt-3"
-							href="{{test.get_absolute_url}}" target="_blank">
-							   {% if test in tested_list %}{% trans 'Resume' %}{% else %}{% trans 'Start' %}{% endif %} 
-						</a>
-					</div>
-				</div>
-				{% endfor %}
-			</div>
-		</div>
-	</div>
-</div> -->
 {% endblock %}

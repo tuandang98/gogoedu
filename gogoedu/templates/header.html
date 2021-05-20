@@ -13,7 +13,7 @@
 									<li><div class="question">Have any questions?</div></li>
 									<li>
 										<i class="fa fa-phone" aria-hidden="true"></i>
-										<div>+84914674590</div>
+										<div>(+84)0123456789</div>
 									</li>
 									<li>
 										<i class="fa fa-envelope-o" aria-hidden="true"></i>
@@ -29,7 +29,16 @@
 											  <img src="{{ request.user.avatar.url }}" class="rounded-circle z-depth-0"
 												alt="avatar image" style="height: 2.1rem; width: 2.1rem;">
 												{{request.user.username}}
+									
+												<button class="btn btn-primary" style="background-color: green;">
+													<h5>{{request.user.badge.name}}
+														<span class="badge badge-success">{{request.user.interface.points}}</span>
+													</h5>
+												</button>
+												
+												
 											</a>
+											
 											<div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
 											  aria-labelledby="navbarDropdownMenuLink-55">
 											  	<a class="dropdown-item" href="{% url 'profile-detail' request.user.id %}">{% trans 'My profile' %}</a>
@@ -42,6 +51,7 @@
 										</li>
 									</ul>
 								</div>
+								
 								{% else %}
 								<div class="d-flex flex-row align-items-center justify-content-end">
 									<div class="top_bar_login dropdown">

@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     # 'dajax',
     'nested_inline',
     'background_task',
+    'django_gamification',
 ]
 
 MIDDLEWARE = [

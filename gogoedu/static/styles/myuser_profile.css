@@ -11,6 +11,10 @@ body{
 .profile-img{
     text-align: center;
 }
+.profile-badge{
+    text-align: center;
+}
+
 .profile-img img{
     width: 200px;
     height: 200px;
