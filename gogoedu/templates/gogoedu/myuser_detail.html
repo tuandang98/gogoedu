@@ -6,7 +6,7 @@
     <link rel="stylesheet" id="bootstrap-css" href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <link rel="stylesheet" type="text/css" href="../../static/styles/myuser_profile.css">
+    <link rel="stylesheet" type="text/css" href="{% static '/styles/myuser_profile.css'%}">
 {% endblock %}
 
 {% block content %}
@@ -27,8 +27,21 @@
                         <!--                        <input type="reset" class="file btn btn-lg btn-primary" id="cancel_avatar"-->
                         <!--                                style="border-radius: 10rem;"-->
                         <!--                            value="{% trans 'Cancel' %}">-->
+                        <br>
+                        {% if user.badge %}
+                        <button class="btn btn-primary" style="background-color: green;">
+                            <h4>{{user.badge.name}}
+                                <span class="badge badge-success"></span>
+                            </h4>
+                        </button>
+                        
+                        {% endif %}
                     </div>
+                    
+                        
+                    
                 </div>
+                
                 <div class="col-md-6">
                     <div class="row">
                         <div class="profile-head">
@@ -37,6 +50,9 @@
                             </h5>
                             <h6>
                                 {{user.email}}
+                            </h6>
+                            <h6>Points:
+                                <span class="badge badge-success">{{user.interface.points}}</span>
                             </h6>
                             <p class="proile-rating"></p>
                             <ul class="nav nav-tabs" id="myTab" role="tablist">
@@ -47,6 +63,10 @@
                                 <li class="nav-item">
                                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
                                        aria-controls="profile" aria-selected="false">{% trans 'Learned word' %}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="profile-tab" data-toggle="tab" href="#badge" role="tab"
+                                       aria-controls="badge" aria-selected="false">{% trans 'Badge' %}</a>
                                 </li>
                             </ul>
                         </div>
@@ -101,6 +121,40 @@
                                             </div>
                                     {% endfor %}
                                 </div>
+                                <div class="tab-pane fade" id="badge" role="tabpanel" aria-labelledby="profile-tab">
+                                    <div class="row">
+                                        <div class="col-md-3">
+                                            <label>{% trans 'Badge' %}</label>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <label>{% trans 'Description' %}</label>
+                                        </div>
+
+                                        <div class="col-md-3">
+                                            <label>{% trans 'Set' %}</label>
+                                        </div>
+                                    </div>
+                                    {% for badge in myuser.interface.badge_set.all %}
+                                        {% if badge.acquired%}
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <a>{{badge.name}}</a>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <a>{{badge.description}}</a>
+                                                </div>
+                                                   
+                                                <div class="col-md-3">
+                                                    <form action="{% url 'set-badge' user.id badge.id %}">
+                                                        <button type="submit">+</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        {%endif%}
+                                    {% endfor %}
+                                </div>
                                 </div>
                             </div>
                         </div>
@@ -116,3 +170,5 @@
         </div>
     </div>
 {% endblock %}
+
+

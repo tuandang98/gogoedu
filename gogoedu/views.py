@@ -39,7 +39,12 @@ from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from background_task import background
 from datetime import datetime, timedelta
-from django.db.models import Avg, Count, Min, Sum
+from django.db.models import Avg, Count, Min, Sum, Q
+import random 
+
+from django.views.generic import TemplateView, RedirectView
+from django_gamification.models import Badge,BadgeDefinition, Category, UnlockableDefinition, GamificationInterface
+
 def index(request):
     return render(request, 'index.html')
 
@@ -117,6 +122,7 @@ def activate(request, uidb64, token):
         user = None
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
+        user.interface=GamificationInterface.objects.create()
         user.save()
         return render(request, "registration/activation_success.html", {'user_is_active': True})
     else:
@@ -168,7 +174,7 @@ class Lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin)
 
 class CatagoryListView(generic.ListView):
     model = Catagory
-    paginate_by = 1
+    paginate_by = 3
 
     def get_queryset(self, **kwargs):
         try:
@@ -423,18 +429,53 @@ def summary_detail_view(request):
     return HttpResponse(template.render(context, request))
 
 
-def contact_view(request):
-    return render(request, 'contact.html')
+def flashcard_view(request):
+    lesson_query_set = Lesson.objects.all().order_by('name')
+    context = {'topics': lesson_query_set}  
+    return render(request, 'flashcard.html', context)
+def view_card_set(request, pk):
+    lesson = get_object_or_404(Lesson, id = pk)
+    word_list = lesson.word_set.all()
+    card_object = word_list.first()	   
+    page = request.GET.get('page', 1)
+    paginator = Paginator(word_list, 1)
+    
+    try:
+        word_list_paged = paginator.page(page)
+    except PageNotAnInteger:
+        word_list_paged = paginator.page(1)
+    except EmptyPage:
+        word_list_paged = paginator.page(paginator.num_pages)
 
+    context = {'lesson': lesson, 'card_object': word_list_paged}
+    return render(request, 'gogoedu/view_cards.html', context)
 
 def leaderboard_view(request):
     template = loader.get_template('leaderboard.html')
-    user = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-average_correct')[:3]
-    context = {"top_user": user,
+    top_avg = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True)).order_by('-average_correct')[:3]
+    top_tested = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-num_tests')[:3]
+    
+    top_learned_word = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-num_tests')[:3]
+
+    context = {"top_avg": top_avg,
+                "top_tested":top_tested,
+                "top_learned_word":top_learned_word,
+               }
+    return HttpResponse(template.render(context, request))
+
+def flashcard_test(request, pk):
+    template = loader.get_template('gogoedu/flashcard_test.html')
+    lesson = get_object_or_404(Lesson, id = pk)
+    word_list = lesson.word_set.all()
+    arr = request.POST.get('arr')
+    print(type(arr))
+    print(arr)
+    context = {"word_list": word_list,"lesson_id": pk
                }
     return HttpResponse(template.render(context, request))
 
 
+    
 def privacy_view(request):
     return render(request, 'privacy.html')
 
@@ -466,3 +507,68 @@ def countdown_time(user_id,test_id):
     kq=calculate_score(user, test)
     if UserTest.objects.filter(user=user, test=test):
         UserTest.objects.filter(user=user, test=test).delete()
+
+class BadgeView(TemplateView):
+    template_name = 'badge.html'
+
+    def get_context_data(self, **kwargs):
+        context = super(BadgeView, self).get_context_data(**kwargs)
+
+        user_data = []
+        for user in myUser.objects.all():
+            acquired_badges = user.interface.badge_set.filter(acquired=True, revoked=False)
+            award_badge_ids = [b.id for b in user.interface.badge_set.filter(acquired=False)]
+            revoke_badge_ids = [b.id for b in acquired_badges]
+
+            user_data.append({
+                'id': user.id,
+                'badges': ', '.join([b.name for b in acquired_badges]),
+                'points': user.interface.points,
+                'random_award_badge_id': random.choice(award_badge_ids) if award_badge_ids else None,
+                'random_revoke_badge_id': random.choice(revoke_badge_ids) if revoke_badge_ids else None
+            })
+
+        context['users'] = user_data
+
+        return context
+
+
+class AwardBadgeView(RedirectView):
+    pattern_name = 'badge'
+
+    def get_redirect_url(self, *args, **kwargs):
+        badge_id = kwargs.pop('badge_id')
+
+        badge = Badge.objects.filter(id=badge_id).first()
+        badge.increment()
+        badge.save()
+
+        return super(AwardBadgeView, self).get_redirect_url(*args, **kwargs)
+
+
+class RevokeBadgeView(RedirectView):
+    pattern_name = 'badge'
+
+    def get_redirect_url(self, *args, **kwargs):
+        badge_id = kwargs.pop('badge_id')
+
+        badge = Badge.objects.filter(id=badge_id).first()
+        badge.force_revoke()
+        badge.acquired = False  # We don't actually want to revoke it entirely in this example
+        badge.revoked = False
+        badge.save()
+
+        return super(RevokeBadgeView, self).get_redirect_url(*args, **kwargs)
+
+class SetBadgeView(RedirectView):
+    pattern_name = 'profile-detail'
+
+    def get_redirect_url(self, *args, **kwargs):
+        badge_id = kwargs.pop('badge_id')
+        user_id = kwargs.pop('pk')
+        badge = Badge.objects.filter(id=badge_id).first()
+        user = myUser.objects.filter(id=user_id).first()
+        user.badge=badge
+        user.save()
+
+        return super(SetBadgeView, self).get_redirect_url(*args, **kwargs)

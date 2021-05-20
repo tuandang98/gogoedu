@@ -1,0 +1,21 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block content %}
+<div class="team" style="margin-top: 140px;">
+	<div class="row">
+		<div class="col">
+			<div class="section_title_container text-center">
+				<h2 class="section_title">{% trans 'Flashcard' %}</h2>
+				<div class="section_subtitle"><p>{% trans 'we wanna bring true value to you' %}</p></div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="list-group mt-3">
+		{% for lesson in topics %}
+		<a class="list-group-item" href="{% url 'view_card_set' lesson.id %}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{lesson.name}}</a>
+		{% endfor %}
+	</div>
+</div>
+{% endblock %}
