@@ -127,10 +127,10 @@
                                                         <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
                                                               data-url="{% url 'lesson-detail' lesson.id %}">
                                                             {% csrf_token %}
-                                                            <input type="hidden" name="user" value="{{request.user.id}}"
+                                                            <!-- <input type="hidden" name="user" value="{{request.user.id}}"
                                                                    id="id_user{{word.id}}" data-id="{{word.id}}">
                                                             <input type="hidden" name="word" value="{{word.id}}"
-                                                                   id="id_word{{word.id}}" data-id="{{word.id}}">
+                                                                   id="id_word{{word.id}}" data-id="{{word.id}}"> -->
                                                             <input type="button" id="markButton{{word.id}}"
                                                                    data-id="{{word.id}}" class="btn mark-button"
                                                                    value="{% if word in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"

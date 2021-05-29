@@ -1,3 +1,4 @@
+
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
@@ -452,12 +453,12 @@ def view_card_set(request, pk):
 
 def leaderboard_view(request):
     template = loader.get_template('leaderboard.html')
-    top_avg = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True)).order_by('-average_correct')[:3]
+    top_points = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True)).exclude(interface=None)
     top_tested = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-num_tests')[:3]
-    
+       
     top_learned_word = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-num_tests')[:3]
 
-    context = {"top_avg": top_avg,
+    context = {"top_points": sorted(top_points,  key=lambda p: p.interface.points,reverse=True)[:3],
                 "top_tested":top_tested,
                 "top_learned_word":top_learned_word,
                }
@@ -571,4 +572,4 @@ class SetBadgeView(RedirectView):
         user.badge=badge
         user.save()
 
-        return super(SetBadgeView, self).get_redirect_url(*args, **kwargs)
+        return super(SetBadgeView, self).get_redirect_url(*args, pk=user_id)
