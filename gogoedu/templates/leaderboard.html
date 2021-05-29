@@ -10,7 +10,7 @@
 		<div class="row">
 			<div class="col">
 				<div class="section_title_container text-center">
-					<h2 class="section_title">{% trans 'Top user testeds' %}</h2>
+					<h2 class="section_title">{% trans 'Top Points' %}</h2>
 					<div class="section_subtitle"><p></p></div>
 				</div>
 			</div>
@@ -19,15 +19,15 @@
 			
 			
 			<!-- Team Item -->
-			{%for user in top_avg %}
+			{%for user in top_points%}
 			<div class="col-lg-4 col-md-6 team_col">
 				<div class="team_item">
 					<div class="team_image"><img src="{{user.avatar.url}}" alt=""></div>
 					<div class="team_body">
-						<div class="team_title"><a href="#">{{user}}</a></div>
-						<div class="team_subtitle">{% trans 'Testeds' %}:{{user.num_tests}}</div>
+						<div class="team_title"><a href="#">{{user}}{%if user.badge%}({{user.badge.name}}){%endif%}</a></div>
+						<div class="team_subtitle">{% trans 'Points' %}:{{user.interface.points }}</div>
 						<div class="team_subtitle">{% trans 'Learned Words' %}:{{user.num_words}}</div>
-						<div class="team_subtitle">{% trans 'Avg' %}:{{user.average_correct }}</div>
+						<div class="team_subtitle">{% trans 'Testeds' %}:{{user.num_tests}}</div>
 						<div class="team_subtitle">{% trans 'Badges' %}:{{user.num_badges }}</div>
 						<div class="social_list">
 							<ul>
