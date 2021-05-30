@@ -11,6 +11,9 @@ urlpatterns = [
 	path('lesson/<int:pk>/words/<int:wordid>/learned/', views.MarkLearned.as_view(), name='mark-learned'),
 	path('catagory/', views.CatagoryListView.as_view(), name='catagory'),
 	path('catagory/<int:pk>', views.CatagoryDetailView.as_view(), name='lesson'),
+	path('grammar/', views.GrammarLevelListView.as_view(), name='grammar'),
+	path('grammar/<int:pk>', views.GrammarLevelDetailView.as_view(), name='grammar-lesson'),
+	path('grammar/<int:grammar_lesson_id>/lesson/<int:pk>', views.Grammar_lesson_detail.as_view(), name='grammar-detail'),
 	path('profile/<int:pk>/edit', views.profile_update, name='profile-update'),
 	path('test/<int:pk>', views.test_detail_view, name='test-detail'),
 	path('test/<int:pk>/paused', views.TestPause.as_view(), name='test-paused'),
@@ -28,4 +31,5 @@ urlpatterns = [
     path('badge/award-badge/<int:badge_id>/', views.AwardBadgeView.as_view(), name='award-badge'),
     path('badge/revoke-badge/<int:badge_id>/', views.RevokeBadgeView.as_view(), name='revoke-badge'),
 	path('profile/<int:pk>/<int:badge_id>/', views.SetBadgeView.as_view(), name='set-badge'),
+	path('alphabet', views.Alphabet, name='alphabet'),
 ]

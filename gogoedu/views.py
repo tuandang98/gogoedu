@@ -29,8 +29,8 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from json import dumps
 from .forms import RegisterForm, UserUpdateForm
-from gogoedu.models import myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
-    TestResult
+from gogoedu.models import Grammar, GrammarLevel, myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
+    TestResult,GrammarLevel,GrammarLesson,GrammarMean,Example
 
 from PIL import Image
 
@@ -468,10 +468,15 @@ def flashcard_test(request, pk):
     template = loader.get_template('gogoedu/flashcard_test.html')
     lesson = get_object_or_404(Lesson, id = pk)
     word_list = lesson.word_set.all()
-    arr = request.POST.get('arr')
-    print(type(arr))
-    print(arr)
-    context = {"word_list": word_list,"lesson_id": pk
+    id_list = word_list.values_list('id', flat=True)
+    
+    random_profiles_id_list = random.sample(list(id_list), min(len(id_list), 6))
+    query_set = word_list.filter(id__in=random_profiles_id_list)
+    
+    query_set2 = random.sample(list(query_set), min(len(query_set), 6))
+
+    context = {"word_list1": query_set,
+                "word_list2":query_set2,
                }
     return HttpResponse(template.render(context, request))
 
@@ -573,3 +578,73 @@ class SetBadgeView(RedirectView):
         user.save()
 
         return super(SetBadgeView, self).get_redirect_url(*args, pk=user_id)
+def Alphabet(request):
+    return render(request, 'gogoedu/Alphabet.html')
+class GrammarLevelListView(generic.ListView):
+    model = GrammarLevel
+    paginate_by = 3
+
+    def get_queryset(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.model.objects.filter(name__icontains=name)
+        else:
+            object_list = self.model.objects.filter()
+        return object_list
+
+class GrammarLevelDetailView(generic.DetailView, MultipleObjectMixin):
+    model = GrammarLevel
+    paginate_by = 10
+    def get_context_data(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.object.grammarlesson_set.filter(name__icontains=name)
+        else:
+            object_list = self.object.grammarlesson_set.all()
+        context = super(GrammarLevelDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
+
+class Grammar_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin):
+    model = GrammarLesson
+    paginate_by = 20
+
+    def get_success_url(self):
+        print("12131231313123123")
+        return reverse('grammar-detail', kwargs={'pk': self.object.pk,'grammar_lesson_id':self.object.grammar_level.id})
+        
+        
+
+    def get_context_data(self, **kwargs):
+        lesson = self.get_object()
+        print(self.object)
+        object_list = Grammar.objects.filter(grammar_lesson=lesson)
+        context = super(Grammar_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
+        # tests = lesson.test_set.all()
+        # user_test_list = []
+        # marked_word_list = []
+        # new_list = []
+        # tested_list = []
+        # for test in tests:
+        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
+        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
+        #         tested_list.append(test)
+
+        # for word in object_list:
+        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
+        #         new_list.append(word)
+        #     else:
+        #         marked_word_list.append(word)
+        # context['user_test_list'] = user_test_list
+        # context['tested_list'] = tested_list
+        # context['marked_word_list'] = marked_word_list
+        # context['new_list'] = new_list
+        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
+        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
+        return context
+    

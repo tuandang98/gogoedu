@@ -154,6 +154,43 @@ class UserWord(models.Model):
 
     class Meta:
         unique_together = (("user", "word"),)
+class GrammarLevel(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('grammar-lesson', args=[str(self.id)])
+
+class GrammarLesson(models.Model):
+    name = models.CharField(max_length=255)
+    grammar_level = models.ForeignKey(GrammarLevel, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('grammar-detail', kwargs={'pk':self.id,'grammar_lesson_id': self.grammar_level.id})
+
+class Grammar(models.Model):
+    name = models.CharField(max_length=255)
+    connect = models.CharField(max_length=255,default="ALL")
+    grammar_lesson = models.ForeignKey(GrammarLesson, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+class GrammarMean(models.Model):
+    mean = models.CharField(max_length=255)
+    grammar = models.ForeignKey(Grammar, on_delete=models.CASCADE)
+
+class Example(models.Model):
+    example = models.CharField(max_length=255)
+    grammar_mean = models.ForeignKey(GrammarMean, on_delete=models.CASCADE)
+
 @receiver(post_save, sender=PointChange)
 def check_unlockables(sender, instance=None, **kwargs):
     """

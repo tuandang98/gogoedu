@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
-from .models import myUser
-from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord, TestResult
+from .models import GrammarLevel, myUser
+from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord, TestResult,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from django_gamification.models import GamificationInterface,Badge,BadgeDefinition,Category,PointChange,Unlockable,UnlockableDefinition,Progression
 
@@ -21,11 +21,24 @@ class CatagoryAdmin(admin.ModelAdmin):
 
 admin.site.register(Catagory, CatagoryAdmin)
 
+class GrammarLevelAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+
+admin.site.register(GrammarLevel, GrammarLevelAdmin)
 
 class WordInline(NestedStackedInline):
     model = Word.lesson.through
     extra = 1
 
+
+class GrammarAdmin(NestedModelAdmin):
+    list_display = ('name', 'grammar_level')
+    list_filter = ('grammar_level',)
+    search_fields = ['name']
+    
+
+admin.site.register(GrammarLesson, GrammarAdmin)
 
 class LessonAdmin(NestedModelAdmin):
     list_display = ('name', 'catagory', 'description')
@@ -45,6 +58,45 @@ class WordAdmin(admin.ModelAdmin):
 
 admin.site.register(Word, WordAdmin)
 
+
+class ExampleInline(NestedStackedInline):
+    model = Example
+    extra = 1
+
+
+class MeanInline(NestedStackedInline):
+    model = GrammarMean
+    extra = 1
+    show_change_link = True
+    inlines = [ExampleInline,]
+
+
+class GrammarAdmin(NestedModelAdmin):
+    list_display = ('name', 'connect','grammar_lesson')
+    list_filter = ('name', 'grammar_lesson' )
+    search_fields = ['name']
+    inlines = [MeanInline,]
+
+
+admin.site.register(Grammar, GrammarAdmin)
+
+
+class MeanAdmin(NestedModelAdmin):
+    list_display = ('mean', 'grammar')
+    search_fields = ['grammar']
+    inlines = [ExampleInline,]
+
+
+admin.site.register(GrammarMean, MeanAdmin)
+
+
+class ExampleAdmin(admin.ModelAdmin):
+    list_display = ('example', 'grammar_mean')
+    list_filter = ('example', 'grammar_mean')
+    search_fields = ['example']
+
+
+admin.site.register(Example, ExampleAdmin)
 
 class ChoiceInline(NestedStackedInline):
     model = Choice
