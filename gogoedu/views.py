@@ -648,3 +648,4 @@ class Grammar_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObje
         #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
         return context
     
+    
