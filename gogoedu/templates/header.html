@@ -84,7 +84,20 @@
 							<nav class="main_nav_contaner ml-auto">
 								<ul class="main_nav">
 									<li class="{% if request.path == '/gogoedu/' %}active{% endif %}"><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
-									<li class="{% if request.path == '/gogoedu/catagory/' %}active{% endif %}"><a href="{% url 'catagory' %}">{% trans 'Catagory' %}</a></li>
+									<li class="{% if request.path == '/gogoedu/catagory/' %}active{% endif %} dropdown">
+										<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #384158;">
+											Learn
+										</a>
+										  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											<a class="dropdown-item" href="{% url 'alphabet' %}">Alphabet</a>
+											<a class="dropdown-item" href="{% url 'catagory' %}">{% trans 'Vocabulary' %}</a>
+											<a class="dropdown-item" href="#">Kanji</a>
+											<a class="dropdown-item" href="{% url 'grammar' %}">{% trans 'Grammar' %}</a>
+											<a class="dropdown-item" href="#">Reading</a>
+											<a class="dropdown-item" href="#">Listening</a>
+										  </div>
+									</li>
+									
 									<!-- <li><a href="blog.html">Blog</a></li> -->
 									<!-- <li><a href="#">Page</a></li> -->
 									<li class="{% if request.path == '/gogoedu/flashcard/' %}active{% endif %}"><a href="{% url 'flashcard' %}">{% trans 'Flashcard' %}</a></li>
