@@ -32,13 +32,13 @@ class WordInline(NestedStackedInline):
     extra = 1
 
 
-class GrammarAdmin(NestedModelAdmin):
+class GrammarLessonAdmin(NestedModelAdmin):
     list_display = ('name', 'grammar_level')
     list_filter = ('grammar_level',)
     search_fields = ['name']
     
 
-admin.site.register(GrammarLesson, GrammarAdmin)
+admin.site.register(GrammarLesson, GrammarLessonAdmin)
 
 class LessonAdmin(NestedModelAdmin):
     list_display = ('name', 'catagory', 'description')
