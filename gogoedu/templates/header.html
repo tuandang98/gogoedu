@@ -91,10 +91,10 @@
 										  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 											<a class="dropdown-item" href="{% url 'alphabet' %}">Alphabet</a>
 											<a class="dropdown-item" href="{% url 'catagory' %}">{% trans 'Vocabulary' %}</a>
-											<a class="dropdown-item" href="#">Kanji</a>
+											<a class="dropdown-item" href="{% url 'kanji' %}">{% trans 'Kanji' %}</a>
 											<a class="dropdown-item" href="{% url 'grammar' %}">{% trans 'Grammar' %}</a>
-											<a class="dropdown-item" href="#">Reading</a>
-											<a class="dropdown-item" href="#">Listening</a>
+											<a class="dropdown-item" href="{% url 'reading' %}">{% trans 'Reading' %}</a>
+											<a class="dropdown-item" href="{% url 'listening' %}">{% trans 'Listening' %}</a>
 										  </div>
 									</li>
 									
