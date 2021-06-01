@@ -42,6 +42,7 @@ class Lesson(models.Model):
 class Word(models.Model):
     catagory = models.ForeignKey('Catagory',on_delete=models.SET_NULL, null=True)
     word = models.CharField(max_length=255)
+    kanji = models.CharField(max_length=255,null=True,blank=True)
     mean = models.CharField(max_length=255,null=True, blank=True)
 
     CHOICES = (
@@ -49,7 +50,7 @@ class Word(models.Model):
         ('N', 'Noun'),
         ('Adj','Adjective'),
     )
-    type = models.CharField(max_length=10,choices=CHOICES)
+    type = models.CharField(max_length=10,choices=CHOICES,null=True,blank=True)
     lesson = models.ManyToManyField(Lesson)
 
     def __str__(self):
@@ -76,23 +77,6 @@ class Test(models.Model):
         return reverse('test-detail', args=[str(self.id)])
 
 
-class Question(models.Model):
-    test = models.ForeignKey('Test', on_delete=models.SET_NULL, null=True)
-    question_text = models.CharField(max_length=255)
-    
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.question_text
-
-
-class Choice(models.Model):
-    choice_text = models.CharField(max_length=255)
-    question = models.ForeignKey('Question', on_delete=models.CASCADE, null=True)
-    correct = models.BooleanField(default=False)
-
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.choice_text
 
 
 class myUser(AbstractUser):
@@ -137,10 +121,7 @@ class UserTest(models.Model):
         return self.test.name
 
 
-class UserAnswer(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    user = models.ForeignKey('myUser', on_delete=models.CASCADE)
+
 
 
 class UserWord(models.Model):
@@ -191,6 +172,97 @@ class Example(models.Model):
     example = models.CharField(max_length=255)
     grammar_mean = models.ForeignKey(GrammarMean, on_delete=models.CASCADE)
 
+class KanjiLevel(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('kanji-lesson', args=[str(self.id)])
+
+class KanjiLesson(models.Model):
+    name = models.CharField(max_length=255)
+    kanji_level = models.ForeignKey(KanjiLevel, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('kanji-detail', kwargs={'pk':self.id,'kanji_lesson_id': self.kanji_level.id})
+
+class Kanji(models.Model):
+    kanji = models.CharField(max_length=255)
+    reading = models.CharField(max_length=255)
+    definition = models.CharField(max_length=255)
+    kanji_lesson = models.ForeignKey(KanjiLesson, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.kanji
+    
+
+
+class ExampleKanji(models.Model):
+    example = models.CharField(max_length=255)
+    reading = models.CharField(max_length=255)
+    definition = models.CharField(max_length=255)
+    kanji = models.ForeignKey(Kanji, on_delete=models.CASCADE)
+    
+
+class ReadingLevel(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('reading-lesson', args=[str(self.id)])
+
+class ReadingLesson(models.Model):
+    name = models.CharField(max_length=255)
+    reading_level = models.ForeignKey(ReadingLevel, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('reading-detail', kwargs={'pk':self.id,'reading_lesson_id': self.reading_level.id})
+
+class Reading(models.Model):
+    text = models.TextField()
+    mondai = models.CharField(max_length=255)
+    reading_lesson = models.ForeignKey(ReadingLesson, on_delete=models.CASCADE)
+
+class ListeningLevel(models.Model):
+    name = models.CharField(max_length=255)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('listening-lesson', args=[str(self.id)])
+
+class ListeningLesson(models.Model):
+    name = models.CharField(max_length=255)
+    listening_level = models.ForeignKey(ListeningLevel, on_delete=models.CASCADE)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+    def get_absolute_url(self):
+        """Returns the url to access a detail record for this book."""
+        return reverse('listening-detail', kwargs={'pk':self.id,'listening_lesson_id': self.listening_level.id})
+
+class Listening(models.Model):
+    text = models.TextField(null=True,blank=True)
+    file = models.FileField(upload_to='musics/')
+    listening_lesson = models.ForeignKey(ListeningLesson, on_delete=models.CASCADE)
+
 @receiver(post_save, sender=PointChange)
 def check_unlockables(sender, instance=None, **kwargs):
     """
@@ -232,6 +304,29 @@ def check_unlockables(sender, instance=None, **kwargs):
 #         acquired=True,
 #         revoked=False,
 #     )
+class Question(models.Model):
+    test = models.ForeignKey('Test', on_delete=models.SET_NULL, null=True,blank=True)
+    reading = models.ForeignKey(Reading, on_delete=models.SET_NULL, null=True,blank=True)
+    listening = models.ForeignKey(Listening, on_delete=models.SET_NULL, null=True,blank=True)
+    question_text = models.CharField(max_length=255)
+    
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.question_text
+
+
+class Choice(models.Model):
+    choice_text = models.CharField(max_length=255)
+    question = models.ForeignKey('Question', on_delete=models.CASCADE, null=True)
+    correct = models.BooleanField(default=False)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.choice_text
+class UserAnswer(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    user = models.ForeignKey('myUser', on_delete=models.CASCADE)
 
 @receiver(post_save, sender=GamificationInterface)
 def create_badges_and_unlockables_from_new_interface(

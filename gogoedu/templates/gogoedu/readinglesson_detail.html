@@ -1,0 +1,203 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load i18n %}
+{% block css %}
+<link rel="stylesheet" type="text/css" href="{% static 'plugins/colorbox/colorbox.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/lesson.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'styles/course_responsive.css' %}">
+{% endblock %}
+
+{% block content %}
+
+<!-- Home -->
+
+<div class="home">
+    <div class="breadcrumbs_container">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <div class="breadcrumbs">
+                        <ul>
+                            <li><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+                            <li><a href="{% url 'reading' %}">{% trans 'Reading' %}</a></li>
+                            <li><a href="{% url 'reading-lesson' readinglesson.reading_level.id%}">{{readinglesson.reading_level.name}}</a></li>
+                            <li>{{readinglesson.name}}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="course">
+    <div class="container">
+        <div class="row">
+
+            <!-- Course -->
+            <div class="col-lg-8">
+                <div class="course_container">
+                    <div id="lessonName" data-id="{{readinglesson.id}}" class="course_title">{% trans 'Lesson' %}:
+                        {{readinglesson.name}}
+                    </div>
+
+                    <div class="course_info d-flex flex-lg-row flex-column align-items-lg-center align-items-start justify-content-start">
+
+                        <!-- Course Info Item -->
+                        <div class="course_info_item">
+                            <div class="course_info_title">{% trans 'reading Level' %}</div>
+                            <div class="course_info_text"><a href="#">{{readinglesson.reading_level}}</a></div>
+                        </div>
+
+                    </div>
+
+                    <!-- Course Image -->
+                    <!-- <div class="course_image"><img src="{% static 'images/course_image.jpg'%}" alt=""></div> -->
+
+                    <!-- Course Tabs -->
+                    <div class="course_tabs_container">
+                        <div class="tabs d-flex flex-row align-items-center justify-content-start">
+                            <div class="tab">
+                                {% trans 'Text' %}
+                            </div>
+                            <div class="tab active">
+                                {% trans 'Reading' %}
+                            </div>
+                            <!-- <div class="tab">
+                                {% trans 'Test' %}
+                            </div> -->
+                        </div>
+                        <div class="tab_panels">
+
+                            <!-- Description -->
+                            <div class="tab_panel">
+                                {% for reading in object_list %}<div class="tab_panel_title">{{reading.text|safe}}</div>
+                               {%endfor%}
+                            </div>
+
+                            <!-- Curriculum -->
+                            <div class="tab_panel tab_panel_2 active">
+                                <div class="tab_panel_content">
+                                    <div class="row">
+                                        <div class="tab_panel_title col-md-9">{{readinglesson.reading_level}}</div>
+                                    </div>
+                                    <div id="wordListTab" class="tab_panel_content">
+                                        <div id="All" class="w3-container city">
+                                            {% for reading in object_list %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{reading.mondai|safe}} </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                {%for question in reading.question_set.all%}
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;">{% trans 'Question'%}:<span>{{question.question_text|safe}}</span>
+                                                                             <div>
+                                                                              
+                                                                                 <ol class="new">
+                                                                                     
+                                                                                     {%for choice in question.choice_set.all%}
+                                                                                     <li>
+                                                                                        {{choice.choice_text}}
+                                                                                     </li>
+                                                                                     {%endfor%}
+                                                                                   </ol>
+                                                                             </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                {%endfor%}
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    
+                                                </div>
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
+										
+										
+										{% block pagination %}
+										{% if is_paginated %}
+										<div class="pagination">
+											<span class="page-links">
+												{% if page_obj.has_previous %}
+												<a href="{{ request.path }}?page={{ page_obj.previous_page_number }}">previous</a>
+												{% endif %}
+												<span class="page-current">
+													Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+												</span>
+												{% if page_obj.has_next %}
+												<a href="{{ request.path }}?page={{ page_obj.next_page_number }}">next</a>
+												{% endif %}
+											</span>
+										</div>
+										{% endif %}
+										{% endblock %}
+                                        
+                                    </div>
+                                </div>
+                            </div>
+
+                            
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course Sidebar -->
+                <div class="col-lg-4">
+                    <div class="sidebar">
+
+                        <!-- Feature -->
+                        <div class="sidebar_section">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Newsletter -->
+
+<div class="newsletter">
+    <div class="newsletter_background"
+         style="background-image:url({% static 'images/newsletter_background.jpg' %})"></div>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <div class="newsletter_container d-flex flex-lg-row flex-column align-items-center justify-content-start">
+
+                    <!-- Newsletter Content -->
+                    <div class="newsletter_content text-lg-left text-center">
+                        <div class="newsletter_title">{% trans 'sign up for news and offers' %}</div>
+                        <div class="newsletter_subtitle">{% trans 'Subcribe to lastest smartphones news & great deals we offer' %}                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block plugin %}
+<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/popper.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/bootstrap.min.js'%}"></script>
+<script src="{% static 'plugins/OwlCarousel2-2.2.1/owl.carousel.js'%}"></script>
+<script src="{% static 'plugins/easing/easing.js'%}"></script>
+<script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
+<script src="{% static 'plugins/colorbox/jquery.colorbox-min.js'%}"></script>
+<script src="{% static 'js/course.js'%}"></script>
+{% endblock %}

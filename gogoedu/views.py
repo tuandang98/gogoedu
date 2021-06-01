@@ -30,7 +30,7 @@ from django.forms.models import model_to_dict
 from json import dumps
 from .forms import RegisterForm, UserUpdateForm
 from gogoedu.models import Grammar, GrammarLevel, myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
-    TestResult,GrammarLevel,GrammarLesson,GrammarMean,Example
+    TestResult,GrammarLevel,GrammarLesson,GrammarMean,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening
 
 from PIL import Image
 
@@ -647,5 +647,206 @@ class Grammar_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObje
         # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
         #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
         return context
-    
-    
+        
+class KanjiLevelListView(generic.ListView):
+    model = KanjiLevel
+    paginate_by = 3
+
+    def get_queryset(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.model.objects.filter(name__icontains=name)
+        else:
+            object_list = self.model.objects.filter()
+        return object_list
+
+class KanjiLevelDetailView(generic.DetailView, MultipleObjectMixin):
+    model = KanjiLevel
+    paginate_by = 10
+    def get_context_data(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.object.kanjilesson_set.filter(name__icontains=name)
+        else:
+            object_list = self.object.kanjilesson_set.all()
+        context = super(KanjiLevelDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
+
+class Kanji_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin):
+    model = KanjiLesson
+    paginate_by = 20
+
+    def get_success_url(self):
+        print("12131231313123123")
+        return reverse('kanji-detail', kwargs={'pk': self.object.pk,'kanji_lesson_id':self.object.kanji_level.id})
+        
+        
+
+    def get_context_data(self, **kwargs):
+        lesson = self.get_object()
+        print(self.object)
+        object_list = Kanji.objects.filter(kanji_lesson=lesson)
+        context = super(Kanji_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
+        # tests = lesson.test_set.all()
+        # user_test_list = []
+        # marked_word_list = []
+        # new_list = []
+        # tested_list = []
+        # for test in tests:
+        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
+        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
+        #         tested_list.append(test)
+
+        # for word in object_list:
+        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
+        #         new_list.append(word)
+        #     else:
+        #         marked_word_list.append(word)
+        # context['user_test_list'] = user_test_list
+        # context['tested_list'] = tested_list
+        # context['marked_word_list'] = marked_word_list
+        # context['new_list'] = new_list
+        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
+        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
+        return context
+class ListeningLevelListView(generic.ListView):
+    model = ListeningLevel
+    paginate_by = 3
+
+    def get_queryset(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.model.objects.filter(name__icontains=name)
+        else:
+            object_list = self.model.objects.filter()
+        return object_list
+
+class ListeningLevelDetailView(generic.DetailView, MultipleObjectMixin):
+    model = ListeningLevel
+    paginate_by = 10
+    def get_context_data(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.object.listeninglesson_set.filter(name__icontains=name)
+        else:
+            object_list = self.object.listeninglesson_set.all()
+        context = super(ListeningLevelDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
+
+class Listening_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin):
+    model = ListeningLesson
+    paginate_by = 20
+
+    def get_success_url(self):
+        print("12131231313123123")
+        return reverse('listening-detail', kwargs={'pk': self.object.pk,'listening_lesson_id':self.object.listening_level.id})
+        
+        
+
+    def get_context_data(self, **kwargs):
+        lesson = self.get_object()
+        print(self.object)
+        object_list = Listening.objects.filter(listening_lesson=lesson)
+        context = super(Listening_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
+        # tests = lesson.test_set.all()
+        # user_test_list = []
+        # marked_word_list = []
+        # new_list = []
+        # tested_list = []
+        # for test in tests:
+        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
+        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
+        #         tested_list.append(test)
+
+        # for word in object_list:
+        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
+        #         new_list.append(word)
+        #     else:
+        #         marked_word_list.append(word)
+        # context['user_test_list'] = user_test_list
+        # context['tested_list'] = tested_list
+        # context['marked_word_list'] = marked_word_list
+        # context['new_list'] = new_list
+        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
+        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
+        return context
+class ReadingLevelListView(generic.ListView):
+    model = ReadingLevel
+    paginate_by = 3
+
+    def get_queryset(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.model.objects.filter(name__icontains=name)
+        else:
+            object_list = self.model.objects.filter()
+        return object_list
+
+class ReadingLevelDetailView(generic.DetailView, MultipleObjectMixin):
+    model = ReadingLevel
+    paginate_by = 10
+    def get_context_data(self, **kwargs):
+        try:
+            name = self.request.GET.get('name', )
+        except:
+            name = ''
+        if name:
+            object_list = self.object.readinglesson_set.filter(name__icontains=name)
+        else:
+            object_list = self.object.readinglesson_set.all()
+        context = super(ReadingLevelDetailView, self).get_context_data(object_list=object_list, **kwargs)
+        return context
+
+class Reading_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObjectMixin):
+    model = ReadingLesson
+    paginate_by = 20
+
+    def get_success_url(self):
+        print("12131231313123123")
+        return reverse('reading-detail', kwargs={'pk': self.object.pk,'reading_lesson_id':self.object.reading_level.id})
+        
+        
+
+    def get_context_data(self, **kwargs):
+        lesson = self.get_object()
+        print(self.object)
+        object_list = Reading.objects.filter(reading_lesson=lesson)
+        context = super(Reading_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
+        # tests = lesson.test_set.all()
+        # user_test_list = []
+        # marked_word_list = []
+        # new_list = []
+        # tested_list = []
+        # for test in tests:
+        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
+        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
+        #         tested_list.append(test)
+
+        # for word in object_list:
+        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
+        #         new_list.append(word)
+        #     else:
+        #         marked_word_list.append(word)
+        # context['user_test_list'] = user_test_list
+        # context['tested_list'] = tested_list
+        # context['marked_word_list'] = marked_word_list
+        # context['new_list'] = new_list
+        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
+        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
+        return context
+        

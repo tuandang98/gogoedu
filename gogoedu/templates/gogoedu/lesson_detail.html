@@ -90,12 +90,12 @@
 													<option>{% trans 'Learned' %}</option>
 													<option>{% trans 'New' %}</option>
 												</optgroup>
-												<optgroup label="{% trans 'Word type' %}">
+												<!-- <optgroup label="{% trans 'Word type' %}">
 													<option>{% trans 'Noun' %}</option>
 													<option>{% trans 'Verb' %}</option>
 													<option>{% trans 'Adjective' %}
 													</option>
-												</optgroup>
+												</optgroup> -->
 											</select>
                                         </div>
                                     </div>
@@ -108,7 +108,7 @@
                                                         <li class="has_children">
                                                             <div class="dropdown_item">
                                                                 <div class="accordion d-flex flex-row justify-content-between">
-                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}}</span>
                                                                 </div>
                                                             </div>
 
@@ -116,7 +116,7 @@
                                                                 <li>
                                                                     <div class="dropdown_item">
                                                                         <div class="tab_panel_title"
-                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                             style="font-size: 15px !important ;">{%if word.kanji %}<span>{{word.kanji}}</span>>>>{%endif%}<span>{{word.mean}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -149,7 +149,7 @@
                                                         <li class="has_children">
                                                             <div class="dropdown_item">
                                                                 <div class="accordion d-flex flex-row justify-content-between">
-                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}} </span>
                                                                 </div>
                                                             </div>
 
@@ -157,7 +157,7 @@
                                                                 <li>
                                                                     <div class="dropdown_item">
                                                                         <div class="tab_panel_title"
-                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                             style="font-size: 15px !important ;">{%if word.kanji %}<span>{{word.kanji}}</span>>>>{%endif%}<span>{{word.mean}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </li>
@@ -190,7 +190,7 @@
                                                         <li class="has_children">
                                                             <div class="dropdown_item">
                                                                 <div class="accordion d-flex flex-row justify-content-between">
-                                                                    <span class="d-flex flex-column justify-content-center">{{word}} ({{word.type}})</span>
+                                                                    <span class="d-flex flex-column justify-content-center">{{word}}</span>
                                                                 </div>
                                                             </div>
 
@@ -198,7 +198,7 @@
                                                                 <li>
                                                                     <div class="dropdown_item">
                                                                         <div class="tab_panel_title"
-                                                                             style="font-size: 15px !important ;"><span>{{word.mean}}</span>
+                                                                             style="font-size: 15px !important ;">{%if word.kanji %}<span>{{word.kanji}}</span>>>>{%endif%}<span>{{word.mean}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </li>

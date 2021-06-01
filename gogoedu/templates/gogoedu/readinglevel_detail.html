@@ -1,0 +1,44 @@
+{% extends "gogoedu/readinglevel_list.html" %}
+{% load i18n %}
+{%block searchform%}
+	<form action="" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
+		<input type="search" class="courses_search_input" placeholder="{% trans 'Search Lesson'%}"  name ='name' value="{{ request.GET.name }}">
+		<input type="submit" value="{% trans 'Search' %}" class="courses_search_button ml-auto" />
+	</form> 
+{% endblock %}
+{% block home %}
+	<div class="home">
+		<div class="breadcrumbs_container">
+			<div class="container">
+				<div class="row">
+					<div class="col">
+						<div class="breadcrumbs">
+							<ul>
+								<li><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+								<li><a href="{% url 'reading' %}">{% trans 'Reading' %}</a></li>
+								<li>{{ reading.name }}</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+{% block content2 %}
+{% if object_list %}
+<div class="container mt-5 mb-5">
+
+<h3>{{reading_lesson.name}}</h3>
+ <div class="list-group mt-3">
+  {% for reading_lesson in object_list %}
+  <a class="list-group-item" href="{{ reading_lesson.get_absolute_url }}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{reading_lesson.name}}</a>
+  {% endfor %}
+</div>
+
+</div>
+{% else %}
+	<p>NO ReadingLesson.</p>
+{% endif %}
+
+{% endblock %}

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import GrammarLevel, myUser
-from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord, TestResult,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar
+from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord, TestResult,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar,ExampleKanji,KanjiLevel,KanjiLesson,Kanji,ReadingLevel,ReadingLesson,Reading,Listening,ListeningLesson,ListeningLevel
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from django_gamification.models import GamificationInterface,Badge,BadgeDefinition,Category,PointChange,Unlockable,UnlockableDefinition,Progression
 
@@ -27,6 +27,21 @@ class GrammarLevelAdmin(admin.ModelAdmin):
 
 admin.site.register(GrammarLevel, GrammarLevelAdmin)
 
+class KanjiLevelAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+admin.site.register(KanjiLevel, KanjiLevelAdmin)
+
+class ReadingLevelAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+admin.site.register(ReadingLevel, ReadingLevelAdmin)
+
+class ListeningLevelAdmin(admin.ModelAdmin):
+    search_fields = ['name']
+
+admin.site.register(ListeningLevel, ListeningLevelAdmin)
+
 class WordInline(NestedStackedInline):
     model = Word.lesson.through
     extra = 1
@@ -39,6 +54,30 @@ class GrammarLessonAdmin(NestedModelAdmin):
     
 
 admin.site.register(GrammarLesson, GrammarLessonAdmin)
+
+class KanjiLessonAdmin(NestedModelAdmin):
+    list_display = ('name', 'kanji_level')
+    list_filter = ('kanji_level',)
+    search_fields = ['name']
+    
+
+admin.site.register(KanjiLesson, KanjiLessonAdmin)
+
+class ReadingLessonAdmin(NestedModelAdmin):
+    list_display = ('name', 'reading_level')
+    list_filter = ('reading_level',)
+    search_fields = ['name']
+    
+
+admin.site.register(ReadingLesson, ReadingLessonAdmin)
+
+class ListeningLessonAdmin(NestedModelAdmin):
+    list_display = ('name', 'listening_level')
+    list_filter = ('listening_level',)
+    search_fields = ['name']
+    
+
+admin.site.register(ListeningLesson, ListeningLessonAdmin)
 
 class LessonAdmin(NestedModelAdmin):
     list_display = ('name', 'catagory', 'description')
@@ -96,7 +135,28 @@ class ExampleAdmin(admin.ModelAdmin):
     search_fields = ['example']
 
 
-admin.site.register(Example, ExampleAdmin)
+class ExampleKanjiInline(NestedStackedInline):
+    model = ExampleKanji
+    extra = 1
+    show_change_link = True
+
+
+class KanjiAdmin(NestedModelAdmin):
+    list_display = ('kanji','kanji_lesson', 'reading','definition')
+    list_filter = ('kanji', 'kanji_lesson' )
+    search_fields = ['kanji','kanji_lesson']
+    inlines = [ExampleKanjiInline,]
+
+
+admin.site.register(Kanji, KanjiAdmin)
+
+
+class ExampleKanjiAdmin(admin.ModelAdmin):
+    list_display = ('example','kanji', 'reading','definition')
+    list_filter = ('example', 'kanji')
+    search_fields = ['example']
+
+admin.site.register(ExampleKanji, ExampleKanjiAdmin)
 
 class ChoiceInline(NestedStackedInline):
     model = Choice
@@ -119,9 +179,26 @@ class TestAdmin(NestedModelAdmin):
 
 admin.site.register(Test, TestAdmin)
 
+class ReadingAdmin(NestedModelAdmin):
+    list_display = ('mondai', 'text', 'reading_lesson' )
+    list_filter = ('reading_lesson', )
+    search_fields = ['reading_lesson']
+    inlines = [QuestionInline,]
+
+
+admin.site.register(Reading, ReadingAdmin)
+
+class ListeningAdmin(NestedModelAdmin):
+    list_display = ('text', 'file', 'listening_lesson' )
+    list_filter = ('listening_lesson', )
+    search_fields = ['listening_lesson']
+    inlines = [QuestionInline,]
+
+
+admin.site.register(Listening, ListeningAdmin)
 
 class QuestionAdmin(NestedModelAdmin):
-    list_display = ('test', 'question_text')
+    list_display = ('test','reading', 'listening','question_text')
     search_fields = ['question_text']
     inlines = [ChoiceInline,]
 
