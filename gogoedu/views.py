@@ -39,12 +39,15 @@ from django.db import transaction
 
 from django.core.exceptions import PermissionDenied
 from background_task import background
-from datetime import datetime, timedelta
+
 from django.db.models import Avg, Count, Min, Sum, Q
 import random 
-
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from django.views.generic import TemplateView, RedirectView
 from django_gamification.models import Badge,BadgeDefinition, Category, UnlockableDefinition, GamificationInterface
+
+import datetime
 
 def index(request):
     return render(request, 'index.html')
@@ -760,28 +763,22 @@ class Listening_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleOb
         print(self.object)
         object_list = Listening.objects.filter(listening_lesson=lesson)
         context = super(Listening_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
-        # tests = lesson.test_set.all()
-        # user_test_list = []
-        # marked_word_list = []
-        # new_list = []
-        # tested_list = []
-        # for test in tests:
-        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
-        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
-        #         tested_list.append(test)
-
-        # for word in object_list:
-        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
-        #         new_list.append(word)
-        #     else:
-        #         marked_word_list.append(word)
-        # context['user_test_list'] = user_test_list
-        # context['tested_list'] = tested_list
-        # context['marked_word_list'] = marked_word_list
-        # context['new_list'] = new_list
-        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
-        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
         return context
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        data = {}
+        lesson = ListeningLesson.objects.get(id=self.kwargs['pk'])
+        print(lesson)
+        listening = Listening.objects.filter(listening_lesson=lesson).first()
+        for key, value in request.POST.items():
+            if key == 'csrfmiddlewaretoken':
+                continue
+            question_id = key.split('-')[1]
+            choice_id = request.POST.get(key)
+            data[question_id] = choice_id
+        perform_listening(request.user, data, listening)
+        return redirect(reverse('show_results_listening', args=(listening.id,)))
 class ReadingLevelListView(generic.ListView):
     model = ReadingLevel
     paginate_by = 3
@@ -820,33 +817,150 @@ class Reading_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObje
         print("12131231313123123")
         return reverse('reading-detail', kwargs={'pk': self.object.pk,'reading_lesson_id':self.object.reading_level.id})
         
-        
+    
 
     def get_context_data(self, **kwargs):
         lesson = self.get_object()
-        print(self.object)
         object_list = Reading.objects.filter(reading_lesson=lesson)
         context = super(Reading_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
-        # tests = lesson.test_set.all()
-        # user_test_list = []
-        # marked_word_list = []
-        # new_list = []
-        # tested_list = []
-        # for test in tests:
-        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
-        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
-        #         tested_list.append(test)
-
-        # for word in object_list:
-        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
-        #         new_list.append(word)
-        #     else:
-        #         marked_word_list.append(word)
-        # context['user_test_list'] = user_test_list
-        # context['tested_list'] = tested_list
-        # context['marked_word_list'] = marked_word_list
-        # context['new_list'] = new_list
-        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
-        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
         return context
+    
+    def post(self, request, *args, **kwargs):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        data = {}
+        lesson = ReadingLesson.objects.get(id=self.kwargs['pk'])
+        print(lesson)
+        reading = Reading.objects.filter(reading_lesson=lesson).first()
+        for key, value in request.POST.items():
+            if key == 'csrfmiddlewaretoken':
+                continue
+            question_id = key.split('-')[1]
+            choice_id = request.POST.get(key)
+            data[question_id] = choice_id
+        perform_reading(request.user, data, reading)
+        return redirect(reverse('show_results_reading', args=(reading.id,)))
         
+def perform_reading(user, data, reading):
+    with transaction.atomic():
+        UserAnswer.objects.filter(user=user, question__reading=reading).delete()
+        for question_id, choice_id in data.items():
+            question = Question.objects.get(id=question_id)
+            choice_id = int(choice_id)
+            if choice_id not in question.choice_set.values_list('id', flat=True):
+                raise SuspiciousOperation('Choice is not valid for this question')
+            UserAnswer.objects.create(user=user,
+                                      question=question,
+                                      choice_id=choice_id, )
+
+
+def calculate_score_reading(user, reading):
+    questions = Question.objects.filter(reading=reading)
+    correct_choices = UserAnswer.objects.filter(
+        user=user,
+        question__reading=reading,
+        choice__correct=True
+    )
+    score = TestResult(user=user, reading=reading, correct_answer_num=correct_choices.count())
+    score.save()
+    return correct_choices.count()
+
+
+
+def show_form_correct_reading(request, pk):
+    is_authenticated(request)
+    reading = Reading.objects.get(id=pk)
+    
+    choices = UserAnswer.objects.filter(
+        user=request.user,
+        question__reading=reading,
+    )
+    listchoices = []
+    for choices1 in choices:
+        listchoices.append(choices1.choice)
+    context = {
+        'test': reading,
+        'score': calculate_score_reading(request.user, reading),
+        'choices': listchoices,
+    }
+    UserAnswer.objects.filter(user=request.user, question__reading=reading).delete()
+    return render(request, 'gogoedu/show_results_reading.html', context)
+
+def perform_listening(user, data, listening):
+    with transaction.atomic():
+        UserAnswer.objects.filter(user=user, question__listening=listening).delete()
+        for question_id, choice_id in data.items():
+            question = Question.objects.get(id=question_id)
+            choice_id = int(choice_id)
+            if choice_id not in question.choice_set.values_list('id', flat=True):
+                raise SuspiciousOperation('Choice is not valid for this question')
+            UserAnswer.objects.create(user=user,
+                                      question=question,
+                                      choice_id=choice_id, )
+
+
+def calculate_score_listening(user, listening):
+    questions = Question.objects.filter(listening=listening)
+    correct_choices = UserAnswer.objects.filter(
+        user=user,
+        question__listening=listening,
+        choice__correct=True
+    )
+    score = TestResult(user=user, listening=listening, correct_answer_num=correct_choices.count())
+    score.save()
+    return correct_choices.count()
+
+
+
+def show_form_correct_listening(request, pk):
+    is_authenticated(request)
+    listening = Listening.objects.get(id=pk)
+    
+    choices = UserAnswer.objects.filter(
+        user=request.user,
+        question__listening=listening,
+    )
+    listchoices = []
+    for choices1 in choices:
+        listchoices.append(choices1.choice)
+    context = {
+        'test': listening,
+        'score': calculate_score_listening(request.user, listening),
+        'choices': listchoices,
+    }
+    UserAnswer.objects.filter(user=request.user, question__listening=listening).delete()
+    return render(request, 'gogoedu/show_results_listening.html', context)
+class ChartData(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def get(self, request, format=None):
+        today = datetime.date.today()
+        sw1 = today - datetime.timedelta(6)
+        
+        sw2=today-datetime.timedelta(5)
+        sw3=today-datetime.timedelta(4)
+        sw4=today-datetime.timedelta(3)
+        sw5=today-datetime.timedelta(2)
+        sw6=today-datetime.timedelta(1)
+        # top_points = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True))
+        ltoday=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=datetime.date.today()),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=datetime.date.today(),testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=datetime.date.today(),testresult__listening__isnull=False),distinct=True)).first()
+        l6=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw6),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__listening__isnull=False),distinct=True)).first()
+        l5=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw5),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw5,testresult__listening__isnull=False),distinct=True)).first()
+        l4=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw4),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw4,testresult__listening__isnull=False),distinct=True)).first()
+        l3=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw3),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw3,testresult__listening__isnull=False),distinct=True)).first()
+        l2=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw2),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw2,testresult__listening__isnull=False),distinct=True)).first()
+        l1=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw1),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw1,testresult__listening__isnull=False),distinct=True)).first()
+        learned_today_test = UserWord.objects.filter(user=request.GET.get('user_id',),date__date=datetime.date.today()- datetime.timedelta(1)).count()
+        print()
+        labels = [sw1,sw2,sw3,sw4,sw5,sw6,today]
+        data_set=[l1.num_vocab,l2.num_vocab,l3.num_vocab,l4.num_vocab,l5.num_vocab,l6.num_vocab,ltoday.num_vocab]
+        datar=[l1.num_reading,l2.num_reading,l3.num_reading,l4.num_reading,l5.num_reading,l6.num_reading,ltoday.num_reading]
+        datal=[l1.num_listening,l2.num_listening,l3.num_listening,l4.num_listening,l5.num_listening,l6.num_listening,ltoday.num_listening]
+        data={
+            "labels":labels,
+            "data":data_set,
+            "datar":datar,
+            "datal":datal,
+        }
+        return Response(data)
