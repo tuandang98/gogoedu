@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from PIL import Image
 from django.utils import timezone
+from datetime import datetime
 from django.db.models.signals import post_save,post_delete
 from django.dispatch import receiver
 from django_gamification.models import PointChange, Unlockable, \
@@ -98,12 +99,12 @@ class myUser(AbstractUser):
 
 class TestResult(models.Model):
     user = models.ForeignKey('myUser', on_delete=models.CASCADE)
-    test = models.ForeignKey('Test', on_delete=models.CASCADE)
+    test = models.ForeignKey('Test', on_delete=models.CASCADE,null=True,blank=True)
+    reading = models.ForeignKey('Reading', on_delete=models.CASCADE,null=True,blank=True)
+    listening = models.ForeignKey('Listening', on_delete=models.CASCADE,null=True,blank=True)
     correct_answer_num = models.IntegerField(default=0)
+    date = models.DateTimeField(default=datetime.now, blank=True)
 
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.test.name
 
 
 class UserTest(models.Model):
@@ -128,6 +129,7 @@ class UserWord(models.Model):
     user = models.ForeignKey('myUser', on_delete=models.CASCADE)
     word = models.ForeignKey('Word', on_delete=models.CASCADE)
     memoried = models.BooleanField(null=False,default=False)
+    date = models.DateTimeField(default=datetime.now, blank=True)
 
     def __str__(self):
         """String for representing the Model object."""

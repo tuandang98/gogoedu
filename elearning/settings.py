@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'nested_inline',
     'background_task',
     'django_gamification',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
