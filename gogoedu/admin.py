@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import GrammarLevel, myUser
-from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord, TestResult,UserKanji,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar,ExampleKanji,KanjiLevel,KanjiLesson,Kanji,ReadingLevel,ReadingLesson,Reading,Listening,ListeningLesson,ListeningLevel
+from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord,Mission, TestResult,UserKanji,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar,ExampleKanji,KanjiLevel,KanjiLesson,Kanji,ReadingLevel,ReadingLesson,Reading,Listening,ListeningLesson,ListeningLevel
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from django_gamification.models import GamificationInterface,Badge,BadgeDefinition,Category,PointChange,Unlockable,UnlockableDefinition,Progression
 
@@ -241,4 +241,4 @@ admin.site.register(PointChange)
 admin.site.register(Unlockable)
 admin.site.register(UnlockableDefinition)
 admin.site.register(Progression)
-
+admin.site.register(Mission)

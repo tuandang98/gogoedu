@@ -45,5 +45,5 @@ urlpatterns = [
     path('badge/revoke-badge/<int:badge_id>/', views.RevokeBadgeView.as_view(), name='revoke-badge'),
 	path('profile/<int:pk>/<int:badge_id>/', views.SetBadgeView.as_view(), name='set-badge'),
 	path('alphabet', views.alphabet, name='alphabet'),
-	path('alphabet/test', views.alphabet_test, name='alphabet-test'),
+	path('mission/', views.MissionView.as_view()),
 ]

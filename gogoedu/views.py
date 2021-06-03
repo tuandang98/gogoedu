@@ -30,7 +30,7 @@ from django.forms.models import model_to_dict
 from json import dumps
 from .forms import RegisterForm, UserUpdateForm
 from gogoedu.models import Grammar, GrammarLevel, myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
-    TestResult,GrammarLevel,GrammarLesson,GrammarMean,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji
+    TestResult,GrammarLevel,GrammarLesson,GrammarMean,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji,Mission
 
 from PIL import Image
 
@@ -46,7 +46,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.views.generic import TemplateView, RedirectView
 from django_gamification.models import Badge,BadgeDefinition, Category, UnlockableDefinition, GamificationInterface
-
+from datetime import timedelta
 import datetime
 
 def index(request):
@@ -81,7 +81,7 @@ class Profile(LoginRequiredMixin, generic.DetailView):
         object_list = UserWord.objects.filter(user=user.id)
         result = (UserWord.objects.values('word__catagory')
                     .annotate(dcount=Count('word'))
-                    .filter(word__catagory__isnull=False)
+                    .filter(word__catagory__isnull=False,user=user.id)
                     .order_by('-dcount')
                 )
         for r in result:
@@ -147,6 +147,13 @@ def activate(request, uidb64, token):
     if user is not None and default_token_generator.check_token(user, token):
         user.is_active = True
         user.interface=GamificationInterface.objects.create()
+        mission= Mission.objects.create(
+                name="DailyLogin",
+                user=user,
+                description='Daily Login Points',
+                process=1,
+                point=50,
+                )
         user.save()
         return render(request, "registration/activation_success.html", {'user_is_active': True})
     else:
@@ -619,8 +626,7 @@ class SetBadgeView(RedirectView):
 
 def alphabet(request):
     return render(request, 'gogoedu/alphabet.html')
-def alphabet_test(request):
-    return render(request, 'gogoedu/test_alphabet.html')
+
 class GrammarLevelListView(generic.ListView):
     model = GrammarLevel
     paginate_by = 3
@@ -991,5 +997,29 @@ class ChartData(APIView):
             "datan":kanji,
             "datar":datar,
             "datal":datal,
+        }
+        return Response(data)
+
+class MissionView(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def get(self, request, format=None):
+        user=myUser.objects.filter(id=request.GET.get('user_id',)).first()
+        missionw = Mission.objects.filter(user=user,type="W").first()
+        missionk = Mission.objects.filter(user=user,type="K").first()
+        missionr = Mission.objects.filter(user=user,type="R").first()
+        missionl = Mission.objects.filter(user=user,type="L").first()
+        data={
+            "point":user.interface.points,
+            "word":missionw.name,
+            "wordp":round((missionw.process/missionw.target)*100),
+            "kanji":missionk.name,
+            "kanjip":round((missionk.process/missionk.target)*100),
+            "reading":missionr.name,
+            "readingp":round((missionr.process/missionr.target)*100),
+            "listening":missionl.name,
+            
+            "listeningp":round((missionl.process/missionl.target)*100),
         }
         return Response(data)

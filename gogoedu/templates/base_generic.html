@@ -19,7 +19,7 @@
 
 </head>
 <body>
-    <div class="super_container">
+    <div id="userid" data-id="{{request.user.id}}" class="super_container">
         {% include "header.html" %}
         
         {% block content %}{% endblock %}
@@ -44,6 +44,53 @@
         <script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
         <script src="{% static 'js/custom.js'%}"></script>
     {% endblock %}
+    <script>
+        $('#mission').on('click',function(){
+        var userid = $("#userid").data('id')
+        var point
+        
+        var pointset= $("#point").text("")
+        var pointset= $("#point").text("")
+        var pointset= $("#point").text("")
+        // var pointdaset = $(".badge badge-success")
+        $.ajax({
+            method: "GET",
+            url: '/gogoedu/mission/',
+            data: {
+                user_id:userid,
+            },
+            success: function (data) {
+                point=data.point
+                word=data.word,
+                dict=data.dict,
+                wordp=data.wordp,
+                kanji=data.kanji,
+                kanjip=data.kanjip,
+                reading=data.reading,
+                readingp=data.readingp,
+                listening=data.listening,
+                listeningp=data.listeningp,
+                setPoint()
+               
+            },
+    })
+    function setPoint(){
+        $("#point").text(point)
+        $("#word").text(word)
+        $("#kanji").text(kanji)
+        $("#reading").text(reading)
+        $("#listening").text(listening)
+        $("#wordp").text(wordp+"%")
+        $("#kanjip").text(kanjip+"%")
+        $("#readingp").text(readingp+"%")
+        $("#listeningp").text(listeningp+"%")
+        $("#wordp").attr('aria-valuenow', wordp).css('width', wordp+'%');
+        $("#kanjip").attr('aria-valuenow', kanjip).css('width', kanjip+'%');
+        $("#readingp").attr('aria-valuenow', readingp).css('width', readingp+'%');
+        $("#listeningp").attr('aria-valuenow', listeningp).css('width', listeningp+'%');
+    }
+    })
+    </script>
     {% block javascript %}
     {% endblock %}
 </body>

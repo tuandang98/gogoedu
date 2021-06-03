@@ -32,7 +32,7 @@
 									
 												<button class="btn btn-primary" style="background-color: green;">
 													<h5>{{request.user.badge.name}}
-														<span class="badge badge-success">{{request.user.interface.points}}</span>
+														<p id="point" class="badge badge-success">{{request.user.interface.points}}</p>
 													</h5>
 												</button>
 												
@@ -102,6 +102,27 @@
 									<!-- <li><a href="#">Page</a></li> -->
 									<li class="{% if request.path == '/gogoedu/flashcard/' %}active{% endif %}"><a href="{% url 'flashcard' %}">{% trans 'Flashcard' %}</a></li>
 									<li class="{% if request.path == '/gogoedu/leaderboard/' %}active{% endif %}"><a href="{% url 'leaderboard' %}">{% trans 'Leaderboard' %}</a></li>
+									{% if request.user.is_authenticated %}
+									<li id = "mission"class="dropdown">
+										<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #384158;">
+											Mission
+										</a>
+										  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											<div class="progress dropdown-item">
+												<div id="word">Word</div><div id="wordp" class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+											</div>
+											<div class="progress dropdown-item">
+												<div id="kanji">Kanji</div><div id="kanjip" class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+											</div>
+											<div class="progress dropdown-item">
+												<div id="reading">Reading</div><div id="readingp" class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+											</div>
+											<div class="progress dropdown-item">
+												<div id="listening">Listening</div><div id="listeningp" class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+											</div>
+										  </div>
+									</li>
+									{%endif%}
 									<li><form action="{% url 'change_language' %}" method="post">
 										{% csrf_token %}
 										<select class="dropdown_item_select home_search_input " name="language" style="width:8.2rem;">
