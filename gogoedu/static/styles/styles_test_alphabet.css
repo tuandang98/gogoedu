@@ -1,0 +1,83 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-weight: normal;
+}
+
+template {
+  display:none;
+}
+
+body {
+  width: 100vw;
+  height: 100vh;
+  padding: 25px;
+}
+
+#quiz {
+  display: flex;
+  justify-content: space-around;
+  align-items: stretch;
+  width: 100%;
+  background-color: #ddd;
+  position: relative;
+  top: 50vh;
+  margin-top: -25vh;
+}
+
+#settings {
+  flex: 1 0 auto;
+  margin-right: 25px;
+  background-color: #999;
+}
+
+#stats {
+  flex: 1 0 auto;
+  margin-left: 25px;
+  background-color: #999;
+}
+
+#timer {
+  font-size: 3rem;
+  font-weight: bold;
+  font-family: monospace;
+  text-align: center;
+}
+
+#challange_box {
+  flex: 0 0 50%;
+
+  background-color: #eee;
+  text-align: center;
+}
+
+#current_kana {
+  font-size: calc(5rem + 5vw);
+}
+
+#answer_field_wrapper {
+  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+}
+
+#answer_field {
+  flex: 0 0 33%;
+  font-size: 1em;
+  padding: 0.25em;
+  height: 2em;
+  font-size: 2vw;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+
+.setting {
+  font-size: 1.25em;
+  display: block;
+}
+
+.setting label {
+  text-transform: capitalize;
+  margin-left: 5px;
+}

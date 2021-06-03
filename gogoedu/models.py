@@ -137,6 +137,7 @@ class UserWord(models.Model):
 
     class Meta:
         unique_together = (("user", "word"),)
+
 class GrammarLevel(models.Model):
     name = models.CharField(max_length=255)
     def __str__(self):
@@ -329,7 +330,17 @@ class UserAnswer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     user = models.ForeignKey('myUser', on_delete=models.CASCADE)
+class UserKanji(models.Model):
+    user = models.ForeignKey('myUser', on_delete=models.CASCADE)
+    kanji = models.ForeignKey(Kanji, on_delete=models.CASCADE)
+    date = models.DateTimeField(default=datetime.now, blank=True)
 
+    def __str__(self):
+        """String for representing the Model object."""
+        return f'{self.user} - {self.kanji}'
+
+    class Meta:
+        unique_together = (("user", "kanji"),)
 @receiver(post_save, sender=GamificationInterface)
 def create_badges_and_unlockables_from_new_interface(
         sender, instance, created, **kwargs):
@@ -413,6 +424,19 @@ def add_point_learned_word(sender, instance, created, **kwargs):
 
 @receiver(post_delete, sender=UserWord)
 def delete_point_learned_word(sender, instance, **kwargs):
+    user=myUser.objects.filter(
+        id=instance.user.id
+    ).first()
+    PointChange.objects.create(amount=-1,interface=user.interface)
+@receiver(post_save, sender=UserKanji)
+def add_point_learned_kanji(sender, instance, created, **kwargs):
+    user=myUser.objects.filter(
+        id=instance.user.id
+    ).first()
+    PointChange.objects.create(amount=1,interface=user.interface)
+
+@receiver(post_delete, sender=UserKanji)
+def delete_point_learned_kanji(sender, instance, **kwargs):
     user=myUser.objects.filter(
         id=instance.user.id
     ).first()

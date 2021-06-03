@@ -1,0 +1,466 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+
+
+
+{% block css %}
+
+<style>
+    
+    table.gameboard { 
+        border-spacing: 3px;
+        border-collapse: separate;
+        border: 5px #999 solid; 
+        margin-left: auto; 
+        margin-right: auto;
+        border-radius: 10px;
+    }
+    .gameboard td { 
+        opacity: 0.9;
+        font-family: arial, sans-serif; 
+        font-size: 1.5em; 
+        font-weight: bold; 
+        text-align: center; 
+        vertical-align: middle; 
+        color: #543; 
+        background: #ffe; 
+        margin: 2px; padding: 6px; 
+        border: 1px #eef solid; 
+        width: 100px;
+        border-radius: 3px 6px;
+    }
+    #yoon .gameboard td { 
+        opacity: 0.9;
+        font-family: arial, sans-serif; 
+        font-size: 1.5em; 
+        font-weight: bold; 
+        text-align: center; 
+        vertical-align: middle; 
+        color: #543; 
+        background: #ffe; 
+        margin: 2px; padding: 6px; 
+        border: 1px #eef solid; 
+        width: 350px;
+        border-radius: 3px 6px;
+    }
+    td.gameboard_over{ 
+        color: #fff; 
+        background: #000; 
+    }
+    td.gameboard_clicked{ 
+        background: #fff;
+        opacity: 0.5;
+    }
+</style>
+{% endblock %}
+
+{% block content%}
+    <div class="col-sm-5" style="display: inline-block;">
+        <h1 style="margin-top:200px ;text-align: center;">Hiragana</h1>
+        <table id="test_board" class="gameboard ">
+        <tbody>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/a.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">あ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/a.mp3"></audio></a> (a)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/i.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">い<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/i.mp3"></audio></a> (i)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/u.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">う<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/u.mp3"></audio></a> (u)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/e.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">え<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/e.mp3"></audio></a> (e)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/o.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">お<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/o.mp3"></audio></a> (o)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ka.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">か</a> (ka)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ki.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">き</a> (ki)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ku.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">く<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/ku.mp3"></audio></a> (ku)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ke.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">け</a> (ke)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ko.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">こ</a> (ko)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/sa.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">さ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/sa.mp3"></audio></a> (sa)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/shi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">し</a> (shi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/su.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">す<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/su.mp3"></audio></a> (su)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/se.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">せ</a> (se)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/so.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">そ</a> (so)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ta.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">た</a> (ta)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/chi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ち<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/chi.mp3"></audio></a> (chi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/tsu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">つ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/tsu.mp3"></audio></a> (tsu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/te.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">て</a> (te)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/to.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">と</a> (to)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/na.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">な</a> (na)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ni.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">に</a> (ni)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/nu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぬ</a> (nu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ne.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ね</a> (ne)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/no.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">の</a> (no)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ha.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">は</a> (ha)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/hi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ひ</a> (hi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/fu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ふ</a> (fu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/he.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">へ</a> (he)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ho.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ほ</a> (ho)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ma.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ま</a> (ma)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/mi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">み</a> (mi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/mu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">む</a> (mu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/me.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">め</a> (me)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/mo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">も</a> (mo)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">や</a> (ya)</td>
+        <td></td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/yu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ゆ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/yu.mp3"></audio></a> (yu)</td>
+        <td></td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/yo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">よ</a> (yo)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ra.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ら</a> (ra)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ri.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">り</a> (ri)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ru.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">る</a> (ru)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/re.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">れ</a> (re)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ro.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ろ (ro)</a></td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/wa.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">わ</a> (wa)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/o.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">を</a> (o)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/n.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ん</a> (n)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <div class="col-sm-5" style="display: inline-block;">
+        <h1 style="margin-top:50px ;text-align: center;">Katakana</h1>
+        <table id="test_board" class="gameboard ">
+        
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/a.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ア<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/a.mp3"></audio></a> (a)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/i.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">イ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/i.mp3"></audio></a> (i)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/u.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ウ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/u.mp3"></audio></a> (u)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/e.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">エ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/e.mp3"></audio></a> (e)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/o.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">オ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/o.mp3"></audio></a> (o)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ka.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">カ</a> (ka)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ki.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">キ</a> (ki)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ku.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ク<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/ku.mp3"></audio></a> (ku)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ke.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ケ</a> (ke)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ko.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">コ</a> (ko)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/sa.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">サ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/sa.mp3"></audio></a> (sa)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/shi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">シ</a>(shi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/su.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ス<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/su.mp3"></audio></a> (su)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/se.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">セ</a> (se)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/so.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ソ</a> (so)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ta.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">タ</a> (ta)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/chi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">チ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/chi.mp3"></audio></a> (chi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/tsu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ツ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/tsu.mp3"></audio></a> (tsu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/te.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">テ</a> (te)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/to.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ト</a> (to)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/na.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ナ</a> (na)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ni.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ニ</a> (ni)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/nu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ヌ</a> (nu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ne.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ネ</a> (ne)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/no.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ノ</a> (no)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ha.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ハ</a> (ha)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/hi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ヒ</a> (hi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/fu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">フ</a> (fu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/he.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ヘ</a> (he)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ho.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ホ</a> (ho)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ma.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">マ</a> (ma)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/mi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ミ</a> (mi)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/mu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ム</a> (mu)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/me.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">メ</a> (me)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/mo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">モ</a> (mo)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ヤ</a> (ya)</td>
+        <td></td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/yu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ユ<audio src="https://0.tqn.com/z/g/japanese/library/media/audio/yu.mp3"></audio></a> (yu)</td>
+        <td></td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/yo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ヨ</a> (yo)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ra.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ラ</a> (ra)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ri.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">リ</a> (ri)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ru.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ル</a> (ru)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/re.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">レ</a> (re)</td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/ro.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ロ (ro)</a></td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/wa.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ワ</a> (wa)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/o.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ヲ</a> (o)</td>
+        </tr>
+        <tr>
+        <td><a href="https://0.tqn.com/z/g/japanese/library/media/audio/n.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ン</a> (n)</td>
+        <td></td>
+        <td></td>
+        <td></td>
+        <td></td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <div id="dakuten" class="col-sm-5" style="display: inline-block;">
+        <h1 style="margin-top:50px ;text-align: center;">Dakuten and Handakuten</h1>
+        <h6>These are the two small strokes to the right which change the sounds of K to G, S to Z, T to D and H to B.</h6>
+        <table id="test_board" class="gameboard ">
+        
+        <tr>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/ga.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">が / ガ</a> (ga)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/gi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぎ / ギ</a>(gi)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/gu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぐ / グ</a> (gu)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/ge.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">げ / ゲ</a> (ge)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/go.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ご / ゴ</a> (go)</td>
+        </tr>
+        <tr>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/za.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ざ / ザ</a> (za)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/ji.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">じ / ジ</a> (ji)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/zu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ず / ズ</a> (zu)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/ze.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぜ / ゼ</a> (ze)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/zo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぞ / ゾ</a> (zo)</td>
+        </tr>
+        <tr>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/da.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">だ / ダ</a> (da)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/di.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぢ / ヂ</a>(ji)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/du.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">づ / ヅ</a> (du)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/de.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">で / デ</a> (de)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/do.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ど / ド</a> (do)</td>
+        </tr>
+        <tr>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/ba.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ば / バ</a> (ba)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/bi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">び / ビ</a> (bi)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/bu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぶ / ブ</a> (bu)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/be.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">べ / ベ</a> (be)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/bo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぼ / ボ</a> (bo)</td>
+        </tr>
+        <tr>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/pa.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぱ / パ</a> (pa)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/pi.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぴ / ピ</a> (pi)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/pu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぷ / プ</a> (pu)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/pe.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぺ / ペ</a> (pe)</td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/po.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぽ / ポ</a> (po)</td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <div id="yoon" class="col-sm-6" style="display: inline-block;">
+        <h1 style="margin-top:50px ;text-align: center;">Yoon</h1>
+        <h6>These are smaller versions of the や (ya) ゆ (yu) andよ  (yo) characters which modify the basic sounds:</h6>
+        <table id="test_board" class="gameboard ">
+        
+        <tr>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/kya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">きゃ / キャ</a> (kya)</td>
+        <td></td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/kyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">きゅ / キュ</a> (kyu)</td>
+        <td></td>
+        <td><a href="https://drmoku.com/content/uploads/2018/06/kyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">きょ / キョ</a> (kyo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/shya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">しゃ / シャ</a> (sha)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/shyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">しゅ / シュ</a> (shu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/shyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">しょ / ショ</a> (sho)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/chya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ちゃ / チャ</a> (cha)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/chyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ちゅ / チュ</a> (chu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/chyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ちょ / チョ</a> (cho)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/nya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">にゃ / ニャ</a> (nya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/nyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">にゅ / ニュ</a> (nyu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/nyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">にょ / ニョ</a> (nyo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/hya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ひゃ / ヒャ</a> (hya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/hyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ひゅ / ヒュ</a> (hyu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/hyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ひょ / ヒョ</a> (hyo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/mya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">みゃ/ ミャ</a> (mya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/myu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">みゅ / ミュ</a> (myu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/myo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">みょ / ミョ</a> (myo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/rya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">りゃ/ リャ</a> (rya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/ryu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">りゅ / リュ</a> (ryu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/ryo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">りょ / リョ</a> (ryo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/gya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぎゃ / ギャ</a> (gya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/gyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぎゅ / ギュ</a> (gyu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/gyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぎょ / ギョ</a> (gyo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/zya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">じゃ / ジャ</a> (ja)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/ju_yoon.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">じゅ / ジュ</a> (ju)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/ju_yoon.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">じょ / ジョ</a> (jo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/dya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぢゃ / ヂャ</a> (jya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/dyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぢゅ / ヂュ</a> (jyu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/dyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぢょ / ヂョ</a> (jyo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/bya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">びゃ / ビャ</a> (bya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/byu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">びゅ / ビュ</a> (byu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/byo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">びょ / ビョ</a> (byo)</td>
+        </tr>
+        <tr>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/pya.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぴゃ / ピャ</a> (pya)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/pyu.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぴゅ / ピュ</a> (pyu)</td>
+            <td></td>
+            <td><a href="https://drmoku.com/content/uploads/2018/06/pyo.mp3" data-component="link" data-source="inlineLink" data-type="externalLink" data-ordinal="1" target="_blank" rel="noopener">ぴょ / ピョ</a> (pyo)</td>
+        </tr>
+        </tbody>
+        </table>
+    </div>
+    <div style="margin-left: 20px; margin-right: auto;">
+        <h2 >Sokoun</h2>
+        <div style="margin-left: 20px; margin-right: auto;">
+            <h6>is a smaller Hiragana つ or Katakana ツ, that indicates a slight pause between two syllables.</h6> 
+        
+        <img src="{%static 'images/soukoun.png'%}" alt="">
+        <h6>Pocky, (a Japanese snack food) is written pokkī in rōmaji (romanized spelling used to transliterate Japanese) .The sokuon is represented by the doubled k consonant.</h6>
+        </div>
+        
+        
+
+    </div>
+    <div style="margin-left: 20px; margin-right: auto;">
+        <h2>Choonpu</h2>
+        <div style="margin-left: 20px; margin-right: auto;">
+            <h6>This dash-like character is used to elongate the previous character.</h6> 
+        
+            <img src="{%static 'images/choonpu.png'%}" alt="">
+            <h6>You will mostly see this in Katakana.</h6>
+        </div>
+       
+    </div>
+    <br>
+    <br>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" style="margin-left: 20px; margin-right: auto;">
+        Play quiz
+    </button>
+    <br>
+    <br>
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <h5 ><button onclick="reset()">Reset everything</button>
+                <div id="settings">
+                    <div id="settings_kana"></div>
+                </div>
+            </h5>
+            <h1 id="current_kana"></h1>
+               
+            <hr>
+            <h5><div id="stats">
+                <div id="timer">00.00</div>
+                <div>
+                    <span>Last score: </span>
+                    <span id="lastScore"></span>
+                </div>
+            </div></h5>
+            <div id="challange_box">
+                
+                <div id="answer_field_wrapper">
+                    <div id="answer_field" contenteditable></div>
+                </div>
+            </div>
+            <template id="settings_input">
+                <div class="setting">
+                    <input type="checkbox" autocomplete="off" /><label></label>
+                </div>
+            </template>
+            
+          </div>
+          
+        
+       
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+    {% endblock %}
+{% block javascript %}
+    <script>
+        $(document).ready(function (){
+            $("table a").on("click", function(ev){
+            let sound=new Audio($(this).attr("href"))
+            sound.play()
+            ev.preventDefault();
+            ev.stopPropagation();
+        });
+        
+        });
+        init();
+    </script>
+{% endblock %}
+{% block plugin %}
+<script src="{% static 'js/jquery-3.2.1.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/popper.min.js'%}"></script>
+<script src="{% static 'styles/bootstrap4/bootstrap.min.js'%}"></script>
+<script src="{% static 'plugins/OwlCarousel2-2.2.1/owl.carousel.js'%}"></script>
+<script src="{% static 'plugins/easing/easing.js'%}"></script>
+<script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
+<script src="{% static 'plugins/colorbox/jquery.colorbox-min.js'%}"></script>
+<script src="{% static 'js/course.js'%}"></script>
+<script src="{% static 'js/app.js'%}"></script>
+{% endblock %}
