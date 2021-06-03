@@ -1,13 +1,17 @@
+from os import name
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.contrib.auth.models import User
 from django.contrib.auth.models import AbstractUser
+from django.db.models.fields import BooleanField
 from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from PIL import Image
 from django.utils import timezone
-from datetime import datetime
-from django.db.models.signals import post_save,post_delete
+
+import datetime
+
+from django.db.models.signals import post_save,post_delete,pre_save
 from django.dispatch import receiver
 from django_gamification.models import PointChange, Unlockable, \
     GamificationInterface, BadgeDefinition, Badge, UnlockableDefinition,Progression,Category
@@ -103,7 +107,7 @@ class TestResult(models.Model):
     reading = models.ForeignKey('Reading', on_delete=models.CASCADE,null=True,blank=True)
     listening = models.ForeignKey('Listening', on_delete=models.CASCADE,null=True,blank=True)
     correct_answer_num = models.IntegerField(default=0)
-    date = models.DateTimeField(default=datetime.now, blank=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
 
 
 
@@ -129,7 +133,7 @@ class UserWord(models.Model):
     user = models.ForeignKey('myUser', on_delete=models.CASCADE)
     word = models.ForeignKey('Word', on_delete=models.CASCADE)
     memoried = models.BooleanField(null=False,default=False)
-    date = models.DateTimeField(default=datetime.now, blank=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -333,7 +337,7 @@ class UserAnswer(models.Model):
 class UserKanji(models.Model):
     user = models.ForeignKey('myUser', on_delete=models.CASCADE)
     kanji = models.ForeignKey(Kanji, on_delete=models.CASCADE)
-    date = models.DateTimeField(default=datetime.now, blank=True)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
 
     def __str__(self):
         """String for representing the Model object."""
@@ -354,6 +358,7 @@ def create_badges_and_unlockables_from_new_interface(
     """
 
     if not created:
+            
         return
 
     for definition in BadgeDefinition.objects.all():
@@ -379,6 +384,7 @@ def create_badges_and_unlockables_from_new_interface(
     badge.progression.save()
     for definition in UnlockableDefinition.objects.all():
         Unlockable.objects.create_unlockable(definition, instance)
+      
 
 @receiver(post_save, sender=TestResult)
 def add_point_test_result(sender, instance, created, **kwargs):
@@ -388,6 +394,16 @@ def add_point_test_result(sender, instance, created, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=instance.correct_answer_num,interface=user.interface)
+    if instance.reading is not None:
+        mission=Mission.objects.filter(user=instance.user,type="R").first()
+        if mission.complete is False:
+            mission.process+=1
+            mission.save()
+    if instance.listening is not None:
+        mission=Mission.objects.filter(user=instance.user,type="L").first()
+        if mission.complete is False:
+            mission.process+=1
+            mission.save()
 
 @receiver(post_save, sender=TestResult)
 def add_progress_test_result(sender, instance, created, **kwargs):
@@ -414,6 +430,9 @@ def add_progress_test_result(sender, instance, created, **kwargs):
             badge.next_badge.progression.progress=badge.progression.target+1
             badge.next_badge.progression.save()
         badge.save()
+    
+    
+        
 
 @receiver(post_save, sender=UserWord)
 def add_point_learned_word(sender, instance, created, **kwargs):
@@ -421,6 +440,10 @@ def add_point_learned_word(sender, instance, created, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=1,interface=user.interface)
+    mission_word=Mission.objects.filter(user=instance.user,type="W").first()
+    if mission_word.complete is False:
+        mission_word.process+=1
+        mission_word.save()
 
 @receiver(post_delete, sender=UserWord)
 def delete_point_learned_word(sender, instance, **kwargs):
@@ -434,6 +457,10 @@ def add_point_learned_kanji(sender, instance, created, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=1,interface=user.interface)
+    mission_kanji=Mission.objects.filter(user=instance.user,type="K").first()
+    if mission_kanji.complete is False:
+        mission_kanji.process+=1
+        mission_kanji.save()
 
 @receiver(post_delete, sender=UserKanji)
 def delete_point_learned_kanji(sender, instance, **kwargs):
@@ -441,3 +468,98 @@ def delete_point_learned_kanji(sender, instance, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=-1,interface=user.interface)
+
+class Mission(models.Model):
+    user = models.ForeignKey('myUser', on_delete=models.CASCADE)
+    point = models.IntegerField()
+    name = models.CharField(max_length=255)
+    description = models.TextField(null= True,blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    process = models.IntegerField(null= True,blank=True)
+    target = models.IntegerField(null= True,blank=True)
+    CHOICES = (
+        ('W', 'Word'),
+        ('G', 'Grammar'),
+        ('R','Reading'),
+        ('L','Listening'),
+        ('K','Kanji'),
+    )
+    complete = BooleanField(default=False)
+    type = models.CharField(max_length=10,choices=CHOICES,null=True,blank=True)
+    def __str__(self):
+        """String for representing the Model object."""
+        return self.name
+
+
+    
+
+@receiver(pre_save, sender=myUser)
+def misson_daily_login(sender, instance, **kwargs):
+    user=myUser.objects.filter(
+        id=instance.id
+    ).first()
+    if user is not None:
+        if user.interface is not None:
+            if user.last_login is None:
+                mission = Mission.objects.filter(user=user,name="DailyLogin").first()
+                missionw= Mission.objects.create(
+                        name="Learn 10 vocabulary",
+                        user=user,
+                        description='Learn 10 vocabulary',
+                        process=0,
+                        target=10,
+                        point=50,
+                        type="W",
+                        )
+                missionk= Mission.objects.create(
+                        name="Learn 10 kanji",
+                        user=user,
+                        description='Learn 10 kanji',
+                        process=0,
+                        target=10,
+                        point=50,
+                        type="K",
+                        )   
+                missionr= Mission.objects.create(
+                        name="Learn 10 Reading",
+                        user=user,
+                        description='Learn 10 Reading',
+                        process=0,
+                        target=10,
+                        point=50,
+                        type="R",
+                        )   
+                missionl= Mission.objects.create(
+                        name="Learn 10 Listening",
+                        user=user,
+                        description='Learn 10 Listening',
+                        process=0,
+                        target=10,
+                        point=50,
+                        type="L",
+                        )   
+                PointChange.objects.create(amount=mission.point,interface=user.interface)
+            else:
+                mission = Mission.objects.filter(user=user,name="DailyLogin").first()
+                if(instance.last_login.date()-user.last_login.date()>=datetime.timedelta(1)):
+                    PointChange.objects.create(amount=mission.point,interface=user.interface)
+                    if(datetime.date.today()-mission.updated_at.date()==datetime.timedelta(1)):
+                        if(mission.point<5):
+                            mission.point+=50
+                            mission.process+=1
+                            mission.save()
+                    else:
+                        mission.point=50
+                        mission.process=1
+                        mission.save()
+@receiver(post_save, sender=Mission)
+def complete_misson(sender, instance, created, **kwargs):
+    user=myUser.objects.filter(
+        id=instance.user.id
+    ).first()
+    if instance.process>=instance.target and instance.complete is False:
+        misson = Mission.objects.filter(id=instance.id).first()
+        misson.complete=True
+        PointChange.objects.create(amount=instance.point,interface=user.interface)
+        misson.save()
