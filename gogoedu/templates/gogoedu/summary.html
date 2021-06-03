@@ -26,7 +26,7 @@
                     {% trans 'Learned Word' %}
                 </div>
                 <div class="tab active">
-                    {% trans 'Memoried Word' %}
+                    {% trans 'Chart' %}
                 </div>
                 <div class="tab">
                     {% trans 'Tests' %}
@@ -187,6 +187,7 @@
     var defaultData = []
     var datar = []
     var datal = []
+    var datan = []
     $.ajax({
             method: "GET",
             url: '/gogoedu/summary/chart/',
@@ -198,6 +199,7 @@
                 defaultData=data.data
                 datar=data.datar
                 datal=data.datal
+                datan = data.datan
                 setChart()
             },
     })
@@ -228,7 +230,11 @@
                     'rgba(255, 159, 64, 1)'
                 ],
                 borderWidth: 1
-            }]
+            },{
+            type: 'line',
+            label: 'Kanji',
+            data: datan,
+        }]
         },
         options: {
             scales: {

@@ -5,6 +5,40 @@
 <link rel="stylesheet" type="text/css" href="{% static 'plugins/colorbox/colorbox.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'styles/lesson.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'styles/course_responsive.css' %}">
+
+<style>
+    table.gameboard { 
+        border-spacing: 3px;
+        border-collapse: separate;
+        border: 5px #999 solid; 
+        margin-left: auto; 
+        margin-right: auto;
+        border-radius: 10px;
+    }
+    .gameboard td { 
+        opacity: 0.9;
+        font-family: arial, sans-serif; 
+        font-size: 1.5em; 
+        font-weight: bold; 
+        text-align: center; 
+        vertical-align: middle; 
+        color: #543; 
+        background: #ffe; 
+        margin: 2px; padding: 6px; 
+        border: 1px #eef solid; 
+        width: 150px;
+        border-radius: 3px 6px;
+    }
+    td.gameboard_over{ 
+        color: #fff; 
+        background: #000; 
+    }
+    td.gameboard_clicked{ 
+        background: #fff;
+        opacity: 0.5;
+    }
+</style>
+
 {% endblock %}
 
 {% block content %}
@@ -54,36 +88,98 @@
                     </div>
 
                     <!-- Course Image -->
-                    <div class="course_image"><img src="{% static 'images/course_image.jpg'%}" alt=""></div>
-
+                    <!-- <div class="course_image"><img src="{% static 'images/course_image.jpg'%}" alt=""></div> -->
+                    <!-- Button trigger modal -->
+                        
+                        
+                        <!-- Modal -->
+                        <div  id="wordListTab" >
+                        {% for kanji in object_list %}
+                        
+                        <div class="modal fade" id="{{kanji}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">{{kanji}} ({{kanji.definition}})</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-body">
+                                    {% trans 'Reading : '%}<span style="font-weight: normal;">{{kanji.reading}}</span>
+                                        <div>
+                                        {% trans 'Example'%}:
+                                            <ol class="new">
+                                                
+                                                {%for example in kanji.examplekanji_set.all%}
+                                                <li>
+                                                
+                                                {{example.example}}
+                                                <br>
+                                                {% trans 'Mean : '%}{{example.definition}}
+                                                <br>
+                                                {% trans 'Reading : '%}{{example.reading}}
+                                                </li>
+                                                {%endfor%}
+                                            </ol>
+                                        </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <form id="markLearnedForm{{kanji.id}}" data-id="{{kanji.id}}"
+                                        data-url="{% url 'kanji-detail' kanjilesson.kanji_level.id kanjilesson.id %}">
+                                        {% csrf_token %}
+                                    
+                                        <input type="button" id="markButton{{kanji.id}}"
+                                            data-id="{{kanji.id}}" class="btn mark-button"
+                                            value="{% if kanji in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                            style="cursor: pointer">
+                                    </form>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+                    
+                        {%endfor%}
+                    </div>
                     <!-- Course Tabs -->
                     <div class="course_tabs_container">
                         <div class="tabs d-flex flex-row align-items-center justify-content-start">
-                            <!-- <div class="tab">
-                                {% trans 'Lesson' %}
-                            </div> -->
                             <div class="tab active">
+                                {% trans 'Lesson' %}
+                            </div>
+                            <div class="tab ">
                                 {% trans 'kanji' %}
                             </div>
                             <!-- <div class="tab">
                                 {% trans 'Test' %}
                             </div> -->
                         </div>
-                        <div class="tab_panels">
+                        <div class="tab_panels ">
 
                             <!-- Description -->
-                            <!-- <div class="tab_panel">
-                                <div class="tab_panel_title">{{kanjilesson.name}}</div>
-                                <div><a>{{kanjilesson.name}}</a></div>
-                            </div> -->
+                            <div class="tab_panel active">
+                                <h1 style="text-align: center;">Kanji</h1>
+                                    <table id="test_board" class="gameboard ">
+                                        
+                                        <tr>
+                                            {% for kanji in object_list %}
+                                                <td type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{kanji}}">
+                                            {{kanji}}
+                                        </td>
+                                        {%endfor%}
+                                        </tr>
+                                        
+                                        </tbody>
+                                        </table>
+                            </div>
 
                             <!-- Curriculum -->
-                            <div class="tab_panel tab_panel_2 active">
+                            <div class="tab_panel tab_panel_2">
                                 <div class="tab_panel_content">
                                     <div class="row">
                                         <div class="tab_panel_title col-md-9">{{kanjilesson.kanji_level}}</div>
                                     </div>
-                                    <div id="wordListTab" class="tab_panel_content">
+                                    <div class="tab_panel_content">
                                         <div id="All" class="w3-container city">
                                             {% for kanji in object_list %}
                                             <ul class="dropdowns">
@@ -207,4 +303,35 @@
 <script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
 <script src="{% static 'plugins/colorbox/jquery.colorbox-min.js'%}"></script>
 <script src="{% static 'js/course.js'%}"></script>
+{% endblock %}
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        var lessonId = $("#lessonName").data('id')
+        console.log($('#wordListTab').data('id'))
+
+        $('#wordListTab').on('click', '.mark-button', function () {
+            var wordId = $(this).data('id')
+            var this_ = $(this)
+            $.ajax({
+                url: '/gogoedu/lesson/' + lessonId + '/kanjis/' + wordId + '/learned/',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id: wordId,
+                },
+                type: 'post',
+                success: function (response) {
+                    if (response.learned) {
+                        this_.val("{% trans 'Unmark' %}")
+                    } else {
+                        this_.val("{% trans 'Mark as learned' %}")
+                    }
+                }
+            })
+        })
+
+    
+    })
+</script>
 {% endblock %}

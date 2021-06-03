@@ -17,6 +17,7 @@ urlpatterns = [
 	path('kanji/', views.KanjiLevelListView.as_view(), name='kanji'),
 	path('kanji/<int:pk>', views.KanjiLevelDetailView.as_view(), name='kanji-lesson'),
 	path('kanji/<int:kanji_lesson_id>/lesson/<int:pk>', views.Kanji_lesson_detail.as_view(), name='kanji-detail'),
+	path('lesson/<int:pk>/kanjis/<int:wordid>/learned/', views.MarkLearnedKanji.as_view(), name='mark-learned-kanji'),
 	path('reading/', views.ReadingLevelListView.as_view(), name='reading'),
 	path('reading/<int:pk>', views.ReadingLevelDetailView.as_view(), name='reading-lesson'),
 	path('reading/<int:reading_lesson_id>/lesson/<int:pk>', views.Reading_lesson_detail.as_view(), name='reading-detail'),
@@ -43,5 +44,6 @@ urlpatterns = [
     path('badge/award-badge/<int:badge_id>/', views.AwardBadgeView.as_view(), name='award-badge'),
     path('badge/revoke-badge/<int:badge_id>/', views.RevokeBadgeView.as_view(), name='revoke-badge'),
 	path('profile/<int:pk>/<int:badge_id>/', views.SetBadgeView.as_view(), name='set-badge'),
-	path('alphabet', views.Alphabet, name='alphabet'),
+	path('alphabet', views.alphabet, name='alphabet'),
+	path('alphabet/test', views.alphabet_test, name='alphabet-test'),
 ]
