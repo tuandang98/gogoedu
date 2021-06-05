@@ -47,11 +47,6 @@
     <script>
         $('#mission').on('click',function(){
         var userid = $("#userid").data('id')
-        var point
-        
-        var pointset= $("#point").text("")
-        var pointset= $("#point").text("")
-        var pointset= $("#point").text("")
         // var pointdaset = $(".badge badge-success")
         $.ajax({
             method: "GET",
@@ -70,6 +65,7 @@
                 readingp=data.readingp,
                 listening=data.listening,
                 listeningp=data.listeningp,
+                dailylogin=data.dailylogin
                 setPoint()
                
             },
@@ -88,6 +84,8 @@
         $("#kanjip").attr('aria-valuenow', kanjip).css('width', kanjip+'%');
         $("#readingp").attr('aria-valuenow', readingp).css('width', readingp+'%');
         $("#listeningp").attr('aria-valuenow', listeningp).css('width', listeningp+'%');
+        $("#dailyloginp").attr('aria-valuenow', dailylogin*20).css('width', dailylogin*20+'%');
+        $("#dailyloginp").text(dailylogin*20+"%")
     }
     })
     </script>
