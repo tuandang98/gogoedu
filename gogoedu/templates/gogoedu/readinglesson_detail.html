@@ -86,7 +86,7 @@
                                     <div id="wordListTab" class="tab_panel_content">
                                         <div id="All" class="w3-container city">
                                             {% for reading in object_list %}
-                                            <form class="mt-5" action="" method="POST" id="quiz" data-id="{{test.id}}" target="_blank">
+                                            <form class="mt-5" action="" method="POST" id="quiz" data-id="{{test.id}}">
                                                 {% csrf_token %}
                                                 {%for question in reading.question_set.all%}
                                                 <li style="font-size: 1.2rem;">

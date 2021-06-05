@@ -54,7 +54,7 @@
                         {%endfor%}
                         </div>
                         <nav aria-label="Page navigation example">
-                        <ul class="pagination pull-right">
+                        <ul class="pagination">
 
                             {% if list_learned.has_previous %}
                             <li class="mr-1"><a href="?page={{ list_learned.previous_page_number }}">&laquo;</a></li>
@@ -126,7 +126,7 @@
                         {%endfor%}
                         </div>
                         <nav aria-label="Page navigation example">
-                        <ul class="pagination pull-right">
+                        <ul class="pagination">
 
                             {% if list_tested.has_previous %}
                             <li class="mr-1"><a href="?page={{ list_tested.previous_page_number }}">&laquo;</a></li>

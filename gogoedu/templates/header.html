@@ -1,5 +1,6 @@
 {% load static %}
 {% load i18n %}
+{% load user_tags %}
 	<!-- Header -->
 	<header class="header" id="home-link" >
 		<!-- Top Bar -->
@@ -42,7 +43,7 @@
 											<div class="dropdown-menu dropdown-menu-lg-right dropdown-secondary"
 											  aria-labelledby="navbarDropdownMenuLink-55">
 											  	<a class="dropdown-item" href="{% url 'profile-detail' request.user.id %}">{% trans 'My profile' %}</a>
-												{% if request.user.is_superuser %}
+												{% if request.user.is_superuser or request.user|has_group:"Teacher" %}
 													<a class="dropdown-item" href="/admin">Admin site</a>
 												{% endif %}
 												<a class="dropdown-item" href="{% url 'show_summary'%}">Summary</a>

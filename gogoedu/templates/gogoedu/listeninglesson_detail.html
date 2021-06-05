@@ -87,7 +87,7 @@
                                         <div id="All" class="w3-container city">
                                             {% for listening in object_list %}
                                             <audio src="{{ listening.file.url }}" controls></audio> 
-                                            <form class="mt-5" action="" method="POST" id="quiz" data-id="{{test.id}}" target="_blank">
+                                            <form class="mt-5" action="" method="POST" id="quiz" data-id="{{test.id}}">
                                                 {% csrf_token %}
                                                 {%for question in listening.question_set.all%}
                                                 <li style="font-size: 1.2rem;">

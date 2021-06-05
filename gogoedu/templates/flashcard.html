@@ -13,9 +13,48 @@
 	</div>
 	
 	<div class="list-group mt-3">
-		{% for lesson in topics %}
+		{% for lesson in list_lesson %}
 		<a class="list-group-item" href="{% url 'view_card_set' lesson.id %}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{lesson.name}}</a>
 		{% endfor %}
 	</div>
+</div>
+<nav aria-label="Page navigation example">
+<ul class="pagination" style="margin-left: 20px;">
+
+	{% if list_lesson.has_previous %}
+	<li class="mr-1"><a href="?page={{ list_lesson.previous_page_number }}">&laquo;</a></li>
+	{% else %}
+	<li class="disabled mr-1"><span>&laquo;</span></li>
+	{% endif %}
+
+	{% if list_lesson.number > 5 %}
+	<li><a href="?page=1"><i>1</i></a></li>
+	{% endif %}
+
+	{% for i in list_lesson.paginator.page_range %}
+	{% if i > list_lesson.number|add:"-5" %}
+		{% if i < list_lesson.number|add:"5" %}
+			{% if list_lesson.number == i %}
+	<li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
+			{% else %}
+	<li class="mr-1"><a href="?page={{ i }}">{{ i }}</a></li>
+			{% endif %}
+		{% endif %}
+	{% endif %}
+	{% endfor %}
+
+	{% if list_lesson.number < list_lesson.paginator.num_pages|add:"-5" %}
+	<li class="mr-1"><a href="?page={{ list_lesson.paginator.num_pages }}"><i>{{ list_lesson.paginator.num_pages }}</i></a></li>
+	{% endif %}
+
+	{% if list_lesson.has_next %}
+	<li><a href="?page={{ list_lesson.next_page_number }}">&raquo;</a></li>
+	{% else %}
+	<li class="disabled"><span>&raquo;</span></li>
+	{% endif %}
+</ul>
+</nav>
+<br>
+</div>
 </div>
 {% endblock %}

@@ -382,6 +382,41 @@ def create_badges_and_unlockables_from_new_interface(
     print(badge)
     badge.progression.progress=1
     badge.progression.save()
+    category_learned=Category.objects.filter(
+            name='Learned', 
+            description='These are the learned badges'
+        ).first()
+    category_kanji=Category.objects.filter(name='Kanji', description='These are the kanji badges').first()
+        
+    badge_definition2=BadgeDefinition.objects.filter(
+            name='100 Words learned',
+            description='Learned 100 words',
+            points=50,
+            progression_target=100,
+            category=category_learned,
+                ).first()
+    badge2=Badge.objects.filter(
+            interface=instance,
+            category=category_learned,
+            badge_definition=badge_definition2
+        ).first()
+    badge_definition3=BadgeDefinition.objects.filter(
+            name='100 Kanjis learned',
+            description='Learned 100 kanji',
+            points=50,
+            progression_target=100,
+            category=category_kanji,
+                ).first()
+    badge3=Badge.objects.filter(
+            interface=instance,
+            category=category_kanji,
+            badge_definition=badge_definition3
+        ).first()
+    
+    badge2.progression.progress=1
+    badge2.progression.save()
+    badge3.progression.progress=1
+    badge3.progression.save()
     for definition in UnlockableDefinition.objects.all():
         Unlockable.objects.create_unlockable(definition, instance)
       
@@ -440,10 +475,29 @@ def add_point_learned_word(sender, instance, created, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=1,interface=user.interface)
+
     mission_word=Mission.objects.filter(user=instance.user,type="W").first()
     if mission_word.complete is False:
         mission_word.process+=1
         mission_word.save()
+    category_learned=Category.objects.filter(
+            name='Learned', 
+            description='These are the learned badges'
+        ).first()
+    badge=Badge.objects.filter(
+        interface=user.interface,
+        category=category_learned,
+        progression__progress__gte=1,
+        progression__progress__lt=F('progression__target'),
+    ).first()
+
+    if badge:
+        badge.increment()
+        badge.progression.save()
+        if badge.progression.finished and badge.next_badge:
+            badge.next_badge.progression.progress=badge.progression.target+1
+            badge.next_badge.progression.save()
+        badge.save()
 
 @receiver(post_delete, sender=UserWord)
 def delete_point_learned_word(sender, instance, **kwargs):
@@ -451,6 +505,7 @@ def delete_point_learned_word(sender, instance, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=-1,interface=user.interface)
+    
 @receiver(post_save, sender=UserKanji)
 def add_point_learned_kanji(sender, instance, created, **kwargs):
     user=myUser.objects.filter(
@@ -461,6 +516,24 @@ def add_point_learned_kanji(sender, instance, created, **kwargs):
     if mission_kanji.complete is False:
         mission_kanji.process+=1
         mission_kanji.save()
+    category_kanji=Category.objects.filter(
+            name='Kanji', 
+            description='These are the kanji badges'
+        ).first()
+    badge=Badge.objects.filter(
+        interface=user.interface,
+        category=category_kanji,
+        progression__progress__gte=1,
+        progression__progress__lt=F('progression__target'),
+    ).first()
+
+    if badge:
+        badge.increment()
+        badge.progression.save()
+        if badge.progression.finished and badge.next_badge:
+            badge.next_badge.progression.progress=badge.progression.target+1
+            badge.next_badge.progression.save()
+        badge.save()
 
 @receiver(post_delete, sender=UserKanji)
 def delete_point_learned_kanji(sender, instance, **kwargs):
