@@ -91,8 +91,6 @@ class Profile(LoginRequiredMixin, generic.DetailView):
             print()
             listcata.append(catagory)
             listcata.append(round(percent*100))
-            
-        print(listcata)
         
         context = super(Profile, self).get_context_data(object_list=object_list, **kwargs)
         context["listcata"] =listcata 
@@ -152,6 +150,7 @@ def activate(request, uidb64, token):
                 user=user,
                 description='Daily Login Points',
                 process=1,
+                target=6,
                 point=50,
                 )
         user.save()
@@ -1006,10 +1005,11 @@ class MissionView(APIView):
     
     def get(self, request, format=None):
         user=myUser.objects.filter(id=request.GET.get('user_id',)).first()
-        missionw = Mission.objects.filter(user=user,type="W").first()
-        missionk = Mission.objects.filter(user=user,type="K").first()
-        missionr = Mission.objects.filter(user=user,type="R").first()
-        missionl = Mission.objects.filter(user=user,type="L").first()
+        dailylogin= Mission.objects.filter(user=user,name="DailyLogin").first()
+        missionw = Mission.objects.filter(user=user,type="W",name="Learn 10 vocabulary").first()
+        missionk = Mission.objects.filter(user=user,type="K",name="Learn 10 kanji").first()
+        missionr = Mission.objects.filter(user=user,type="R",name="Learn 10 Reading").first()
+        missionl = Mission.objects.filter(user=user,type="L",name="Learn 10 Listening").first()
         data={
             "point":user.interface.points,
             "word":missionw.name,
@@ -1019,7 +1019,51 @@ class MissionView(APIView):
             "reading":missionr.name,
             "readingp":round((missionr.process/missionr.target)*100),
             "listening":missionl.name,
-            
             "listeningp":round((missionl.process/missionl.target)*100),
+            "dailylogin":dailylogin.process,
+            "dailyloginPoint":dailylogin.point,
+            
+        }
+        return Response(data)
+@background(schedule=20)
+def reset_daily():
+    missionw = Mission.objects.filter(type="W",name="Learn 10 vocabulary").update(process=0,complete=False)
+    missionk = Mission.objects.filter(type="K",name="Learn 10 kanji").update(process=0,complete=False)
+    missionr = Mission.objects.filter(type="R",name="Learn 10 Reading").update(process=0,complete=False)
+    missionl = Mission.objects.filter(type="L",name="Learn 10 Listening").update(process=0,complete=False)
+
+class CheckAlphabet(APIView):
+    authentication_classes = []
+    permission_classes = []
+    
+    def get(self, request, format=None):
+        user=myUser.objects.filter(id=request.GET.get('user_id',)).first()
+        category_learned=Category.objects.filter(
+            name='Learned', 
+            description='These are the learned badges'
+        ).first()
+        badge_definition=BadgeDefinition.objects.filter(
+                name='Alphabet Finished',
+                description='Finished learning the alphabet',
+                points=50,
+                progression_target=100,
+                category=category_learned,
+                ).first()
+        badge=Badge.objects.filter(
+            interface=user.interface,
+            category=category_learned,
+            badge_definition=badge_definition
+        ).first()
+        
+        if badge.acquired is False:
+            badge.progression.progress=badge.progression.target
+            badge.increment()
+            badge.save()
+            learned=False
+        else:
+            learned=True
+        data={
+            "learned":learned,
+            
         }
         return Response(data)

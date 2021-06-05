@@ -232,7 +232,11 @@ class UserWordAdmin(admin.ModelAdmin):
 
 admin.site.register(UserWord, UserWordAdmin)
 admin.site.register(UserKanji)
-admin.site.register(TestResult)
+class TestResultAdmin(NestedModelAdmin):
+    list_display = ('user', 'date')
+    list_filter = ('date',)
+    search_fields = ['date']
+admin.site.register(TestResult, TestResultAdmin)    
 admin.site.register(GamificationInterface)
 admin.site.register(Badge)
 admin.site.register(BadgeDefinition)
@@ -241,4 +245,9 @@ admin.site.register(PointChange)
 admin.site.register(Unlockable)
 admin.site.register(UnlockableDefinition)
 admin.site.register(Progression)
-admin.site.register(Mission)
+
+class MissionAdmin(NestedModelAdmin):
+    list_display = ('user', 'name','updated_at')
+    list_filter = ('user',)
+    search_fields = ['user']
+admin.site.register(Mission, MissionAdmin)   

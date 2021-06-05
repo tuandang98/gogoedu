@@ -364,8 +364,8 @@ def create_badges_and_unlockables_from_new_interface(
     for definition in BadgeDefinition.objects.all():
         Badge.objects.create_badge(definition, instance)
     category_tested=Category.objects.filter(
-        name__icontains='Tested Badges', 
-        description__icontains='These are the tested badges'
+        name='Tested Badges', 
+        description='These are the tested badges'
     ).first()
     badge_definition=BadgeDefinition.objects.filter(
             name='Bronze',
@@ -541,18 +541,21 @@ def misson_daily_login(sender, instance, **kwargs):
                         )   
                 PointChange.objects.create(amount=mission.point,interface=user.interface)
             else:
+                
                 mission = Mission.objects.filter(user=user,name="DailyLogin").first()
                 if(instance.last_login.date()-user.last_login.date()>=datetime.timedelta(1)):
                     PointChange.objects.create(amount=mission.point,interface=user.interface)
                     if(datetime.date.today()-mission.updated_at.date()==datetime.timedelta(1)):
-                        if(mission.point<5):
-                            mission.point+=50
-                            mission.process+=1
+                        if(mission.process<5):
+                            mission.point=mission.point+50
+                            mission.process=mission.process+1
                             mission.save()
-                    else:
+                            print("Vao dc tang daily mission")
+                    if(datetime.date.today()-mission.updated_at.date()>=datetime.timedelta(2)):
                         mission.point=50
                         mission.process=1
                         mission.save()
+                        print("Khong dc tang daily mission")
 @receiver(post_save, sender=Mission)
 def complete_misson(sender, instance, created, **kwargs):
     user=myUser.objects.filter(

@@ -46,4 +46,5 @@ urlpatterns = [
 	path('profile/<int:pk>/<int:badge_id>/', views.SetBadgeView.as_view(), name='set-badge'),
 	path('alphabet', views.alphabet, name='alphabet'),
 	path('mission/', views.MissionView.as_view()),
+	path('alphabet/getfinish', views.CheckAlphabet.as_view()),
 ]

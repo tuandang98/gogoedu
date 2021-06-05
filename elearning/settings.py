@@ -189,3 +189,4 @@ EMAIL_HOST_PASSWORD = env('EPASS') #past the key or password app here
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'gogoedu'
+BACKGROUND_TASK_RUN_ASYNC = True
