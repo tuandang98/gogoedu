@@ -475,9 +475,19 @@ def summary_detail_view(request):
 
 
 def flashcard_view(request):
-    lesson_query_set = Lesson.objects.all().order_by('name')
-    context = {'topics': lesson_query_set}  
+    lesson_query_set = Lesson.objects.all().order_by('catagory')
+    page = request.GET.get('page', 1)
+    paginator1 = Paginator(lesson_query_set, 5)
+    
+    try:
+        paged = paginator1.page(page)
+    except PageNotAnInteger:
+        paged = paginator1.page(1)
+    except EmptyPage:
+        paged = paginator1.page(paginator1.num_pages)
+    context = {"list_lesson": paged,}  
     return render(request, 'flashcard.html', context)
+
 def view_card_set(request, pk):
     lesson = get_object_or_404(Lesson, id = pk)
     word_list = lesson.word_set.all()

@@ -9,13 +9,13 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         category_learned=Category.objects.create(name='Learned', description='These are the learned badges')
-
+        category_kanji=Category.objects.create(name='Kanji', description='These are the kanji badges')
         kanji300=BadgeDefinition.objects.create(
             name='300 Kanjis learned',
             description='Learned 300 kanji',
             points=150,
             progression_target=300,
-            category=category_learned,
+            category=category_kanji,
         )
         word300=BadgeDefinition.objects.create(
             name='300 Words learned',
@@ -46,7 +46,7 @@ class Command(BaseCommand):
             points=50,
             progression_target=100,
             next_badge=kanji300,
-            category=category_learned,
+            category=category_kanji,
         )
 
         UnlockableDefinition.objects.create(
