@@ -62,7 +62,7 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab"
-                                       aria-controls="profile" aria-selected="false">{% trans 'Learned word' %}</a>
+                                       aria-controls="profile" aria-selected="false">{% trans 'Process' %}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link" id="profile-tab" data-toggle="tab" href="#badge" role="tab"
@@ -95,14 +95,34 @@
                                 </div>
                                 <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
                                     <div class="row">
-                                        <div class="col-md-6">
-                                            <label>{% trans 'Category' %}</label>
-                                        </div>
-                                        
                                         <div class="col-md-3">
-                                            <label>{% trans 'Percent' %}</label>
+											<select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+													role="button" aria-haspopup="true" aria-expanded="false">
+												<optgroup label="{% trans 'Status' %}">
+													<option>{% trans 'Vocabulary' %}</option>
+													<option>{% trans 'Kanji' %}</option>
+													<option>{% trans 'Grammar' %}</option>
+													
+												</optgroup>
+												<!-- <optgroup label="{% trans 'Word type' %}">
+													<option>{% trans 'Noun' %}</option>
+													<option>{% trans 'Verb' %}</option>
+													<option>{% trans 'Adjective' %}
+													</option>
+												</optgroup> -->
+											</select>
                                         </div>
                                     </div>
+                                    <div id="Vocabulary" class="w3-container city">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans 'Category' %}</label>
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <label>{% trans 'Percent' %}</label>
+                                            </div>
+                                        </div>
                                    
                                         <div class="row">
                                             {%for cata in listcata%}
@@ -121,7 +141,65 @@
                                             {% endfor %}
                                             
                                         </div>
-                                    
+                                    </div>
+                                    <div id="Kanji" class="w3-container city" style="display:none">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans 'Category' %}</label>
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <label>{% trans 'Percent' %}</label>
+                                            </div>
+                                        </div>
+                                   
+                                        <div class="row">
+                                            {%for cata in listkanji%}
+                                            <div class="col-md-6">
+                                                {%if cata.name %}
+                                                <a href="{{cata.get_absolute_url}}">{{cata}}</a>
+                                                {%else%}
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{cata}}%" aria-valuenow="{{cata}}" aria-valuemin="0" aria-valuemax="100">{{cata}}%</div>
+                                                </div>
+                                                
+                                                {%endif%}
+
+                                            </div>
+                                            
+                                            {% endfor %}
+                                            
+                                        </div>
+                                    </div>
+                                    <div id="Grammar" class="w3-container city" style="display:none">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <label>{% trans 'Category' %}</label>
+                                            </div>
+                                            
+                                            <div class="col-md-3">
+                                                <label>{% trans 'Percent' %}</label>
+                                            </div>
+                                        </div>
+                                   
+                                        <div class="row">
+                                            {%for cata in listgrammar%}
+                                            <div class="col-md-6">
+                                                {%if cata.name %}
+                                                <a href="{{cata.get_absolute_url}}">{{cata}}</a>
+                                                {%else%}
+                                                <div class="progress">
+                                                    <div class="progress-bar" role="progressbar" style="width: {{cata}}%" aria-valuenow="{{cata}}" aria-valuemin="0" aria-valuemax="100">{{cata}}%</div>
+                                                </div>
+                                                
+                                                {%endif%}
+
+                                            </div>
+                                            
+                                            {% endfor %}
+                                            
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="tab-pane fade" id="badge" role="tabpanel" aria-labelledby="profile-tab">
                                     <div class="row">
@@ -172,5 +250,19 @@
         </div>
     </div>
 {% endblock %}
+{% block javascript %}
+<script>
 
+    function openCity() {
+        var i;
+        var x = document.getElementsByClassName("city");
+        var cityName = document.getElementById("filter-list").value
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        console.log('success')
+        document.getElementById(cityName).style.display = "block";
+    }
+</script>
+{% endblock %}
 

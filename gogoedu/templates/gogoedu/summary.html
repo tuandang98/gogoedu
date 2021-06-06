@@ -188,6 +188,7 @@
     var datar = []
     var datal = []
     var datan = []
+    var datag = []
     $.ajax({
             method: "GET",
             url: '/gogoedu/summary/chart/',
@@ -200,6 +201,7 @@
                 datar=data.datar
                 datal=data.datal
                 datan = data.datan
+                datag = data.datag
                 setChart()
             },
     })
@@ -233,8 +235,16 @@
             },{
             type: 'line',
             label: 'Kanji',
+            backgroundColor: "#e755ba",
             data: datan,
-        }]
+        },{
+            type: 'line',
+            label: 'Grammar',
+            backgroundColor: "green",
+            data: datag,
+        },
+
+        ]
         },
         options: {
             scales: {
@@ -249,10 +259,12 @@
         datasets: [{
             type: 'bar',
             label: 'Reading',
+            backgroundColor:"red",
             data: datar,
         }, {
             type: 'line',
             label: 'Listening',
+            backgroundColor:"yellow",
             data: datal,
         }],
         labels: labels,

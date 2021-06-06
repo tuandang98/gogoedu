@@ -65,7 +65,9 @@
                 readingp=data.readingp,
                 listening=data.listening,
                 listeningp=data.listeningp,
-                dailylogin=data.dailylogin
+                dailylogin=data.dailylogin,
+                grammar=data.grammar,
+                grammarp=data.grammarp
                 setPoint()
                
             },
@@ -76,14 +78,17 @@
         $("#kanji").text(kanji)
         $("#reading").text(reading)
         $("#listening").text(listening)
+        $("#grammar").text(grammar)
         $("#wordp").text(wordp+"%")
         $("#kanjip").text(kanjip+"%")
         $("#readingp").text(readingp+"%")
         $("#listeningp").text(listeningp+"%")
+        $("#grammarp").text(grammarp+"%")
         $("#wordp").attr('aria-valuenow', wordp).css('width', wordp+'%');
         $("#kanjip").attr('aria-valuenow', kanjip).css('width', kanjip+'%');
         $("#readingp").attr('aria-valuenow', readingp).css('width', readingp+'%');
         $("#listeningp").attr('aria-valuenow', listeningp).css('width', listeningp+'%');
+        $("#grammarp").attr('aria-valuenow', grammarp).css('width', grammarp+'%');
         $("#dailyloginp").attr('aria-valuenow', dailylogin*20).css('width', dailylogin*20+'%');
         $("#dailyloginp").text(dailylogin*20+"%")
     }

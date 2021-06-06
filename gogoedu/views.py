@@ -30,7 +30,7 @@ from django.forms.models import model_to_dict
 from json import dumps
 from .forms import RegisterForm, UserUpdateForm
 from gogoedu.models import Grammar, GrammarLevel, myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
-    TestResult,GrammarLevel,GrammarLesson,GrammarMean,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji,Mission
+    TestResult,GrammarLevel,GrammarLesson,GrammarMean,UserGrammar,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji,Mission
 
 from PIL import Image
 
@@ -77,7 +77,8 @@ class Profile(LoginRequiredMixin, generic.DetailView):
     def get_context_data(self, **kwargs):
         user = self.get_object()
         listcata = []
-        listper = []
+        listkanji = []
+        listgrammar = []
         object_list = UserWord.objects.filter(user=user.id)
         result = (UserWord.objects.values('word__catagory')
                     .annotate(dcount=Count('word'))
@@ -88,12 +89,39 @@ class Profile(LoginRequiredMixin, generic.DetailView):
             word = Word.objects.filter(catagory=r.get('word__catagory')).count()
             catagory = Catagory.objects.get(id=r.get('word__catagory'))
             percent=r.get('dcount')/word
-            print()
+            
             listcata.append(catagory)
             listcata.append(round(percent*100))
+        result2 = (UserKanji.objects.values('kanji__kanji_lesson__kanji_level')
+                    .annotate(dcount=Count('kanji'))
+                    .filter(user=user.id)
+                    .order_by('-dcount')
+                )
+        for r in result2:
+            kanji = Kanji.objects.filter(kanji_lesson__kanji_level=r.get('kanji__kanji_lesson__kanji_level')).count()
+            catagory = KanjiLevel.objects.get(id=r.get('kanji__kanji_lesson__kanji_level'))
+            percent=r.get('dcount')/kanji
+            
+            listkanji.append(catagory)
+            listkanji.append(round(percent*100))
+
+        result3 = (UserGrammar.objects.values('grammar__grammar_lesson__grammar_level')
+                    .annotate(dcount=Count('grammar'))
+                    .filter(user=user.id)
+                    .order_by('-dcount')
+                )
+        for r in result3:
+            grammar = Grammar.objects.filter(grammar_lesson__grammar_level=r.get('grammar__grammar_lesson__grammar_level')).count()
+            catagory = GrammarLevel.objects.get(id=r.get('grammar__grammar_lesson__grammar_level'))
+            percent=r.get('dcount')/grammar
+            
+            listgrammar.append(catagory)
+            listgrammar.append(round(percent*100))
         
         context = super(Profile, self).get_context_data(object_list=object_list, **kwargs)
         context["listcata"] =listcata 
+        context["listkanji"] =listkanji
+        context["listgrammar"] =listgrammar
         
         user = self.request.user
         if not user.avatar:
@@ -432,6 +460,21 @@ class MarkLearnedKanji(generic.View):
             learned = False
         return JsonResponse({'word': model_to_dict(user_word), 'learned': learned}, status=200)
 
+class MarkLearnedGrammar(generic.View):
+
+    def post(self, request, pk, wordid):
+        if not request.user.is_authenticated:
+            return HttpResponseForbidden()
+        user_word = UserGrammar()
+        user_word.user = myUser.objects.get(id=request.user.id)
+        user_word.grammar = Grammar.objects.get(id=wordid)
+        if not UserGrammar.objects.filter(user=request.user.id, grammar=wordid).first():
+            user_word.save()
+            learned = True
+        else:
+            UserGrammar.objects.filter(user=request.user.id, grammar=wordid).delete()
+            learned = False
+        return JsonResponse({'word': model_to_dict(user_word), 'learned': learned}, status=200)
 def summary_detail_view(request):
     is_authenticated(request)
     template = loader.get_template('gogoedu/summary.html')
@@ -505,6 +548,38 @@ def view_card_set(request, pk):
     context = {'lesson': lesson, 'card_object': word_list_paged}
     return render(request, 'gogoedu/view_cards.html', context)
 
+def viewflashcard(request,pk):
+    lesson = get_object_or_404(Lesson, id = pk)
+    word_list = lesson.word_set.all() 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(word_list, 1)
+    
+    try:
+        word_list_paged = paginator.page(page)
+    except PageNotAnInteger:
+        word_list_paged = paginator.page(1)
+    except EmptyPage:
+        word_list_paged = paginator.page(paginator.num_pages)
+
+    context = {'lesson': lesson, 'card_object': word_list_paged}
+    return render(request, 'gogoedu/view_cards.html', context)
+
+def viewkanjiflash(request,pk):
+    lesson = get_object_or_404(KanjiLesson, id = pk)
+    word_list = lesson.kanji_set.all() 
+    page = request.GET.get('page', 1)
+    paginator = Paginator(word_list, 1)
+    
+    try:
+        word_list_paged = paginator.page(page)
+    except PageNotAnInteger:
+        word_list_paged = paginator.page(1)
+    except EmptyPage:
+        word_list_paged = paginator.page(paginator.num_pages)
+
+    context = {'lesson': lesson, 'card_object': word_list_paged}
+    return render(request, 'gogoedu/view_cards_kanji.html', context)
+
 def leaderboard_view(request):
     template = loader.get_template('leaderboard.html')
     top_points = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True)).exclude(interface=None)
@@ -534,7 +609,21 @@ def flashcard_test(request, pk):
                }
     return HttpResponse(template.render(context, request))
 
+def kanjiflashcard_test(request, pk):
+    template = loader.get_template('gogoedu/flashcard_test.html')
+    lesson = get_object_or_404(KanjiLesson, id = pk)
+    word_list = lesson.kanji_set.all()
+    id_list = word_list.values_list('id', flat=True)
+    
+    random_profiles_id_list = random.sample(list(id_list), min(len(id_list), 6))
+    query_set = word_list.filter(id__in=random_profiles_id_list)
+    
+    query_set2 = random.sample(list(query_set), min(len(query_set), 6))
 
+    context = {"word_list1": query_set,
+                "word_list2":query_set2,
+               }
+    return HttpResponse(template.render(context, request))
     
 def privacy_view(request):
     return render(request, 'privacy.html')
@@ -681,28 +770,17 @@ class Grammar_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObje
         print(self.object)
         object_list = Grammar.objects.filter(grammar_lesson=lesson)
         context = super(Grammar_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
-        # tests = lesson.test_set.all()
-        # user_test_list = []
-        # marked_word_list = []
-        # new_list = []
-        # tested_list = []
-        # for test in tests:
-        #     if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
-        #         user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
-        #         tested_list.append(test)
-
-        # for word in object_list:
-        #     if not UserWord.objects.filter(user=self.request.user.id, word=word.id).first():
-        #         new_list.append(word)
-        #     else:
-        #         marked_word_list.append(word)
-        # context['user_test_list'] = user_test_list
-        # context['tested_list'] = tested_list
-        # context['marked_word_list'] = marked_word_list
-        # context['new_list'] = new_list
-        # if UserTest.objects.filter(user=self.request.user, test=lesson.test_set.first.id):
-        #     context['my_test'] = UserTest.objects.filter(user=self.request.user, test=lesson.test).first()
+        new_list = []
+        marked_word_list = []
+        for word in object_list:
+            if not UserGrammar.objects.filter(user=self.request.user.id, grammar=word.id).first():
+                new_list.append(word)
+            else:
+                marked_word_list.append(word)
+        context['marked_word_list'] = marked_word_list
+        context['new_list'] = new_list
         return context
+        
         
 class KanjiLevelListView(generic.ListView):
     model = KanjiLevel
@@ -985,13 +1063,13 @@ class ChartData(APIView):
         sw5=today-datetime.timedelta(2)
         sw6=today-datetime.timedelta(1)
         # top_points = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True))
-        ltoday=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=datetime.date.today()),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=today),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=datetime.date.today(),testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=datetime.date.today(),testresult__listening__isnull=False),distinct=True)).first()
-        l6=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw6),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw6),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__listening__isnull=False),distinct=True)).first()
-        l5=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw5),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw5),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw5,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw5,testresult__listening__isnull=False),distinct=True)).first()
-        l4=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw4),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw4),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw4,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw4,testresult__listening__isnull=False),distinct=True)).first()
-        l3=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw3),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw3),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw3,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw3,testresult__listening__isnull=False),distinct=True)).first()
-        l2=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw2),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw2),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw2,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw2,testresult__listening__isnull=False),distinct=True)).first()
-        l1=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw1),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw1),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw1,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw1,testresult__listening__isnull=False),distinct=True)).first()
+        ltoday=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=datetime.date.today()),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=today),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=today),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=datetime.date.today(),testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=datetime.date.today(),testresult__listening__isnull=False),distinct=True)).first()
+        l6=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw6),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw6),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=sw6),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw6,testresult__listening__isnull=False),distinct=True)).first()
+        l5=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw5),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw5),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=sw5),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw5,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw5,testresult__listening__isnull=False),distinct=True)).first()
+        l4=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw4),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw4),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=sw4),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw4,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw4,testresult__listening__isnull=False),distinct=True)).first()
+        l3=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw3),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw3),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=sw3),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw3,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw3,testresult__listening__isnull=False),distinct=True)).first()
+        l2=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw2),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw2),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=sw2),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw2,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw2,testresult__listening__isnull=False),distinct=True)).first()
+        l1=myUser.objects.filter(id=request.GET.get('user_id',)).annotate(num_vocab=Count('userword',filter=Q(userword__date__date=sw1),distinct=True),num_kanji=Count('userkanji',filter=Q(userkanji__date__date=sw1),distinct=True),num_grammar=Count('usergrammar',filter=Q(usergrammar__date__date=sw1),distinct=True),num_reading=Count('testresult',filter=Q(testresult__date__date=sw1,testresult__reading__isnull=False),distinct=True),num_listening=Count('testresult',filter=Q(testresult__date__date=sw1,testresult__listening__isnull=False),distinct=True)).first()
         learned_today_test = UserWord.objects.filter(user=request.GET.get('user_id',),date__date=datetime.date.today()- datetime.timedelta(1)).count()
         print()
         labels = [sw1,sw2,sw3,sw4,sw5,sw6,today]
@@ -999,6 +1077,7 @@ class ChartData(APIView):
         datar=[l1.num_reading,l2.num_reading,l3.num_reading,l4.num_reading,l5.num_reading,l6.num_reading,ltoday.num_reading]
         datal=[l1.num_listening,l2.num_listening,l3.num_listening,l4.num_listening,l5.num_listening,l6.num_listening,ltoday.num_listening]
         kanji=[l1.num_kanji,l2.num_kanji,l3.num_kanji,l4.num_kanji,l5.num_kanji,l6.num_kanji,ltoday.num_kanji]
+        grammar=[l1.num_grammar,l2.num_grammar,l3.num_grammar,l4.num_grammar,l5.num_grammar,l6.num_grammar,ltoday.num_grammar]
 
         data={
             "labels":labels,
@@ -1006,6 +1085,7 @@ class ChartData(APIView):
             "datan":kanji,
             "datar":datar,
             "datal":datal,
+            "datag":grammar,
         }
         return Response(data)
 
@@ -1020,6 +1100,7 @@ class MissionView(APIView):
         missionk = Mission.objects.filter(user=user,type="K",name="Learn 10 kanji").first()
         missionr = Mission.objects.filter(user=user,type="R",name="Learn 10 Reading").first()
         missionl = Mission.objects.filter(user=user,type="L",name="Learn 10 Listening").first()
+        missiong = Mission.objects.filter(user=user,type="G",name="Learn 10 Grammar").first()
         data={
             "point":user.interface.points,
             "word":missionw.name,
@@ -1030,6 +1111,8 @@ class MissionView(APIView):
             "readingp":round((missionr.process/missionr.target)*100),
             "listening":missionl.name,
             "listeningp":round((missionl.process/missionl.target)*100),
+            "grammar":missiong.name,
+            "grammarp":round((missiong.process/missiong.target)*100),
             "dailylogin":dailylogin.process,
             "dailyloginPoint":dailylogin.point,
             
@@ -1041,6 +1124,7 @@ def reset_daily():
     missionk = Mission.objects.filter(type="K",name="Learn 10 kanji").update(process=0,complete=False)
     missionr = Mission.objects.filter(type="R",name="Learn 10 Reading").update(process=0,complete=False)
     missionl = Mission.objects.filter(type="L",name="Learn 10 Listening").update(process=0,complete=False)
+    missiong = Mission.objects.filter(type="G",name="Learn 10 Grammar").update(process=0,complete=False)
 
 class CheckAlphabet(APIView):
     authentication_classes = []

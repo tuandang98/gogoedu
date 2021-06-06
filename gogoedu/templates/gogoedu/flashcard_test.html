@@ -111,6 +111,7 @@
 				</div>
 				<div class="game__front-card">
 					{{data}}
+					
 				</div>
 			</div>
             {%endfor%}
@@ -133,7 +134,13 @@
 					</svg>
 				</div>
 				<div class="game__front-card">
+					{%if data.mean%}
 					{{data.mean}}
+					{{data.kanji}}
+					{%else%}
+					{{data.reading}}
+					{{data.definition}}
+					{%endif%}
 				</div>
 			</div>
 			{%endfor%}
