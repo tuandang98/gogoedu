@@ -120,7 +120,17 @@
                                                             </ul>
                                                         </li>
                                                     </div>
-                                                    
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'grammar-detail' grammarlesson.grammar_level.id grammarlesson.id %}">
+                                                            {% csrf_token %}
+                                                           
+                                                            <input type="button" id="markButton{{grammar.id}}"
+                                                                   data-id="{{grammar.id}}" class="btn mark-button"
+                                                                   value="{% if grammar in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </ul>
                                             {% endfor %}
@@ -200,4 +210,35 @@
 <script src="{% static 'plugins/parallax-js-master/parallax.min.js'%}"></script>
 <script src="{% static 'plugins/colorbox/jquery.colorbox-min.js'%}"></script>
 <script src="{% static 'js/course.js'%}"></script>
+{% endblock %}
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        var lessonId = $("#lessonName").data('id')
+        console.log($('#wordListTab').data('id'))
+
+        $('#wordListTab').on('click', '.mark-button', function () {
+            var wordId = $(this).data('id')
+            var this_ = $(this)
+            $.ajax({
+                url: '/gogoedu/lesson/' + lessonId + '/grammar/' + wordId + '/learned/',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id: wordId,
+                },
+                type: 'post',
+                success: function (response) {
+                    if (response.learned) {
+                        this_.val("{% trans 'Unmark' %}")
+                    } else {
+                        this_.val("{% trans 'Mark as learned' %}")
+                    }
+                }
+            })
+        })
+
+    
+    })
+</script>
 {% endblock %}

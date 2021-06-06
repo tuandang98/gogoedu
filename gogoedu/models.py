@@ -345,6 +345,17 @@ class UserKanji(models.Model):
 
     class Meta:
         unique_together = (("user", "kanji"),)
+class UserGrammar(models.Model):
+    user = models.ForeignKey('myUser', on_delete=models.CASCADE)
+    grammar = models.ForeignKey(Grammar, on_delete=models.CASCADE)
+    date = models.DateTimeField(auto_now_add=True, blank=True)
+
+    def __str__(self):
+        """String for representing the Model object."""
+        return f'{self.user} - {self.grammar}'
+
+    class Meta:
+        unique_together = (("user", "grammar"),)
 @receiver(post_save, sender=GamificationInterface)
 def create_badges_and_unlockables_from_new_interface(
         sender, instance, created, **kwargs):
@@ -541,7 +552,24 @@ def delete_point_learned_kanji(sender, instance, **kwargs):
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=-1,interface=user.interface)
+@receiver(post_save, sender=UserGrammar)
+def add_point_learned_kanji(sender, instance, created, **kwargs):
+    user=myUser.objects.filter(
+        id=instance.user.id
+    ).first()
+    PointChange.objects.create(amount=1,interface=user.interface)
+   
 
+@receiver(post_delete, sender=UserGrammar)
+def delete_point_learned_kanji(sender, instance, **kwargs):
+    user=myUser.objects.filter(
+        id=instance.user.id
+    ).first()
+    PointChange.objects.create(amount=-1,interface=user.interface)
+    mission_grammar=Mission.objects.filter(user=instance.user,type="G").first()
+    if mission_grammar.complete is False:
+        mission_grammar.process+=1
+        mission_grammar.save()
 class Mission(models.Model):
     user = models.ForeignKey('myUser', on_delete=models.CASCADE)
     point = models.IntegerField()
@@ -611,7 +639,16 @@ def misson_daily_login(sender, instance, **kwargs):
                         target=10,
                         point=50,
                         type="L",
-                        )   
+                        )
+                missiong= Mission.objects.create(
+                        name="Learn 10 Grammar",
+                        user=user,
+                        description='Learn 10 Grammar',
+                        process=0,
+                        target=10,
+                        point=50,
+                        type="G",
+                        )      
                 PointChange.objects.create(amount=mission.point,interface=user.interface)
             else:
                 

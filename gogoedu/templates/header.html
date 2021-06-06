@@ -101,7 +101,7 @@
 									
 									<!-- <li><a href="blog.html">Blog</a></li> -->
 									<!-- <li><a href="#">Page</a></li> -->
-									<li class="{% if request.path == '/gogoedu/flashcard/' %}active{% endif %}"><a href="{% url 'flashcard' %}">{% trans 'Flashcard' %}</a></li>
+									
 									<li class="{% if request.path == '/gogoedu/leaderboard/' %}active{% endif %}"><a href="{% url 'leaderboard' %}">{% trans 'Leaderboard' %}</a></li>
 									{% if request.user.is_authenticated %}
 
@@ -127,6 +127,12 @@
 													<div id="kanji">Kanji</div>
 													<div class="progress">
 														<div id="kanjip" class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
+													</div>
+												</div>
+												<div>
+													<div id="grammar">Grammar</div>
+													<div class="progress">
+														<div id="grammarp" class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">0%</div>
 													</div>
 												</div>
 												<div>

@@ -70,15 +70,16 @@
 		<div class="card-header">{{ lesson }}
 		</div>
 		<p>
-		<h4 class="card-title" style="font-size: 45px">{{ card.word }}</h4>
+		<h4 class="card-title" style="font-size: 45px">{{ card.kanji }}</h4>
 		</p>
 		</div>
 
 		<!--Back of Card-->
 		<div class="flip-card-back">
 		<p>
-		<h4 class="card-text" style="font-size: 45px">{{ card.kanji}}</h4>
-		<h4 class="card-text" style="font-size: 45px">{{ card.mean}}</h4>
+		<h4 class="card-text" style="font-size: 45px">{{ card.reading}}</h4>
+		<h4 class="card-text" style="font-size: 45px">{{ card.definition}}</h4>
+		
 		</p>
 		</div>
 	</div>
@@ -108,7 +109,7 @@
 				{% else %}
 				<li class="page-item disabled"><a class="page-link">Next</a></li>
 				{% endif %}
-				<li class="page-item"><a class="page-link" target="_blank" href="{% url 'flashcard_test' lesson.id%}">Game</a></li>
+				<li class="page-item"><a class="page-link" target="_blank" href="{% url 'kanji-flashcard-game' lesson.id%}">Game</a></li>
 			</ul>
 		</nav>
 	
@@ -119,21 +120,6 @@
 		<p></p>
 	</div>
 
-	<div class="col-xl-4">
-		<h6>Test</h6>
-	
-		{% for test in lesson.test_set.all %}
-		<div id="test-detail-content" data-id="{{test.id}}">
-			<p>Name:{{test}}</p>
-			<p>Questions Number : {{test.question_num}}</p>
-							<p>Time : {{test.time}} s</p>
-							<p id="remainTime"></p>
-			<a class="btn btn-outline-warning" id="test-detail-content" id="startTestBtn{{test.id}}"
-			href="{{test.get_absolute_url}}" target="_blank" role="button">
-			Do test</a>
-		</div>
-		{%endfor%}
-	</div>
 </div>
 </div>
 {% endblock %}
