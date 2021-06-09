@@ -66,6 +66,7 @@
 <script src="{% static 'js/jquery.countdown.js' %}"></script>
 {%endblock%}
 {% block javascript %}
+{%if test.lesson %}
 <script>
     $(document).ready(function () {
         var timer = $('#defaultCountdown')
@@ -138,5 +139,152 @@
     }
 
 </script>
+{%elif test.kanji_lesson%}
+<script>
+    $(document).ready(function () {
+        var timer = $('#defaultCountdown')
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        var pauseBtn = $("#pauseBtn")
+        var is_paused = pauseBtn.data('id')
+        console.log(is_paused)
+        // if (is_paused) {
+        //     timer.countdown('pause')
+        // } else {
+        //     timer.countdown('resume')
+        // }
+        pauseBtn.unbind("click");
+
+        pauseBtn.on('click', function () {
+            console.log('pause')
+            var this_ = $(this)
+            var url_ = $("#pauseBtn").data('url')
+            var choice_input = $(".choice-input")
+            var test_time = timer.countdown('getTimes')[5] * 60 + timer.countdown('getTimes')[6]
+            console.log(test_time)
+
+            $.ajax({
+                url: url_,
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id: $("#quiz").data('id'),
+                    test_time: test_time
+                },
+                type: 'post',
+                success: function (response) {
+                    timer.countdown('pause')
+                    window.close()
+                    this_.attr("href", "{% url 'kanji-detail' test.kanji_lesson.id test.kanji_lesson.kanji_level.id %}");
+                }
+            })
+        });
+
+        $("#saveBtn").unbind("click")
+        $("#saveBtn").on('click', function () {
+            var serializedData = $("#quiz").serialize()
+            console.log(serializedData)
+            var this_ = $(this)
+            var url_ = this_.data('url')
+
+            $.ajax({
+                url: url_,
+                data: serializedData,
+                type: 'post',
+                success: function (response) {
+                    console.log(response.data)
+                }
+            })
+        });
+
+    });
+    $(function () {
+        $('#defaultCountdown').countdown({
+            until: '+{{test_time}}s',
+            format: 'YOWDHMS',
+            significant: 2,
+            onExpiry: time_over
+        });
+
+    });
+
+    function time_over() {
+        alert("{% trans 'Time off!' %}");
+        document.getElementById("quiz").submit();
+    }
+
+</script>
+{%else%}
+<script>
+    $(document).ready(function () {
+        var timer = $('#defaultCountdown')
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        var pauseBtn = $("#pauseBtn")
+        var is_paused = pauseBtn.data('id')
+        console.log(is_paused)
+        // if (is_paused) {
+        //     timer.countdown('pause')
+        // } else {
+        //     timer.countdown('resume')
+        // }
+        pauseBtn.unbind("click");
+
+        pauseBtn.on('click', function () {
+            console.log('pause')
+            var this_ = $(this)
+            var url_ = $("#pauseBtn").data('url')
+            var choice_input = $(".choice-input")
+            var test_time = timer.countdown('getTimes')[5] * 60 + timer.countdown('getTimes')[6]
+            console.log(test_time)
+
+            $.ajax({
+                url: url_,
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id: $("#quiz").data('id'),
+                    test_time: test_time
+                },
+                type: 'post',
+                success: function (response) {
+                    timer.countdown('pause')
+                    window.close()
+                    this_.attr("href", "{% url 'grammar-detail' test.grammar_lesson.id test.grammar_lesson.grammar_level.id %}");
+                }
+            })
+        });
+
+        $("#saveBtn").unbind("click")
+        $("#saveBtn").on('click', function () {
+            var serializedData = $("#quiz").serialize()
+            console.log(serializedData)
+            var this_ = $(this)
+            var url_ = this_.data('url')
+
+            $.ajax({
+                url: url_,
+                data: serializedData,
+                type: 'post',
+                success: function (response) {
+                    console.log(response.data)
+                }
+            })
+        });
+
+    });
+    $(function () {
+        $('#defaultCountdown').countdown({
+            until: '+{{test_time}}s',
+            format: 'YOWDHMS',
+            significant: 2,
+            onExpiry: time_over
+        });
+
+    });
+
+    function time_over() {
+        alert("{% trans 'Time off!' %}");
+        document.getElementById("quiz").submit();
+    }
+
+</script>
+{%endif%}
 {%endblock%}
 {% endblock %}

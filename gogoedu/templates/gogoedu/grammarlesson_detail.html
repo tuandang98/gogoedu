@@ -65,9 +65,9 @@
                             <div class="tab active">
                                 {% trans 'Grammar' %}
                             </div>
-                            <!-- <div class="tab">
+                            <div class="tab">
                                 {% trans 'Test' %}
-                            </div> -->
+                            </div>
                         </div>
                         <div class="tab_panels">
 
@@ -82,6 +82,17 @@
                                 <div class="tab_panel_content">
                                     <div class="row">
                                         <div class="tab_panel_title col-md-9">{{grammarlesson.grammar_level}}</div>
+                                        <div class="col-md-3">
+											<select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+													role="button" aria-haspopup="true" aria-expanded="false">
+												<optgroup label="{% trans 'Status' %}">
+													<option>{% trans 'All' %}</option>
+													<option>{% trans 'Learned' %}</option>
+													<option>{% trans 'New' %}</option>
+												</optgroup>
+											
+											</select>
+                                        </div>
                                     </div>
                                     <div id="wordListTab" class="tab_panel_content">
                                         <div id="All" class="w3-container city">
@@ -135,7 +146,108 @@
                                             </ul>
                                             {% endfor %}
                                         </div>
-										
+                                        <div id="Learned" class="w3-container city" style="display:none">
+                                            {% for grammar in marked_word_list %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{grammar}} </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                {%for mean in grammar.grammarmean_set.all%}
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;">{% trans 'Mean'%}:<span>{{mean.mean}}</span>
+                                                                             <div>
+                                                                                {% trans 'Example'%}:
+                                                                                 <ol class="new">
+                                                                                     
+                                                                                     {%for example in mean.example_set.all%}
+                                                                                     <li>
+                                                                                        {{example.example}}
+                                                                                     </li>
+                                                                                     {%endfor%}
+                                                                                   </ol>
+                                                                             </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                {%endfor%}
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'grammar-detail' grammarlesson.grammar_level.id grammarlesson.id %}">
+                                                            {% csrf_token %}
+                                                           
+                                                            <input type="button" id="markButton{{grammar.id}}"
+                                                                   data-id="{{grammar.id}}" class="btn mark-button"
+                                                                   value="{% if grammar in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
+										<div id="New" class="w3-container city" style="display:none">
+                                            {% for grammar in new_list %}
+                                            <ul class="dropdowns">
+                                                <div class="row">
+                                                    <div class="col-lg-9">
+                                                        <li class="has_children">
+                                                            <div class="dropdown_item">
+                                                                <div class="accordion d-flex flex-row justify-content-between">
+                                                                    <span class="d-flex flex-column justify-content-center">{{grammar}} </span>
+                                                                </div>
+                                                            </div>
+
+                                                            <ul>
+                                                                {%for mean in grammar.grammarmean_set.all%}
+                                                                <li>
+                                                                    <div class="dropdown_item">
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;">{% trans 'Mean'%}:<span>{{mean.mean}}</span>
+                                                                             <div>
+                                                                                {% trans 'Example'%}:
+                                                                                 <ol class="new">
+                                                                                     
+                                                                                     {%for example in mean.example_set.all%}
+                                                                                     <li>
+                                                                                        {{example.example}}
+                                                                                     </li>
+                                                                                     {%endfor%}
+                                                                                   </ol>
+                                                                             </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </li>
+                                                                {%endfor%}
+                                                            </ul>
+                                                        </li>
+                                                    </div>
+                                                    <div class="col-lg-3">
+                                                        <form id="markLearnedForm{{word.id}}" data-id="{{word.id}}"
+                                                              data-url="{% url 'grammar-detail' grammarlesson.grammar_level.id grammarlesson.id %}">
+                                                            {% csrf_token %}
+                                                           
+                                                            <input type="button" id="markButton{{grammar.id}}"
+                                                                   data-id="{{grammar.id}}" class="btn mark-button"
+                                                                   value="{% if grammar in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+                                                                   style="cursor: pointer">
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </ul>
+                                            {% endfor %}
+                                        </div>
 										
 										{% block pagination %}
 										{% if is_paginated %}
@@ -158,7 +270,40 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab_panel tab_panel_3">
+                                <div class="tab_panel_title">Test</div>
 
+                                <div class="tab_panel_content" id="test-desc">
+                                    <div class="accordions">
+                                        
+                                        <div class="elements_accordions">
+                                            
+                                            {% for test in grammarlesson.test_set.all %}
+                                            <div class="accordion_container">
+                                                <div class="accordion d-flex flex-row align-items-center">
+                                                    <div><a target="_blank">{{test}}</a></div>
+                                                </div>
+                                                <div class="accordion_panel" id="test-detail-content" data-id="{{test.id}}">
+                                                    <p>Questions Number : {{test.question_num}}</p>
+                                                    <p>Time : {{test.time}} s</p>
+                                                    <p id="remainTime">
+                                                    {% for user_test in user_test_list %}
+                                                        {% if user_test.test is test and user_test.is_paused is true %}
+                                                            {{user_test.remain_time}}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    </p>
+                                                    <a  type="button" id="startTestBtn{{test.id}}" class="btn btn-outline-success mt-3"
+                                                        href="{{test.get_absolute_url}}" target="_blank">
+                                                           {% if test in tested_list %}{% trans 'Resume' %}{% else %}{% trans 'Start' %}{% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                         </div>
                     </div>
@@ -237,8 +382,34 @@
                 }
             })
         })
-
+        $.ajax({
+            url: '/gogoedu/lesson/' + lessonId + '/tests/',
+            data: {
+                csrfmiddlewaretoken: csrfToken,
+                lesson_id: lessonId,
+                test_id: $('#test-detail-content').data('id')
+            },
+            type: 'get',
+            success: function (response) {
+                if (response.tested) {
+                    $('#remainTime').text("Remain time : " + response.my_test_remain_time + " s")
+                    $('#startTestBtn').text("Resume")
+                } else {
+                    $('#startTestBtn').text("Start")
+                }
+            }
+        })
     
     })
+    function openCity() {
+        var i;
+        var x = document.getElementsByClassName("city");
+        var cityName = document.getElementById("filter-list").value
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        console.log('success')
+        document.getElementById(cityName).style.display = "block";
+    }
 </script>
 {% endblock %}

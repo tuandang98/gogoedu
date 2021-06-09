@@ -86,11 +86,14 @@
                                     <div id="wordListTab" class="tab_panel_content">
                                         <div id="All" class="w3-container city">
                                             {% for reading in object_list %}
+                                            {% if reading.img %}
+                                                <img src="{{reading.img.url}}" alt="">
+                                            {%endif%}
                                             <form class="mt-5" action="" method="POST" id="quiz" data-id="{{test.id}}">
                                                 {% csrf_token %}
                                                 {%for question in reading.question_set.all%}
                                                 <li style="font-size: 1.2rem;">
-                                                    <h3 class="mb-2"><strong>{{question}}</strong></h3>
+                                                    <h3 class="mb-2"><strong>{{question|safe}}</strong></h3>
                                                     {% for choice in question.choice_set.all %}
                                                     <label class="radio" for="">
                                                         <input type="radio"
@@ -98,7 +101,7 @@
                                                                value="{{ choice.id }}"
                                                                name="question-{{ question.id }}"
                                                         >
-                                                        {{choice}}
+                                                        {{choice|safe}}
                                                     </label>
                                                     <br>
                                                     {% endfor %}
