@@ -64,7 +64,9 @@ class Word(models.Model):
 
 
 class Test(models.Model):
-    lesson = models.ForeignKey('Lesson', on_delete=models.SET_NULL, null=True)
+    lesson = models.ForeignKey('Lesson', on_delete=models.SET_NULL, null=True, blank= True)
+    kanji_lesson = models.ForeignKey('KanjiLesson', on_delete=models.SET_NULL, null=True, blank= True)
+    grammar_lesson = models.ForeignKey('GrammarLesson', on_delete=models.SET_NULL, null=True, blank= True)
     question_num = models.IntegerField()
     name = models.CharField(max_length=50, null= True)
     time = models.IntegerField(default=600)
@@ -242,6 +244,7 @@ class ReadingLesson(models.Model):
 class Reading(models.Model):
     text = models.TextField()
     mondai = models.CharField(max_length=255)
+    img = models.ImageField( upload_to='images/reading',null=True, blank=True)
     reading_lesson = models.ForeignKey(ReadingLesson, on_delete=models.CASCADE)
 
 class ListeningLevel(models.Model):

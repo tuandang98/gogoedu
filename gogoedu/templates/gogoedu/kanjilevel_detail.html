@@ -32,7 +32,10 @@
 <h3>{{kanji_lesson.name}}</h3>
  <div class="list-group mt-3">
   {% for kanji_lesson in object_list %}
-  <a class="list-group-item" href="{{ kanji_lesson.get_absolute_url }}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{kanji_lesson.name}}</a>
+  <a class="progress" href="{{ kanji_lesson.get_absolute_url }}">
+	<a class="list-group-item" href="{{ kanji_lesson.get_absolute_url }}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{kanji_lesson.name}}</a>
+	<div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{kanji_lesson.percent}}%" aria-valuenow="{{kanji_lesson.percent}}" aria-valuemin="0" aria-valuemax="100">{{kanji_lesson.percent|floatformat}}%</div>
+  </a>
   {% endfor %}
 </div>
 

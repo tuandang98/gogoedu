@@ -40,7 +40,7 @@ from django.db import transaction
 from django.core.exceptions import PermissionDenied
 from background_task import background
 
-from django.db.models import Avg, Count, Min, Sum, Q,Max
+from django.db.models import Avg, Count, Min, Sum, Q,Max,F,FloatField
 import random 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -235,6 +235,7 @@ class CatagoryListView(generic.ListView):
     paginate_by = 3
 
     def get_queryset(self, **kwargs):
+        
         try:
             name = self.request.GET.get('name', )
         except:
@@ -248,17 +249,19 @@ class CatagoryListView(generic.ListView):
 
 class CatagoryDetailView(generic.DetailView, MultipleObjectMixin):
     model = Catagory
-    paginate_by = 10
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
+        user = myUser.objects.filter(id=self.request.user.id).first()
+        
         try:
             name = self.request.GET.get('name', )
         except:
             name = ''
         if name:
-            object_list = self.object.lesson_set.filter(name__icontains=name)
+            object_list = self.object.lesson_set.filter(name__icontains=name).annotate(wcount=Count('word', distinct=True,output_field=FloatField()),lcount=Count('word',filter=Q(word__userword__user=user), distinct=True,output_field=FloatField())).annotate(percent=F('lcount') / F('wcount')*100)
         else:
-            object_list = self.object.lesson_set.all()
+            object_list = self.object.lesson_set.all().annotate(wcount=Count('word', distinct=True,output_field=FloatField()),lcount=Count('word',filter=Q(word__userword__user=user), distinct=True,output_field=FloatField())).annotate(percent=F('lcount') / F('wcount')*100)
         context = super(CatagoryDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
 
@@ -374,7 +377,12 @@ class TestPause(generic.View):
         Task.objects.filter(task_params='[['+str(request.user.id)+', '+str(test.id)+'], {}]').delete()
         # my_test.update(is_paused=not my_test.is_paused)
         
-        return redirect('lesson-detail', test.lesson.id)
+        if test.lesson is not None:
+            return redirect('lesson-detail', test.lesson.id)
+        if test.kanji_lesson is not None:
+            return redirect('kanji-detail', test.kanji_lesson.id ,test.kanji_lesson.kanji_level.id)
+        if test.grammar_lesson is not None:
+            return redirect('grammar-detail', test.grammar_lesson.id ,test.grammar_lesson.grammar_level.id)
 
 
 class SuspiciousOperation(Exception):
@@ -583,13 +591,10 @@ def viewkanjiflash(request,pk):
 def leaderboard_view(request):
     template = loader.get_template('leaderboard.html')
     top_points = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True)).exclude(interface=None)
-    top_tested = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-num_tests')[:3]
-       
-    top_learned_word = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True)).order_by('-num_tests')[:3]
+    
 
     context = {"top_points": sorted(top_points,  key=lambda p: p.interface.points,reverse=True)[:3],
-                "top_tested":top_tested,
-                "top_learned_word":top_learned_word,
+                
                }
     return HttpResponse(template.render(context, request))
 
@@ -772,6 +777,13 @@ class Grammar_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObje
         context = super(Grammar_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
         new_list = []
         marked_word_list = []
+        tests = lesson.test_set.all()
+        user_test_list = []
+        tested_list = []
+        for test in tests:
+            if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
+                user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
+                tested_list.append(test)
         for word in object_list:
             if not UserGrammar.objects.filter(user=self.request.user.id, grammar=word.id).first():
                 new_list.append(word)
@@ -779,6 +791,8 @@ class Grammar_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObje
                 marked_word_list.append(word)
         context['marked_word_list'] = marked_word_list
         context['new_list'] = new_list
+        context['user_test_list'] = user_test_list
+        context['tested_list'] = tested_list
         return context
         
         
@@ -799,16 +813,17 @@ class KanjiLevelListView(generic.ListView):
 
 class KanjiLevelDetailView(generic.DetailView, MultipleObjectMixin):
     model = KanjiLevel
-    paginate_by = 10
+    paginate_by = 5
     def get_context_data(self, **kwargs):
+        user = myUser.objects.filter(id=self.request.user.id).first()
         try:
             name = self.request.GET.get('name', )
         except:
             name = ''
         if name:
-            object_list = self.object.kanjilesson_set.filter(name__icontains=name)
+            object_list = self.object.kanjilesson_set.filter(name__icontains=name).annotate(wcount=Count('kanji', distinct=True,output_field=FloatField()),lcount=Count('kanji',filter=Q(kanji__userkanji__user=user), distinct=True,output_field=FloatField())).annotate(percent=F('lcount') / F('wcount')*100)
         else:
-            object_list = self.object.kanjilesson_set.all()
+            object_list = self.object.kanjilesson_set.all().annotate(wcount=Count('kanji', distinct=True,output_field=FloatField()),lcount=Count('kanji',filter=Q(kanji__userkanji__user=user), distinct=True,output_field=FloatField())).annotate(percent=F('lcount') / F('wcount')*100)
         context = super(KanjiLevelDetailView, self).get_context_data(object_list=object_list, **kwargs)
         return context
 
@@ -829,6 +844,13 @@ class Kanji_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObject
         context = super(Kanji_lesson_detail, self).get_context_data(object_list=object_list, **kwargs)
         new_list = []
         marked_word_list = []
+        tests = lesson.test_set.all()
+        user_test_list = []
+        tested_list = []
+        for test in tests:
+            if UserTest.objects.filter(user=self.request.user.id, test=test.id).first():
+                user_test_list.append(UserTest.objects.filter(user=self.request.user.id, test=test.id).first())
+                tested_list.append(test)
         for word in object_list:
             if not UserKanji.objects.filter(user=self.request.user.id, kanji=word.id).first():
                 new_list.append(word)
@@ -836,6 +858,8 @@ class Kanji_lesson_detail(LoginRequiredMixin, generic.DetailView, MultipleObject
                 marked_word_list.append(word)
         context['marked_word_list'] = marked_word_list
         context['new_list'] = new_list
+        context['user_test_list'] = user_test_list
+        context['tested_list'] = tested_list
         return context
 class ListeningLevelListView(generic.ListView):
     model = ListeningLevel

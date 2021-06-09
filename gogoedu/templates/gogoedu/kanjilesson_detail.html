@@ -150,28 +150,52 @@
                             <div class="tab ">
                                 {% trans 'kanji' %}
                             </div>
-                            <a class="tab" href="{% url 'kanji-flashcard' kanjilesson.id %}">Flashcard</a>
-                            <!-- <div class="tab">
+                            <div class="tab">
                                 {% trans 'Test' %}
-                            </div> -->
+                            </div>
+                            <a class="tab" href="{% url 'kanji-flashcard' kanjilesson.id %}">Flashcard</a>
                         </div>
                         <div class="tab_panels ">
 
                             <!-- Description -->
                             <div class="tab_panel active">
                                 <h1 style="text-align: center;">Kanji</h1>
+                                <div class="col-md-3">
+                                    <select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+                                            role="button" aria-haspopup="true" aria-expanded="false">
+                                        <optgroup label="{% trans 'Status' %}">
+                                            <option>{% trans 'All' %}</option>
+                                            <option>{% trans 'Learned' %}</option>
+                                            <option>{% trans 'New' %}</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                                
                                     <table id="test_board" class="gameboard ">
                                         
-                                        <tr>
+                                        <tr id="All" class="w3-container city">
                                             {% for kanji in object_list %}
                                                 <td type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{kanji}}">
                                             {{kanji}}
-                                        </td>
+                                                </td>
                                         {%endfor%}
                                         </tr>
-                                        
+                                        <tr id="Learned" class="w3-container city" style="display:none">
+                                            {% for kanji in marked_word_list %}
+                                                <td type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{kanji}}">
+                                            {{kanji}}
+                                                </td>
+                                            {%endfor%}
+                                        </tr>
+                                        <tr id="New" class="w3-container city" style="display:none">
+                                            {% for kanji in new_list %}
+                                                <td type="button" class="btn btn-primary" data-toggle="modal" data-target="#{{kanji}}">
+                                            {{kanji}}
+                                                </td>
+                                            {%endfor%}
+                                        </tr>
                                         </tbody>
-                                        </table>
+                                    </table>
                             </div>
 
                             <!-- Curriculum -->
@@ -252,7 +276,40 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="tab_panel tab_panel_3">
+                                <div class="tab_panel_title">Test</div>
 
+                                <div class="tab_panel_content" id="test-desc">
+                                    <div class="accordions">
+                                        
+                                        <div class="elements_accordions">
+                                            
+                                            {% for test in kanjilesson.test_set.all %}
+                                            <div class="accordion_container">
+                                                <div class="accordion d-flex flex-row align-items-center">
+                                                    <div><a target="_blank">{{test}}</a></div>
+                                                </div>
+                                                <div class="accordion_panel" id="test-detail-content" data-id="{{test.id}}">
+                                                    <p>Questions Number : {{test.question_num}}</p>
+                                                    <p>Time : {{test.time}} s</p>
+                                                    <p id="remainTime">
+                                                    {% for user_test in user_test_list %}
+                                                        {% if user_test.test is test and user_test.is_paused is true %}
+                                                            {{user_test.remain_time}}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    </p>
+                                                    <a  type="button" id="startTestBtn{{test.id}}" class="btn btn-outline-success mt-3"
+                                                        href="{{test.get_absolute_url}}" target="_blank">
+                                                           {% if test in tested_list %}{% trans 'Resume' %}{% else %}{% trans 'Start' %}{% endif %}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                             
                         </div>
                     </div>
@@ -331,8 +388,34 @@
                 }
             })
         })
-
+        $.ajax({
+            url: '/gogoedu/lesson/' + lessonId + '/tests/',
+            data: {
+                csrfmiddlewaretoken: csrfToken,
+                lesson_id: lessonId,
+                test_id: $('#test-detail-content').data('id')
+            },
+            type: 'get',
+            success: function (response) {
+                if (response.tested) {
+                    $('#remainTime').text("Remain time : " + response.my_test_remain_time + " s")
+                    $('#startTestBtn').text("Resume")
+                } else {
+                    $('#startTestBtn').text("Start")
+                }
+            }
+        })
     
     })
+    function openCity() {
+        var i;
+        var x = document.getElementsByClassName("city");
+        var cityName = document.getElementById("filter-list").value
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        console.log('success')
+        document.getElementById(cityName).style.display = "block";
+    }
 </script>
 {% endblock %}

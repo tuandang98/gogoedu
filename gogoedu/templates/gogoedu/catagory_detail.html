@@ -32,7 +32,11 @@
 <h3>{{catagory.name}}</h3>
  <div class="list-group mt-3">
   {% for lesson in object_list %}
-  <a class="list-group-item" href="{{ lesson.get_absolute_url }}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{lesson.name}}</a>
+  <a class="progress" href="{{ lesson.get_absolute_url }}">
+	<a class="list-group-item" href="{{ lesson.get_absolute_url }}"><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{lesson.name}}</a>
+	<div class="progress-bar progress-bar-striped" role="progressbar" style="width: {{lesson.percent}}%" aria-valuenow="{{lesson.percent}}" aria-valuemin="0" aria-valuemax="100">{{lesson.percent|floatformat}}%</div>
+  </a>
+  
   {% endfor %}
 </div>
 
