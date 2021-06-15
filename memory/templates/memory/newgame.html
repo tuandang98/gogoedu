@@ -1,0 +1,53 @@
+{% extends "base_generic.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% load i18n %}
+{% block content%}
+<p style="margin-top: 200px;">Welcome to the Memory game</p>
+
+{% if request.user.username %}
+
+
+<p>{{ error }}</p>
+<p>If you want to join an existing game please ask the link from the other player.</p>
+<div class="col-md-3">
+    <select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+            role="button" aria-haspopup="true" aria-expanded="false">
+        <optgroup label="{% trans 'Level' %}">
+            {%for category in category%}
+            <option>{{category}}</option>
+            {%endfor%}            
+        </optgroup>
+    </select>
+</div>
+{% for category in category %}
+<div id="{{category}}" class="row courses_row city" style="display: none">
+
+    {% for lesson in category.lesson_set.all %}
+        <form method="post">
+        {% csrf_token %}
+        <label for="name" style="margin-left: 50px;">{{lesson.name}}</label>
+        <input type="text" name="name" value="{{request.user}}" readonly="readonly" style="display: none;"/>
+        <input type="text" name="lesson" value="{{lesson.id}}" readonly="readonly" style="display: none;"/>
+        <input type="submit" value="Start a new game"/> 
+        </form>
+    {% endfor %}
+</div>
+{%endfor%}
+{%else%}
+<div class="login_button "><a href="{% url 'login' %}?next={% url 'index' %}">Sign in</a></div>
+{%endif%}
+{%endblock%}
+{% block javascript %}
+<script>
+    function openCity() {
+        var i;
+        var x = document.getElementsByClassName("city");
+        var cityName = document.getElementById("filter-list").value
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        document.getElementById(cityName).style.display = "block";
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Memory Game</title>
+<style>
+.card {
+	width: 140px; 
+	height: 140px; 
+	background-image: url({% static 'memory/cards_alphabet.png' %}); 
+}
+.cardcell {
+	width: 150px; 
+	height: 150px; 
+}
+</style>
+<script src="{% static 'memory/gamen.js' %}"></script>
+</head>
+<body onload="main()">
+<p>This is game {{ game }}.</p>
+
+{% if game.state == 0 %} 
+<p>Please wait for other player</p>
+<p>Send him this link to join: <a href="{{ game.get_absolute_url }}">{{ game.get_absolute_url }}</a></p>
+{% else %}
+<table>
+<tr>
+{% for aplayer in game.players.all %}
+<td id="player{{ aplayer.id }}" {% if aplayer.is_current_player %}style="background: yellow"{% endif %}>{{ aplayer.name }} - {{ aplayer.score }}</td>
+{% endfor %}
+</tr>
+</table>
+
+{% if player %}
+<p>You are {{ player }}.</p>
+{% endif %}
+<p id="message">{{game.message}}</p>
+
+<form method='post' id="game-form">
+{% csrf_token %}
+<div id="ended" {% if not game.has_ended  %} style="visibility: hidden" {% endif %}>
+<p><input type="submit" value="Play again"/></p>
+<p><a href="{% url 'memory:welcome' %}">or start a new game with somebody else.</a></p>
+</div>
+<table>
+{% for card in game.cards.all %}
+    {% if forloop.counter0|divisibleby:6 %}<tr>{% endif %}
+	<td class="cardcell">
+	{% if card.shown %}
+		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}">{{ card.word}}</button>
+	{% elif card.visible %}
+		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}"></button>
+	{% else %}
+		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}" style="visibility: hidden"></button>
+	{% endif %}
+	</td>
+    {% if forloop.counter|divisibleby:6 %}</tr>{% endif %}
+{% endfor %}
+</table>
+</form>
+{% endif %}
+</body>
+</html>
