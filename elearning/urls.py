@@ -36,6 +36,7 @@ urlpatterns = [
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
     path('gogoedu/', include('gogoedu.urls')),
+    path('memory/', include('memory.urls')),
     path('', RedirectView.as_view(url='gogoedu/')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),

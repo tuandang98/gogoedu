@@ -1,0 +1,11 @@
+<p>Welcome to the Memory game</p>
+<form method="post">
+{% csrf_token %}
+{% if request.user.username %}
+<label for="name">Your name or nickname</label><input type="text" name="name" value="{{request.user.username}}" readonly="readonly"/>
+<input type="submit" value="Join the game"/> 
+</form>
+{%else%}
+<div class="login_button "><a href="{% url 'login' %}?next={% url 'index' %}">Sign in</a></div>
+{%endif%}
+<p>{{ error }}</p>

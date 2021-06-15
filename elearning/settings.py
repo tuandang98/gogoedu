@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_gamification',
     'rest_framework',
     'notifications',
+    'memory',
 ]
 
 MIDDLEWARE = [
