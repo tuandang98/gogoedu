@@ -1,6 +1,8 @@
 {% load static %}
 {% load i18n %}
 {% load user_tags %}
+{% load notifications_tags %}
+
 	<!-- Header -->
 	<header class="header" id="home-link" >
 		<!-- Top Bar -->
@@ -23,8 +25,26 @@
 								</ul>
 								{% if request.user.is_authenticated %}
 								<div class="d-flex flex-row align-items-center justify-content-end">
-									<ul class="navbar-nav ml-auto nav-flex-icons">
+									<ul class="navbar-nav ml-auto nav-flex-icons" style="flex-direction: row;">
+										<a href="#" class="notification dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true">
+											<i class="fa fa-bell" style="font-size:24px"></i>
+											<span class="badge">{% live_notify_badge %}</span>
+										</a>
+											  <div class="dropdown-menu" aria-labelledby="dropdownMenu2" style="text-align: center;">
+												
+												  {% for notification in  user.notifications.unread|slice:":5"  %}
+													  <div>
+													  Message from <b>GogoEdu</b>
+													<button class="dropdown-item" type="button">{{ notification.description }}</button>			
+													</div>
+													<div class="dropdown-divider"></div>
+												{% endfor %}
+												<a href="{% url 'notifications:unread' %}">See All</a>
+												</div>
+										
+												<!-- {% live_notify_list list_class="live_notify_list dropdown-menu" %} -->
 										<li class="nav-item avatar dropdown" style="color: white; cursor: pointer;">
+											
 											<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
 											  aria-haspopup="true" aria-expanded="false">
 											  <img src="{{ request.user.avatar.url }}" class="rounded-circle z-depth-0"
