@@ -56,8 +56,9 @@
 
 {% block content%}
 
-<div class="container" style="margin-top: 240px;">
-<div class="row">
+<div id="lessonName" data-id="{{lesson.id}}" class="container" style="margin-top: 240px;">
+<div id="wordListTab" class="row">
+	
 
 	<div class="col-md-4 mr-5">
 	{% if card_object %}
@@ -84,7 +85,17 @@
 		</div>
 	</div>
 	</div>
-
+	<div style="margin-left: 50%;">
+		<form id="markLearnedForm{{card.id}}" data-id="{{card.id}}"
+			  data-url="{% url 'kanji-detail' lesson.kanji_level.id lesson.id %}">
+			{% csrf_token %}
+		   
+			<input type="button" id="markButton{{card.id}}"
+				   data-id="{{card.id}}" class="btn mark-button"
+				   value="{% if card in marked_word_list %}{% trans 'Unmark' %}{% else %}{% trans 'Mark as learned' %}{% endif %}"
+				   style="cursor: pointer">
+		</form>
+	</div>
 	<br>
 	{%endfor%}
 	{% else %}
@@ -122,4 +133,37 @@
 
 </div>
 </div>
+{% endblock %}
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        var lessonId = $("#lessonName").data('id')
+        console.log($('#wordListTab').data('id'))
+
+        $('#wordListTab').on('click', '.mark-button', function () {
+            var wordId = $(this).data('id')
+            var this_ = $(this)
+            $.ajax({
+                url: '/gogoedu/lesson/' + lessonId + '/kanjis/' + wordId + '/learned/',
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id: wordId,
+                },
+                type: 'post',
+                success: function (response) {
+                    if (response.learned) {
+                        this_.val("{% trans 'Unmark' %}")
+                    } else {
+                        this_.val("{% trans 'Mark as learned' %}")
+                    }
+                }
+            })
+        })
+
+
+    });
+
+
+</script>
 {% endblock %}

@@ -550,7 +550,13 @@ def view_card_set(request, pk):
     card_object = word_list.first()	   
     page = request.GET.get('page', 1)
     paginator = Paginator(word_list, 1)
-    
+    marked_word_list=[]
+    new_list=[]
+    for word in word_list:
+            if not UserWord.objects.filter(user=request.user.id, word=word.id).first():
+                new_list.append(word)
+            else:
+                marked_word_list.append(word)
     try:
         word_list_paged = paginator.page(page)
     except PageNotAnInteger:
@@ -558,7 +564,7 @@ def view_card_set(request, pk):
     except EmptyPage:
         word_list_paged = paginator.page(paginator.num_pages)
 
-    context = {'lesson': lesson, 'card_object': word_list_paged}
+    context = {'lesson': lesson, 'card_object': word_list_paged,'marked_word_list':marked_word_list}
     return render(request, 'gogoedu/view_cards.html', context)
 
 def viewflashcard(request,pk):
@@ -566,7 +572,13 @@ def viewflashcard(request,pk):
     word_list = lesson.word_set.all() 
     page = request.GET.get('page', 1)
     paginator = Paginator(word_list, 1)
-    
+    marked_word_list=[]
+    new_list=[]
+    for word in word_list:
+            if not UserWord.objects.filter(user=request.user.id, word=word.id).first():
+                new_list.append(word)
+            else:
+                marked_word_list.append(word)
     try:
         word_list_paged = paginator.page(page)
     except PageNotAnInteger:
@@ -574,7 +586,7 @@ def viewflashcard(request,pk):
     except EmptyPage:
         word_list_paged = paginator.page(paginator.num_pages)
 
-    context = {'lesson': lesson, 'card_object': word_list_paged}
+    context = {'lesson': lesson, 'card_object': word_list_paged,'marked_word_list':marked_word_list}
     return render(request, 'gogoedu/view_cards.html', context)
 
 def viewkanjiflash(request,pk):
@@ -582,7 +594,13 @@ def viewkanjiflash(request,pk):
     word_list = lesson.kanji_set.all() 
     page = request.GET.get('page', 1)
     paginator = Paginator(word_list, 1)
-    
+    marked_word_list=[]
+    new_list=[]
+    for word in word_list:
+            if not UserKanji.objects.filter(user=request.user.id, kanji=word.id).first():
+                new_list.append(word)
+            else:
+                marked_word_list.append(word)
     try:
         word_list_paged = paginator.page(page)
     except PageNotAnInteger:
@@ -590,7 +608,7 @@ def viewkanjiflash(request,pk):
     except EmptyPage:
         word_list_paged = paginator.page(paginator.num_pages)
 
-    context = {'lesson': lesson, 'card_object': word_list_paged}
+    context = {'lesson': lesson, 'card_object': word_list_paged,'marked_word_list':marked_word_list}
     return render(request, 'gogoedu/view_cards_kanji.html', context)
 
 def leaderboard_view(request):
