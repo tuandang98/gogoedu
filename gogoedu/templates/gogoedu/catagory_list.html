@@ -31,7 +31,7 @@
 {% endblock %}
 
 	<!-- Courses -->
-
+	
 	<div class="courses pt-5">
 		<div class="container">
 			<div class="row">
@@ -47,14 +47,35 @@
 						{% endblock %}
 					</div>
 					<div class="courses_container">
-						<div class="row courses_row">
+						
 						{%block content2%}
+						<div class="col-md-3">
+							<select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+									role="button" aria-haspopup="true" aria-expanded="false">
+								<optgroup label="{% trans 'Level' %}">
+									<option>{% trans 'All' %}</option>
+									<option>{% trans 'N5' %}</option>
+									<option>{% trans 'N4' %}</option>
+									<option>{% trans 'N3' %}</option>
+									<option>{% trans 'N2' %}</option>
+									<option>{% trans 'N1' %}</option>
+								</optgroup>
+								<!-- <optgroup label="{% trans 'Word type' %}">
+									<option>{% trans 'Noun' %}</option>
+									<option>{% trans 'Verb' %}</option>
+									<option>{% trans 'Adjective' %}
+									</option>
+								</optgroup> -->
+							</select>
+						</div>
+						<div id="All" class="row courses_row city">
+						
 							{% if catagory_list %}
 							<!-- Course -->
 							{% for catagory in catagory_list %}
 							<div class="col-lg-4 course_col">
 								<div class="course">
-									<div class="course_image"><img src="https://lh6.googleusercontent.com/X7JYEBXkxFMLWlXgsipqGbOYN6j9Lh_83FdKL-WPAtVKZsNnwrEE-VJVR83IXO73jgq4NrVuwPER2JVgkuyIpFMDMLzN3kbY1uHnD2_5enIx52yB-0IWf_VIfgFcpQBb4Yp3-an0" alt=""></div>
+									<div class="course_image"><img src="https://thumbs.dreamstime.com/z/learn-japanese-indicates-japan-language-speech-mountain-sun-symbols-130548046.jpg" alt=""></div>
 									<div class="course_body">
 										<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
 										<div class="course_teacher">Mr. John Taylor</div>
@@ -84,6 +105,201 @@
 
 
 						</div>
+						<div id="N1" class="row courses_row city" style="display: none;">
+						
+							{% if catagory_list %}
+							<!-- Course -->
+							{% for catagory in catagory_list %}
+							{%if catagory.level == 'N1'%}
+							<div class="col-lg-4 course_col">
+								<div class="course">
+									<div class="course_image"><img src="https://thumbs.dreamstime.com/z/learn-japanese-indicates-japan-language-speech-mountain-sun-symbols-130548046.jpg" alt=""></div>
+									<div class="course_body">
+										<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
+										<div class="course_teacher">Mr. John Taylor</div>
+										<div class="course_text">
+											<p>Lorem ipsum dolor sit amet, consectetur adipi elitsed do eiusmod tempor</p>
+										</div>
+									</div>
+									{% comment %} <div class="course_footer">
+										<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+											<div class="course_info">
+												<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+												<span>20 Student</span>
+											</div>
+											<div class="course_info">
+												<i class="fa fa-star" aria-hidden="true"></i>
+												<span>5 Ratings</span>
+											</div>
+											<div class="course_price ml-auto">$130</div>
+										</div>
+									</div> {% endcomment %}
+								</div>
+							</div>
+							{%endif%}
+							{% endfor %}
+							{% else %}
+								<p>NO Catagory.</p>
+							{% endif %}
+
+
+						</div>
+						<div id="N2" class="row courses_row city" style="display: none;">
+						
+							{% if catagory_list %}
+							<!-- Course -->
+							{% for catagory in catagory_list %}
+							{%if catagory.level == 'N2'%}
+							<div class="col-lg-4 course_col">
+								<div class="course">
+									<div class="course_image"><img src="https://thumbs.dreamstime.com/z/learn-japanese-indicates-japan-language-speech-mountain-sun-symbols-130548046.jpg" alt=""></div>
+									<div class="course_body">
+										<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
+										<div class="course_teacher">Mr. John Taylor</div>
+										<div class="course_text">
+											<p>Lorem ipsum dolor sit amet, consectetur adipi elitsed do eiusmod tempor</p>
+										</div>
+									</div>
+									{% comment %} <div class="course_footer">
+										<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+											<div class="course_info">
+												<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+												<span>20 Student</span>
+											</div>
+											<div class="course_info">
+												<i class="fa fa-star" aria-hidden="true"></i>
+												<span>5 Ratings</span>
+											</div>
+											<div class="course_price ml-auto">$130</div>
+										</div>
+									</div> {% endcomment %}
+								</div>
+							</div>
+							{%endif%}
+							{% endfor %}
+							{% else %}
+								<p>NO Catagory.</p>
+							{% endif %}
+
+
+						</div>
+						<div id="N3" class="row courses_row city" style="display: none;">
+						
+								{% if catagory_list %}
+								<!-- Course -->
+								{% for catagory in catagory_list %}
+								{%if catagory.level == 'N3'%}
+								<div class="col-lg-4 course_col">
+									<div class="course">
+										<div class="course_image"><img src="https://thumbs.dreamstime.com/z/learn-japanese-indicates-japan-language-speech-mountain-sun-symbols-130548046.jpg" alt=""></div>
+										<div class="course_body">
+											<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
+											<div class="course_teacher">Mr. John Taylor</div>
+											<div class="course_text">
+												<p>Lorem ipsum dolor sit amet, consectetur adipi elitsed do eiusmod tempor</p>
+											</div>
+										</div>
+										{% comment %} <div class="course_footer">
+											<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+												<div class="course_info">
+													<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+													<span>20 Student</span>
+												</div>
+												<div class="course_info">
+													<i class="fa fa-star" aria-hidden="true"></i>
+													<span>5 Ratings</span>
+												</div>
+												<div class="course_price ml-auto">$130</div>
+											</div>
+										</div> {% endcomment %}
+									</div>
+								</div>
+								{%endif%}
+								{% endfor %}
+								{% else %}
+									<p>NO Catagory.</p>
+								{% endif %}
+	
+	
+							</div>
+							<div id="N4" class="row courses_row city" style="display: none;">
+						
+								{% if catagory_list %}
+								<!-- Course -->
+								{% for catagory in catagory_list %}
+								{%if catagory.level == 'N4'%}
+								<div class="col-lg-4 course_col">
+									<div class="course">
+										<div class="course_image"><img src="https://thumbs.dreamstime.com/z/learn-japanese-indicates-japan-language-speech-mountain-sun-symbols-130548046.jpg" alt=""></div>
+										<div class="course_body">
+											<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
+											<div class="course_teacher">Mr. John Taylor</div>
+											<div class="course_text">
+												<p>Lorem ipsum dolor sit amet, consectetur adipi elitsed do eiusmod tempor</p>
+											</div>
+										</div>
+										{% comment %} <div class="course_footer">
+											<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+												<div class="course_info">
+													<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+													<span>20 Student</span>
+												</div>
+												<div class="course_info">
+													<i class="fa fa-star" aria-hidden="true"></i>
+													<span>5 Ratings</span>
+												</div>
+												<div class="course_price ml-auto">$130</div>
+											</div>
+										</div> {% endcomment %}
+									</div>
+								</div>
+								{%endif%}
+								{% endfor %}
+								{% else %}
+									<p>NO Catagory.</p>
+								{% endif %}
+	
+	
+							</div>
+							<div id="N5" class="row courses_row city" style="display: none;">
+						
+								{% if catagory_list %}
+								<!-- Course -->
+								{% for catagory in catagory_list %}
+								{%if catagory.level == 'N5'%}
+								<div class="col-lg-4 course_col">
+									<div class="course">
+										<div class="course_image"><img src="https://thumbs.dreamstime.com/z/learn-japanese-indicates-japan-language-speech-mountain-sun-symbols-130548046.jpg" alt=""></div>
+										<div class="course_body">
+											<h3 class="course_title"><a href="{{ catagory.get_absolute_url }}">{{catagory.name}}</a></h3>
+											<div class="course_teacher">Mr. John Taylor</div>
+											<div class="course_text">
+												<p>Lorem ipsum dolor sit amet, consectetur adipi elitsed do eiusmod tempor</p>
+											</div>
+										</div>
+										{% comment %} <div class="course_footer">
+											<div class="course_footer_content d-flex flex-row align-items-center justify-content-start">
+												<div class="course_info">
+													<i class="fa fa-graduation-cap" aria-hidden="true"></i>
+													<span>20 Student</span>
+												</div>
+												<div class="course_info">
+													<i class="fa fa-star" aria-hidden="true"></i>
+													<span>5 Ratings</span>
+												</div>
+												<div class="course_price ml-auto">$130</div>
+											</div>
+										</div> {% endcomment %}
+									</div>
+								</div>
+								{%endif%}
+								{% endfor %}
+								{% else %}
+									<p>NO Catagory.</p>
+								{% endif %}
+	
+	
+							</div>
 						{% endblock %}
 						<div class="row pagination_row">
 							<div class="col">
@@ -142,4 +358,18 @@
 	<script src="{% static 'plugins/greensock/animation.gsap.min.js'%}"></script>
 	<script src="{% static 'plugins/greensock/ScrollToPlugin.min.js'%}"></script>
     <script src="{% static 'js/custom.js'%}"></script>
+{% endblock %}
+{% block javascript %}
+<script>
+    function openCity() {
+        var i;
+        var x = document.getElementsByClassName("city");
+        var cityName = document.getElementById("filter-list").value
+        for (i = 0; i < x.length; i++) {
+            x[i].style.display = "none";
+        }
+        console.log('success')
+        document.getElementById(cityName).style.display = "inline-flex";
+    }
+</script>
 {% endblock %}

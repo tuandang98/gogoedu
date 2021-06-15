@@ -8,9 +8,8 @@ from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
 from PIL import Image
 from django.utils import timezone
-
 import datetime
-
+from notifications.signals import notify
 from django.db.models.signals import post_save,post_delete,pre_save
 from django.dispatch import receiver
 from django_gamification.models import PointChange, Unlockable, \
@@ -19,6 +18,14 @@ from django.db.models import F
 
 class Catagory(models.Model):
     name = models.CharField(max_length=255)
+    CHOICES = (
+        ('N1', 'N1'),
+        ('N2', 'N2'),
+        ('N3','N3'),
+        ('N4','N4'),
+        ('N5','N5'),
+    )
+    level = models.CharField(max_length=10,choices=CHOICES,null=True,blank=True)
     # image = models.ImageField(upload_to='images/lesson_pics', blank=True)
 
     def __str__(self):
@@ -146,6 +153,14 @@ class UserWord(models.Model):
 
 class GrammarLevel(models.Model):
     name = models.CharField(max_length=255)
+    CHOICES = (
+        ('N1', 'N1'),
+        ('N2', 'N2'),
+        ('N3','N3'),
+        ('N4','N4'),
+        ('N5','N5'),
+    )
+    level = models.CharField(max_length=2,choices=CHOICES,null=True,blank=True)
     def __str__(self):
         """String for representing the Model object."""
         return self.name
@@ -183,6 +198,14 @@ class Example(models.Model):
 
 class KanjiLevel(models.Model):
     name = models.CharField(max_length=255)
+    CHOICES = (
+        ('N1', 'N1'),
+        ('N2', 'N2'),
+        ('N3','N3'),
+        ('N4','N4'),
+        ('N5','N5'),
+    )
+    level = models.CharField(max_length=2,choices=CHOICES,null=True,blank=True)
     def __str__(self):
         """String for representing the Model object."""
         return self.name
@@ -222,6 +245,14 @@ class ExampleKanji(models.Model):
 
 class ReadingLevel(models.Model):
     name = models.CharField(max_length=255)
+    CHOICES = (
+        ('N1', 'N1'),
+        ('N2', 'N2'),
+        ('N3','N3'),
+        ('N4','N4'),
+        ('N5','N5'),
+    )
+    level = models.CharField(max_length=2,choices=CHOICES,null=True,blank=True)
     def __str__(self):
         """String for representing the Model object."""
         return self.name
@@ -249,6 +280,14 @@ class Reading(models.Model):
 
 class ListeningLevel(models.Model):
     name = models.CharField(max_length=255)
+    CHOICES = (
+        ('N1', 'N1'),
+        ('N2', 'N2'),
+        ('N3','N3'),
+        ('N4','N4'),
+        ('N5','N5'),
+    )
+    level = models.CharField(max_length=2,choices=CHOICES,null=True,blank=True)
     def __str__(self):
         """String for representing the Model object."""
         return self.name
@@ -294,7 +333,7 @@ def check_unlockables(sender, instance=None, **kwargs):
         acquired=True
     )
     
-
+    
 # @receiver(post_save, sender=Progression)
 # def check_unlock_badge(sender, instance=None, **kwargs):
 #     """
@@ -362,17 +401,8 @@ class UserGrammar(models.Model):
 @receiver(post_save, sender=GamificationInterface)
 def create_badges_and_unlockables_from_new_interface(
         sender, instance, created, **kwargs):
-    """
-    Creates new badges from all definitions for the new interface.
 
-    :param sender:
-    :param created:
-    :param kwargs:
-    :return:
-    """
-
-    if not created:
-            
+    if not created:    
         return
 
     for definition in BadgeDefinition.objects.all():
@@ -475,6 +505,9 @@ def add_progress_test_result(sender, instance, created, **kwargs):
     if badge:
         badge.increment()
         badge.progression.save()
+        if badge.progression.finished:
+            message='Congratulations you get '+str(badge.point)+' points title of '+ str(badge.name)
+            notify.send(user, recipient=user, verb='Notification',description=message)
         if badge.progression.finished and badge.next_badge:
             badge.next_badge.progression.progress=badge.progression.target+1
             badge.next_badge.progression.save()
@@ -508,6 +541,9 @@ def add_point_learned_word(sender, instance, created, **kwargs):
     if badge:
         badge.increment()
         badge.progression.save()
+        if badge.progression.finished:
+            message='Congratulations you get '+str(badge.point)+' points title of '+ str(badge.name)
+            notify.send(user, recipient=user, verb='Notification',description=message)
         if badge.progression.finished and badge.next_badge:
             badge.next_badge.progression.progress=badge.progression.target+1
             badge.next_badge.progression.save()
@@ -544,19 +580,23 @@ def add_point_learned_kanji(sender, instance, created, **kwargs):
     if badge:
         badge.increment()
         badge.progression.save()
+        if badge.progression.finished:
+            message='Congratulations you get '+str(badge.point)+' points title of '+ str(badge.name)
+            notify.send(user, recipient=user, verb='Notification',description=message)
         if badge.progression.finished and badge.next_badge:
             badge.next_badge.progression.progress=badge.progression.target+1
             badge.next_badge.progression.save()
         badge.save()
-
+    
 @receiver(post_delete, sender=UserKanji)
 def delete_point_learned_kanji(sender, instance, **kwargs):
     user=myUser.objects.filter(
         id=instance.user.id
     ).first()
     PointChange.objects.create(amount=-1,interface=user.interface)
+    
 @receiver(post_save, sender=UserGrammar)
-def add_point_learned_kanji(sender, instance, created, **kwargs):
+def add_point_learned_grammar(sender, instance, created, **kwargs):
     user=myUser.objects.filter(
         id=instance.user.id
     ).first()
@@ -564,7 +604,7 @@ def add_point_learned_kanji(sender, instance, created, **kwargs):
    
 
 @receiver(post_delete, sender=UserGrammar)
-def delete_point_learned_kanji(sender, instance, **kwargs):
+def delete_point_learned_grammar(sender, instance, **kwargs):
     user=myUser.objects.filter(
         id=instance.user.id
     ).first()
@@ -660,15 +700,18 @@ def misson_daily_login(sender, instance, **kwargs):
                     PointChange.objects.create(amount=mission.point,interface=user.interface)
                     if(datetime.date.today()-mission.updated_at.date()==datetime.timedelta(1)):
                         if(mission.process<5):
+                            message='You get '+str(mission.point)+'points from the login quest'
                             mission.point=mission.point+50
                             mission.process=mission.process+1
                             mission.save()
-                            print("Vao dc tang daily mission")
+                            
+                            notify.send(user, recipient=user, verb='Notification',description=message)
                     if(datetime.date.today()-mission.updated_at.date()>=datetime.timedelta(2)):
+                        message='You get '+str(mission.point)+'points from the login quest'
                         mission.point=50
                         mission.process=1
                         mission.save()
-                        print("Khong dc tang daily mission")
+                        notify.send(user, recipient=user, verb='Notification',description=message)
 @receiver(post_save, sender=Mission)
 def complete_misson(sender, instance, created, **kwargs):
     user=myUser.objects.filter(
@@ -678,4 +721,7 @@ def complete_misson(sender, instance, created, **kwargs):
         misson = Mission.objects.filter(id=instance.id).first()
         misson.complete=True
         PointChange.objects.create(amount=instance.point,interface=user.interface)
+        message='You get '+str(misson.point)+'points from the daily quest'
+        notify.send(user, recipient=user, verb='Notification',description=message)
         misson.save()
+

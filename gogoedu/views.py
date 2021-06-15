@@ -153,7 +153,12 @@ def register(request):
                 })
                 plain_message = strip_tags(message)
                 to_email = form.cleaned_data.get('email')
+                # print(mail_subject)
+                # print(plain_message)
+                # print(settings.EMAIL_HOST_USER)
+                # print(to_email)
                 send_mail(mail_subject, plain_message, settings.EMAIL_HOST_USER, [to_email], html_message=message)
+                
                 return redirect('account-activation', user.id)
                 # return HttpResponseRedirect(reverse('index'))
         else:
@@ -279,7 +284,7 @@ def profile_update(request, pk):
             if form.is_valid():
                 form.save()
                 messages.success(request, f'Your account was updated!')
-                return redirect('profile-update', pk)
+                return redirect('profile-detail', pk)
         else:
             form = UserUpdateForm(instance=user)
 
@@ -649,16 +654,9 @@ class GetTestInfo(generic.View):
 def countdown_time(user_id,test_id):
     test = get_object_or_404(Test, pk=test_id)
     user=myUser.objects.get(id=user_id)
-    choices = UserAnswer.objects.filter(
-        user=user,
-        question__test=test,
-    )
-    listchoices = []
-    for choices1 in choices:
-        listchoices.append(choices1.choice)
     
-    UserAnswer.objects.filter(user=user, question__test=test).delete()
     kq=calculate_score(user, test)
+    UserAnswer.objects.filter(user=user, question__test=test).delete()
     if UserTest.objects.filter(user=user, test=test):
         UserTest.objects.filter(user=user, test=test).delete()
 

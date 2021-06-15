@@ -26,6 +26,7 @@ from django.contrib import admin
 from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import gettext_lazy as _
 from gogoedu.views import change_language
+import notifications.urls
 
 
 urlpatterns = [
@@ -37,6 +38,7 @@ urlpatterns += i18n_patterns(
     path('gogoedu/', include('gogoedu.urls')),
     path('', RedirectView.as_view(url='gogoedu/')),
     path('accounts/', include('django.contrib.auth.urls')),
+    path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
     prefix_default_language=False,
 )
 

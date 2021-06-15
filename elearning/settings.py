@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'background_task',
     'django_gamification',
     'rest_framework',
+    'notifications',
 ]
 
 MIDDLEWARE = [
