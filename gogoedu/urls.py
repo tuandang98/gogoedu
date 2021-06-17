@@ -51,5 +51,5 @@ urlpatterns = [
 	path('alphabet', views.alphabet, name='alphabet'),
 	path('mission/', views.MissionView.as_view()),
 	path('alphabet/getfinish', views.CheckAlphabet.as_view()),
-	
+	path('listtest/', views.listtest, name='listtest'),
 ]

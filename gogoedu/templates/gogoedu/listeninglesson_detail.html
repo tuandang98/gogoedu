@@ -91,7 +91,7 @@
                                                 {% csrf_token %}
                                                 {%for question in listening.question_set.all%}
                                                 <li style="font-size: 1.2rem;">
-                                                    <h3 class="mb-2"><strong>{{question}}</strong></h3>
+                                                    <h3 class="mb-2"><strong>{{question.question|safe}}</strong></h3>
                                                     {% for choice in question.choice_set.all %}
                                                     <label class="radio" for="">
                                                         <input type="radio"

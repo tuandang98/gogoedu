@@ -40,6 +40,7 @@ urlpatterns += i18n_patterns(
     path('', RedirectView.as_view(url='gogoedu/')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
+    path('ckeditor/', include('ckeditor_uploader.urls')),
     prefix_default_language=False,
 )
 
