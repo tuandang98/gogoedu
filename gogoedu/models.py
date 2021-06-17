@@ -15,6 +15,15 @@ from django.dispatch import receiver
 from django_gamification.models import PointChange, Unlockable, \
     GamificationInterface, BadgeDefinition, Badge, UnlockableDefinition,Progression,Category
 from django.db.models import F
+from ckeditor.fields import RichTextField
+import random
+
+def random_id(length):
+    CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789'
+    return ''.join(random.choice(CHARACTERS) for _ in range(length))
+
+def _default_urlid():
+    return random_id(Test._meta.get_field('urlid').max_length)
 
 class Catagory(models.Model):
     name = models.CharField(max_length=255)
@@ -69,6 +78,11 @@ class Word(models.Model):
         """String for representing the Model object."""
         return self.word
 
+class Game(models.Model):
+    urlid = models.CharField(max_length=10, unique=True, default=_default_urlid)
+    test =  models.ForeignKey('Test', on_delete=models.SET_NULL, null=True, blank= True)
+    def get_urlid(self):
+        return reverse('test-detail', args=[self.urlid])
 
 class Test(models.Model):
     lesson = models.ForeignKey('Lesson', on_delete=models.SET_NULL, null=True, blank= True)
@@ -77,7 +91,7 @@ class Test(models.Model):
     question_num = models.IntegerField()
     name = models.CharField(max_length=50, null= True)
     time = models.IntegerField(default=600)
-
+    
     def __str__(self):
         """String for representing the Model object."""
         return self.name
@@ -89,7 +103,7 @@ class Test(models.Model):
     def get_test_url(self):
         """Returns the url to access a detail record for this book."""
         return reverse('test-detail', args=[str(self.id)])
-
+   
 
 
 
@@ -357,11 +371,8 @@ class Question(models.Model):
     test = models.ForeignKey('Test', on_delete=models.SET_NULL, null=True,blank=True)
     reading = models.ForeignKey(Reading, on_delete=models.SET_NULL, null=True,blank=True)
     listening = models.ForeignKey(Listening, on_delete=models.SET_NULL, null=True,blank=True)
-    question_text = models.CharField(max_length=255)
+    question = RichTextField(null=True)
     
-    def __str__(self):
-        """String for representing the Model object."""
-        return self.question_text
 
 
 class Choice(models.Model):

@@ -4,7 +4,9 @@ from .models import GrammarLevel, myUser
 from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord,Mission, TestResult,UserGrammar,UserKanji,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar,ExampleKanji,KanjiLevel,KanjiLesson,Kanji,ReadingLevel,ReadingLesson,Reading,Listening,ListeningLesson,ListeningLevel
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from django_gamification.models import GamificationInterface,Badge,BadgeDefinition,Category,PointChange,Unlockable,UnlockableDefinition,Progression
+from django import forms
 
+from ckeditor.widgets import CKEditorWidget
 # Register your models here.
 class MyUserAdmin(admin.ModelAdmin):
     list_display = ('username', 'email', 'first_name', 'last_name', 'date_joined', 'is_staff', 'is_active')
@@ -162,6 +164,11 @@ class ChoiceInline(NestedStackedInline):
     model = Choice
     extra = 1
 
+class QuestionAdminForm(forms.ModelForm):
+    question = forms.CharField(widget=CKEditorWidget())
+    class Meta:
+        model = Question
+        fields = '__all__'
 
 class QuestionInline(NestedStackedInline):
     model = Question
@@ -198,8 +205,9 @@ class ListeningAdmin(NestedModelAdmin):
 admin.site.register(Listening, ListeningAdmin)
 
 class QuestionAdmin(NestedModelAdmin):
-    list_display = ('test','reading', 'listening','question_text')
-    search_fields = ['question_text']
+    list_display = ('test','reading', 'listening','question')
+    search_fields = ['question']
+    # form = QuestionAdminForm
     inlines = [ChoiceInline,]
 
 

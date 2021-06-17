@@ -1,0 +1,35 @@
+{% extends "gogoedu/catagory_list.html" %}
+{% load i18n %}
+{%block searchform%}
+	<form action="" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
+		<input type="search" class="courses_search_input" placeholder="{% trans 'Search Lesson'%}"  name ='name' value="{{ request.GET.name }}">
+		<input type="submit" value="{% trans 'Search' %}" class="courses_search_button ml-auto" />
+	</form> 
+{% endblock %}
+
+{% block content2 %}
+{% if test %}
+<div class="container mt-5 mb-5">
+
+
+ <div class="list-group mt-3">
+  {% for test in test %}
+ 
+	<div class="list-group-item" ><i class="fa fa-book fa-fw" aria-hidden="true"></i>&nbsp; {{test.name}}</div>
+	<a href="{{ test.get_absolute_url }}">Do test</a>
+
+    <form method="post">
+        {% csrf_token %}
+        
+        <input type="submit" value="Play with friends"/> 
+    </form>
+  
+  {% endfor %}
+</div>
+
+</div>
+{% else %}
+	<p>NO Test.</p>
+{% endif %}
+
+{% endblock %}

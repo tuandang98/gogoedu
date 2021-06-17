@@ -1096,7 +1096,6 @@ class ChartData(APIView):
     def get(self, request, format=None):
         today = datetime.date.today()
         sw1 = today - datetime.timedelta(6)
-        
         sw2=today-datetime.timedelta(5)
         sw3=today-datetime.timedelta(4)
         sw4=today-datetime.timedelta(3)
@@ -1201,3 +1200,7 @@ class CheckAlphabet(APIView):
             
         }
         return Response(data)
+def listtest(request):
+    test = Test.objects.all()
+    context = {"test": test,}  
+    return render(request, 'gogoedu/listtest.html', context)
