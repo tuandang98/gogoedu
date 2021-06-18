@@ -17,7 +17,7 @@ from django_gamification.models import PointChange, Unlockable, \
 from django.db.models import F
 from ckeditor.fields import RichTextField
 import random
-
+from ckeditor_uploader.fields import RichTextUploadingField
 def random_id(length):
     CHARACTERS = 'abcdefghijklmnopqrstuvwxyz0123456789'
     return ''.join(random.choice(CHARACTERS) for _ in range(length))
@@ -287,9 +287,8 @@ class ReadingLesson(models.Model):
         return reverse('reading-detail', kwargs={'pk':self.id,'reading_lesson_id': self.reading_level.id})
 
 class Reading(models.Model):
-    text = models.TextField()
+    text = RichTextUploadingField(null=True)
     mondai = models.CharField(max_length=255)
-    img = models.ImageField( upload_to='images/reading',null=True, blank=True)
     reading_lesson = models.ForeignKey(ReadingLesson, on_delete=models.CASCADE)
 
 class ListeningLevel(models.Model):
@@ -322,7 +321,7 @@ class ListeningLesson(models.Model):
         return reverse('listening-detail', kwargs={'pk':self.id,'listening_lesson_id': self.listening_level.id})
 
 class Listening(models.Model):
-    text = models.TextField(null=True,blank=True)
+    text = RichTextUploadingField(null=True)
     file = models.FileField(upload_to='musics/')
     listening_lesson = models.ForeignKey(ListeningLesson, on_delete=models.CASCADE)
 
@@ -371,7 +370,7 @@ class Question(models.Model):
     test = models.ForeignKey('Test', on_delete=models.SET_NULL, null=True,blank=True)
     reading = models.ForeignKey(Reading, on_delete=models.SET_NULL, null=True,blank=True)
     listening = models.ForeignKey(Listening, on_delete=models.SET_NULL, null=True,blank=True)
-    question = RichTextField(null=True)
+    question = RichTextUploadingField(null=True)
     
 
 

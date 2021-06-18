@@ -27,6 +27,9 @@ from django.conf.urls.i18n import i18n_patterns
 from django.utils.translation import gettext_lazy as _
 from gogoedu.views import change_language
 import notifications.urls
+from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
+from ckeditor_uploader import views as ckeditor_views
 
 
 urlpatterns = [
@@ -40,7 +43,8 @@ urlpatterns += i18n_patterns(
     path('', RedirectView.as_view(url='gogoedu/')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('inbox/notifications/', include(notifications.urls, namespace='notifications')),
-    path('ckeditor/', include('ckeditor_uploader.urls')),
+    path('ckeditor/upload/', login_required(ckeditor_views.upload), name='ckeditor_upload'),
+    path('ckeditor/browse/', never_cache(login_required(ckeditor_views.browse)), name='ckeditor_browse'),
     prefix_default_language=False,
 )
 
