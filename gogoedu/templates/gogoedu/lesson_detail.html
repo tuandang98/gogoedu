@@ -117,7 +117,12 @@
                                                                 <li>
                                                                     <div class="dropdown_item">
                                                                         <div class="tab_panel_title"
-                                                                             style="font-size: 15px !important ;">{%if word.kanji %}<span>{{word.kanji}}</span>>>>{%endif%}<span>{{word.mean}}</span>
+                                                                             style="font-size: 15px !important ;">Kanji:{%if word.kanji %}<span>{{word.kanji}}</span>{%endif%}
+                                                                             
+                                                                        </div>
+                                                                        <div class="tab_panel_title"
+                                                                             style="font-size: 15px !important ;">
+                                                                             Mean:<span>{{word.mean}}</span>
                                                                         </div>
                                                                     </div>
                                                                 </li>
