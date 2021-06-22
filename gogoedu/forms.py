@@ -29,5 +29,5 @@ class RegisterForm(UserCreationForm):
 class UserUpdateForm(UserChangeForm):
     class Meta:
         model = myUser
-        fields = ["username", "first_name", "last_name", "email", "avatar"]
+        fields = ["first_name", "last_name",  "avatar"]
         exclude = ['user']

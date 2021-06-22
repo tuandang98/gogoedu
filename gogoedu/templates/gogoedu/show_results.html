@@ -22,7 +22,7 @@
                         {% csrf_token %}
                         {% for question in test.question_set.all %}
                         <li style="font-size: 1.2rem;">
-                            <h3 class="mb-2"><strong>{{question.question}}</strong></h3>
+                            <h3 class="mb-2"><strong>{{question.question|safe}}</strong></h3>
                             {% for choice in question.choice_set.all %}
                             <label class="radio" for="" {% if choice.correct%} style="color:green;text-decoration: underline;" {%endif%}>
                                 <input type="radio" disabled="disabled"

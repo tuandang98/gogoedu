@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-09-01 09:10+0700\n"
+"POT-Creation-Date: 2021-06-22 15:22+0700\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -28,47 +28,35 @@ msgstr "Quên mật khẩu?"
 msgid "Email existed. Please try again"
 msgstr "Email đã tồn tại.Vui lòng thử lại"
 
-#: models.py:95
+#: models.py:112
 msgid "email address"
 msgstr "Địa chỉ Email"
 
-#: templates/about.html:13
-msgid "We are gogo team"
-msgstr "Chúng mình là gogoedu"
+#: templates/flashcard.html:9 templates/footer.html:60 templates/index.html:113
+msgid "Flashcard"
+msgstr ""
 
-#: templates/about.html:14 templates/contact.html:10 templates/privacy.html:11
+#: templates/flashcard.html:10 templates/privacy.html:11
 msgid "we wanna bring true value to you"
 msgstr "Chúng tôi muốn mang đến giá trị cho Bạn"
 
-#: templates/about.html:26
-msgid "Team leader"
-msgstr "Nhóm Trưởng"
-
-#: templates/about.html:44 templates/about.html:62
-msgid "Developer"
-msgstr "Đội Viên"
-
-#: templates/contact.html:9
-#, fuzzy
-#| msgid "Contact"
-msgid "Contact us"
-msgstr "Liên hệ"
-
-#: templates/contact.html:16 templates/footer.html:39
+#: templates/footer.html:39
 #, fuzzy
 #| msgid "Contact"
 msgid "Contact Us"
 msgstr "Liên hệ"
 
-#: templates/contact.html:19 templates/footer.html:42
+#: templates/footer.html:42
 msgid "Email: gogoedu@gmail.com"
 msgstr "Thư điện tử: gogoedu@gmail.com"
 
-#: templates/contact.html:20 templates/footer.html:43
-msgid "Phone:  +(84) 914674590"
-msgstr "Số điện thoại : +(84) 914674590"
+#: templates/footer.html:43
+#, fuzzy
+#| msgid "Phone:  +(84) 123465789"
+msgid "Phone:  +(84) 123465789"
+msgstr "Số điện thoại : +(84) 123465789"
 
-#: templates/contact.html:21 templates/footer.html:44
+#: templates/footer.html:44
 msgid ""
 "stage 11, Handico tower, Pham Hung street, Nam Tu Liem distric, Hanoi, "
 "Vietnam"
@@ -78,112 +66,370 @@ msgstr "Tầng 11,tòa Handico,dường Phạm Hùng,Nam Từ Liêm,Hà Nội"
 msgid "Menu"
 msgstr "Đề Mục"
 
-#: templates/footer.html:58 templates/header.html:78
+#: templates/footer.html:58 templates/gogoedu/catagory_detail.html:17
+#: templates/gogoedu/catagory_list.html:22
+#: templates/gogoedu/grammarlesson_detail.html:21
+#: templates/gogoedu/grammarlevel_detail.html:17
+#: templates/gogoedu/grammarlevel_list.html:22
+#: templates/gogoedu/kanjilesson_detail.html:55
+#: templates/gogoedu/kanjilevel_detail.html:17
+#: templates/gogoedu/kanjilevel_list.html:22
+#: templates/gogoedu/lesson_detail.html:21
+#: templates/gogoedu/listeninglesson_detail.html:21
+#: templates/gogoedu/listeninglevel_detail.html:17
+#: templates/gogoedu/listeninglevel_list.html:22
+#: templates/gogoedu/readinglesson_detail.html:21
+#: templates/gogoedu/readinglevel_detail.html:17
+#: templates/gogoedu/readinglevel_list.html:22 templates/header.html:108
 msgid "Home"
 msgstr "Trang chủ"
 
-#: templates/footer.html:59 templates/gogoedu/lesson_detail.html:28
-#: templates/gogoedu/myuser_detail.html:85 templates/header.html:79
+#: templates/footer.html:59 templates/gogoedu/catagory_detail.html:18
+#: templates/gogoedu/catagory_list.html:23
+#: templates/gogoedu/lesson_detail.html:22
+#: templates/gogoedu/lesson_detail.html:50
 msgid "Catagory"
 msgstr "Thể loại"
 
-#: templates/footer.html:60 templates/header.html:82 templates/index.html:110
-msgid "Contact"
-msgstr "Liên hệ"
-
-#: templates/footer.html:61 templates/gogoedu/myuser_detail.html:45
-#: templates/header.html:83
-msgid "About"
-msgstr "Thông tin"
+#: templates/footer.html:61
+msgid "leaderboard"
+msgstr "Bảng xếp hạng"
 
 #: templates/footer.html:91
 msgid "Privacy Policy"
 msgstr "Chính sách"
 
 #: templates/gogoedu/catagory_detail.html:5
+#: templates/gogoedu/grammarlevel_detail.html:5
+#: templates/gogoedu/kanjilevel_detail.html:5
+#: templates/gogoedu/listeninglevel_detail.html:5
+#: templates/gogoedu/listtest.html:5
+#: templates/gogoedu/readinglevel_detail.html:5
 msgid "Search Lesson"
 msgstr "Tìm kiếm Bài Học"
 
 #: templates/gogoedu/catagory_detail.html:6
-#: templates/gogoedu/catagory_list.html:23
+#: templates/gogoedu/catagory_list.html:45
+#: templates/gogoedu/grammarlevel_detail.html:6
+#: templates/gogoedu/grammarlevel_list.html:45
+#: templates/gogoedu/kanjilevel_detail.html:6
+#: templates/gogoedu/kanjilevel_list.html:45
+#: templates/gogoedu/listeninglevel_detail.html:6
+#: templates/gogoedu/listeninglevel_list.html:45
+#: templates/gogoedu/listtest.html:6
+#: templates/gogoedu/readinglevel_detail.html:6
+#: templates/gogoedu/readinglevel_list.html:45
+#: templates/gogoedu/summary.html:44
 msgid "Search"
 msgstr "Tìm Kiếm"
 
-#: templates/gogoedu/catagory_list.html:22
+#: templates/gogoedu/catagory_list.html:44
+#: templates/gogoedu/grammarlevel_list.html:44
+#: templates/gogoedu/kanjilevel_list.html:44
+#: templates/gogoedu/listeninglevel_list.html:44
+#: templates/gogoedu/readinglevel_list.html:44
 msgid "Search Category"
-msgstr "Tìm kiếm Thể loại"
+msgstr "Tìm kiếm"
 
-#: templates/gogoedu/lesson_detail.html:22
-msgid "Lesson "
-msgstr "Bài Học"
+#: templates/gogoedu/catagory_list.html:55
+#: templates/gogoedu/grammarlevel_list.html:55
+#: templates/gogoedu/kanjilevel_list.html:55
+#: templates/gogoedu/listeninglevel_list.html:55
+#: templates/gogoedu/readinglevel_list.html:55
+msgid "Level"
+msgstr "Trình độ"
 
-#: templates/gogoedu/lesson_detail.html:41
-#: templates/gogoedu/myuser_detail.html:82
-msgid "Lesson"
-msgstr "Bài Học"
-
-#: templates/gogoedu/lesson_detail.html:44
-msgid "Words"
-msgstr "Danh sách từ"
-
-#: templates/gogoedu/lesson_detail.html:47
-msgid "Test"
-msgstr "Kiểm Tra"
-
-#: templates/gogoedu/lesson_detail.html:65
-msgid "Status"
-msgstr "Trạng Thái"
-
-#: templates/gogoedu/lesson_detail.html:66
+#: templates/gogoedu/catagory_list.html:56
+#: templates/gogoedu/grammarlesson_detail.html:89
+#: templates/gogoedu/grammarlevel_list.html:56
+#: templates/gogoedu/kanjilesson_detail.html:167
+#: templates/gogoedu/kanjilevel_list.html:56
+#: templates/gogoedu/lesson_detail.html:90
+#: templates/gogoedu/listeninglevel_list.html:56
+#: templates/gogoedu/readinglevel_list.html:56
 msgid "All"
 msgstr "Tất cả"
 
-#: templates/gogoedu/lesson_detail.html:67
-msgid "Learned"
-msgstr "Đã Học"
+#: templates/gogoedu/catagory_list.html:57
+#: templates/gogoedu/grammarlevel_list.html:57
+#: templates/gogoedu/kanjilevel_list.html:57
+#: templates/gogoedu/listeninglevel_list.html:57
+#: templates/gogoedu/readinglevel_list.html:57
+msgid "N5"
+msgstr ""
 
-#: templates/gogoedu/lesson_detail.html:68
-msgid "New"
-msgstr "Từ mới"
+#: templates/gogoedu/catagory_list.html:58
+#: templates/gogoedu/grammarlevel_list.html:58
+#: templates/gogoedu/kanjilevel_list.html:58
+#: templates/gogoedu/listeninglevel_list.html:58
+#: templates/gogoedu/readinglevel_list.html:58
+msgid "N4"
+msgstr ""
 
-#: templates/gogoedu/lesson_detail.html:70
+#: templates/gogoedu/catagory_list.html:59
+#: templates/gogoedu/grammarlevel_list.html:59
+#: templates/gogoedu/kanjilevel_list.html:59
+#: templates/gogoedu/listeninglevel_list.html:59
+#: templates/gogoedu/readinglevel_list.html:59
+msgid "N3"
+msgstr ""
+
+#: templates/gogoedu/catagory_list.html:60
+#: templates/gogoedu/grammarlevel_list.html:60
+#: templates/gogoedu/kanjilevel_list.html:60
+#: templates/gogoedu/listeninglevel_list.html:60
+#: templates/gogoedu/readinglevel_list.html:60
+msgid "N2"
+msgstr ""
+
+#: templates/gogoedu/catagory_list.html:61
+#: templates/gogoedu/grammarlevel_list.html:61
+#: templates/gogoedu/kanjilevel_list.html:61
+#: templates/gogoedu/listeninglevel_list.html:61
+#: templates/gogoedu/readinglevel_list.html:61
+msgid "N1"
+msgstr ""
+
+#: templates/gogoedu/catagory_list.html:63
+#: templates/gogoedu/grammarlevel_list.html:63
+#: templates/gogoedu/kanjilevel_list.html:63
+#: templates/gogoedu/lesson_detail.html:94
+#: templates/gogoedu/listeninglevel_list.html:63
+#: templates/gogoedu/myuser_detail.html:107
+#: templates/gogoedu/readinglevel_list.html:63
 msgid "Word type"
 msgstr "Loại Từ"
 
-#: templates/gogoedu/lesson_detail.html:71
+#: templates/gogoedu/catagory_list.html:64
+#: templates/gogoedu/grammarlevel_list.html:64
+#: templates/gogoedu/kanjilevel_list.html:64
+#: templates/gogoedu/lesson_detail.html:95
+#: templates/gogoedu/listeninglevel_list.html:64
+#: templates/gogoedu/myuser_detail.html:108
+#: templates/gogoedu/readinglevel_list.html:64
 msgid "Noun"
 msgstr "Danh từ"
 
-#: templates/gogoedu/lesson_detail.html:72
+#: templates/gogoedu/catagory_list.html:65
+#: templates/gogoedu/grammarlevel_list.html:65
+#: templates/gogoedu/kanjilevel_list.html:65
+#: templates/gogoedu/lesson_detail.html:96
+#: templates/gogoedu/listeninglevel_list.html:65
+#: templates/gogoedu/myuser_detail.html:109
+#: templates/gogoedu/readinglevel_list.html:65
 msgid "Verb"
 msgstr "Động Từ"
 
-#: templates/gogoedu/lesson_detail.html:73
+#: templates/gogoedu/catagory_list.html:66
+#: templates/gogoedu/grammarlevel_list.html:66
+#: templates/gogoedu/kanjilevel_list.html:66
+#: templates/gogoedu/lesson_detail.html:97
+#: templates/gogoedu/listeninglevel_list.html:66
+#: templates/gogoedu/myuser_detail.html:110
+#: templates/gogoedu/readinglevel_list.html:66
 msgid "Adjective"
 msgstr "Tính từ"
 
-#: templates/gogoedu/lesson_detail.html:91
-#: templates/gogoedu/lesson_detail.html:138
-#: templates/gogoedu/lesson_detail.html:166
-#: templates/gogoedu/lesson_detail.html:195
-#: templates/gogoedu/lesson_detail.html:224
-#: templates/gogoedu/lesson_detail.html:252
-#: templates/gogoedu/lesson_detail.html:363
-msgid "Mark as learned"
-msgstr "Đánh dấu đã học"
+#: templates/gogoedu/grammarlesson_detail.html:22
+#: templates/gogoedu/grammarlesson_detail.html:66
+#: templates/gogoedu/grammarlevel_detail.html:18
+#: templates/gogoedu/myuser_detail.html:104 templates/header.html:117
+msgid "Grammar"
+msgstr "Ngữ Pháp"
 
-#: templates/gogoedu/lesson_detail.html:138
-#: templates/gogoedu/lesson_detail.html:361
+#: templates/gogoedu/grammarlesson_detail.html:42
+#: templates/gogoedu/grammarlesson_detail.html:63
+#: templates/gogoedu/kanjilesson_detail.html:76
+#: templates/gogoedu/kanjilesson_detail.html:148
+#: templates/gogoedu/lesson_detail.html:42
+#: templates/gogoedu/lesson_detail.html:63
+#: templates/gogoedu/listeninglesson_detail.html:42
+#: templates/gogoedu/readinglesson_detail.html:42
+msgid "Lesson"
+msgstr "Bài Học"
+
+#: templates/gogoedu/grammarlesson_detail.html:50
+msgid "Grammar Level"
+msgstr ""
+
+#: templates/gogoedu/grammarlesson_detail.html:69
+#: templates/gogoedu/kanjilesson_detail.html:154
+#: templates/gogoedu/lesson_detail.html:69
+#: templates/gogoedu/listeninglesson_detail.html:69
+#: templates/gogoedu/readinglesson_detail.html:69 templates/header.html:177
+msgid "Test"
+msgstr "Kiểm Tra"
+
+#: templates/gogoedu/grammarlesson_detail.html:88
+#: templates/gogoedu/kanjilesson_detail.html:166
+#: templates/gogoedu/lesson_detail.html:89
+msgid "Status"
+msgstr "Trạng Thái"
+
+#: templates/gogoedu/grammarlesson_detail.html:90
+#: templates/gogoedu/kanjilesson_detail.html:168
+#: templates/gogoedu/lesson_detail.html:91
+msgid "Learned"
+msgstr "Đã Học"
+
+#: templates/gogoedu/grammarlesson_detail.html:91
+#: templates/gogoedu/kanjilesson_detail.html:169
+#: templates/gogoedu/lesson_detail.html:92
+msgid "New"
+msgstr "Từ mới"
+
+#: templates/gogoedu/grammarlesson_detail.html:115
+#: templates/gogoedu/grammarlesson_detail.html:166
+#: templates/gogoedu/grammarlesson_detail.html:217
+#: templates/gogoedu/kanjilesson_detail.html:225
+#: templates/gogoedu/kanjilesson_detail.html:237
+msgid "Mean"
+msgstr "Nghĩa"
+
+#: templates/gogoedu/grammarlesson_detail.html:117
+#: templates/gogoedu/grammarlesson_detail.html:168
+#: templates/gogoedu/grammarlesson_detail.html:219
+#: templates/gogoedu/kanjilesson_detail.html:111
+#: templates/gogoedu/kanjilesson_detail.html:229
+msgid "Example"
+msgstr "Ví dụ"
+
+#: templates/gogoedu/grammarlesson_detail.html:141
+#: templates/gogoedu/grammarlesson_detail.html:192
+#: templates/gogoedu/grammarlesson_detail.html:243
+#: templates/gogoedu/grammarlesson_detail.html:378
+#: templates/gogoedu/kanjilesson_detail.html:134
+#: templates/gogoedu/kanjilesson_detail.html:384
+#: templates/gogoedu/lesson_detail.html:139
+#: templates/gogoedu/lesson_detail.html:180
+#: templates/gogoedu/lesson_detail.html:221
+#: templates/gogoedu/lesson_detail.html:263
+#: templates/gogoedu/lesson_detail.html:306
+#: templates/gogoedu/lesson_detail.html:349
+#: templates/gogoedu/lesson_detail.html:485
+#: templates/gogoedu/view_cards.html:94 templates/gogoedu/view_cards.html:172
+#: templates/gogoedu/view_cards_kanji.html:95
+#: templates/gogoedu/view_cards_kanji.html:156
 msgid "Unmark"
 msgstr "Bỏ đánh dấu"
 
-#: templates/gogoedu/lesson_detail.html:322
+#: templates/gogoedu/grammarlesson_detail.html:141
+#: templates/gogoedu/grammarlesson_detail.html:192
+#: templates/gogoedu/grammarlesson_detail.html:243
+#: templates/gogoedu/grammarlesson_detail.html:380
+#: templates/gogoedu/kanjilesson_detail.html:134
+#: templates/gogoedu/kanjilesson_detail.html:386
+#: templates/gogoedu/lesson_detail.html:139
+#: templates/gogoedu/lesson_detail.html:180
+#: templates/gogoedu/lesson_detail.html:221
+#: templates/gogoedu/lesson_detail.html:263
+#: templates/gogoedu/lesson_detail.html:306
+#: templates/gogoedu/lesson_detail.html:349
+#: templates/gogoedu/lesson_detail.html:487
+#: templates/gogoedu/view_cards.html:94 templates/gogoedu/view_cards.html:174
+#: templates/gogoedu/view_cards_kanji.html:95
+#: templates/gogoedu/view_cards_kanji.html:158
+msgid "Mark as learned"
+msgstr "Đánh dấu đã học"
+
+#: templates/gogoedu/grammarlesson_detail.html:298
+#: templates/gogoedu/kanjilesson_detail.html:304
+#: templates/gogoedu/lesson_detail.html:405
+msgid "Resume"
+msgstr "Tiếp tục"
+
+#: templates/gogoedu/grammarlesson_detail.html:298
+#: templates/gogoedu/kanjilesson_detail.html:304
+#: templates/gogoedu/lesson_detail.html:405
+msgid "Start"
+msgstr "Bắt đầu"
+
+#: templates/gogoedu/grammarlesson_detail.html:338
+#: templates/gogoedu/kanjilesson_detail.html:344
+#: templates/gogoedu/lesson_detail.html:444
+#: templates/gogoedu/listeninglesson_detail.html:171
+#: templates/gogoedu/readinglesson_detail.html:172
 msgid "sign up for news and offers"
 msgstr "Đăng kí để nhận tin mới và ưu đãi"
 
-#: templates/gogoedu/lesson_detail.html:323
+#: templates/gogoedu/grammarlesson_detail.html:339
+#: templates/gogoedu/kanjilesson_detail.html:345
+#: templates/gogoedu/lesson_detail.html:445
+#: templates/gogoedu/listeninglesson_detail.html:172
+#: templates/gogoedu/readinglesson_detail.html:173
 msgid "Subcribe to lastest smartphones news & great deals we offer"
 msgstr "Đăng kí để nhận nhiều thông tin và ưu đãi tuyệt vời"
+
+#: templates/gogoedu/grammarlevel_list.html:23
+msgid "grammarlevel"
+msgstr "cấp độ ngữ pháp"
+
+#: templates/gogoedu/kanjilesson_detail.html:56
+#: templates/gogoedu/kanjilevel_detail.html:18
+#: templates/gogoedu/myuser_detail.html:103 templates/header.html:116
+msgid "Kanji"
+msgstr "Chữ hán"
+
+#: templates/gogoedu/kanjilesson_detail.html:84
+msgid "kanji Level"
+msgstr "Cấp độ chữ hán"
+
+#: templates/gogoedu/kanjilesson_detail.html:109
+#: templates/gogoedu/kanjilesson_detail.html:121
+msgid "Reading : "
+msgstr "Đọc hiểu"
+
+#: templates/gogoedu/kanjilesson_detail.html:119
+msgid "Mean : "
+msgstr "Nghĩa"
+
+#: templates/gogoedu/kanjilesson_detail.html:151
+msgid "kanji"
+msgstr "Chữ hán"
+
+#: templates/gogoedu/kanjilesson_detail.html:227
+#: templates/gogoedu/kanjilesson_detail.html:239
+#: templates/gogoedu/readinglesson_detail.html:22
+#: templates/gogoedu/readinglesson_detail.html:66
+#: templates/gogoedu/readinglevel_detail.html:18 templates/header.html:118
+msgid "Reading"
+msgstr "Đọc hiểu"
+
+#: templates/gogoedu/kanjilevel_list.html:23
+msgid "kanjilevel"
+msgstr "cấp độ chữ hán"
+
+#: templates/gogoedu/lesson_detail.html:66
+msgid "Words"
+msgstr "Danh sách từ"
+
+#: templates/gogoedu/listeninglesson_detail.html:22
+#: templates/gogoedu/listeninglevel_detail.html:18 templates/header.html:119
+msgid "Listening"
+msgstr "Nghe hiểu"
+
+#: templates/gogoedu/listeninglesson_detail.html:50
+msgid "listening Level"
+msgstr "cấp độ nghe hiểu"
+
+#: templates/gogoedu/listeninglesson_detail.html:63
+#: templates/gogoedu/readinglesson_detail.html:63
+msgid "Text"
+msgstr "Văn bản"
+
+#: templates/gogoedu/listeninglesson_detail.html:66
+msgid "listening"
+msgstr "Nghe hiểu"
+
+#: templates/gogoedu/listeninglesson_detail.html:109
+#: templates/gogoedu/readinglesson_detail.html:111
+#: templates/gogoedu/test_detail.html:54
+msgid "Submit"
+msgstr "Đồng ý"
+
+#: templates/gogoedu/listeninglevel_list.html:23
+msgid "listeninglevel"
+msgstr ""
 
 #: templates/gogoedu/myuser_detail.html:21
 #, fuzzy
@@ -192,6 +438,7 @@ msgid "Change avatar"
 msgstr "Đổi ngôn ngữ"
 
 #: templates/gogoedu/myuser_detail.html:26
+#: templates/gogoedu/test_detail.html:52
 msgid "Save"
 msgstr "Lưu"
 
@@ -199,31 +446,78 @@ msgstr "Lưu"
 msgid "Cancel"
 msgstr "Hủy"
 
-#: templates/gogoedu/myuser_detail.html:49
-msgid "Learned word"
-msgstr "Từ đã học"
-
 #: templates/gogoedu/myuser_detail.html:61
+msgid "About"
+msgstr "Thông tin"
+
+#: templates/gogoedu/myuser_detail.html:65
+msgid "Process"
+msgstr "Tiến trình"
+
+#: templates/gogoedu/myuser_detail.html:69
+#: templates/gogoedu/myuser_detail.html:207
+msgid "Badge"
+msgstr "Huy hiệu"
+
+#: templates/gogoedu/myuser_detail.html:81
 msgid "Name"
 msgstr "Tên"
 
-#: templates/gogoedu/myuser_detail.html:69
+#: templates/gogoedu/myuser_detail.html:89
 msgid "Email"
 msgstr "Thư điện tử"
 
-#: templates/gogoedu/myuser_detail.html:79
-msgid "Word"
-msgstr "Từ"
+#: templates/gogoedu/myuser_detail.html:101
+#, fuzzy
+#| msgid "Catagory"
+msgid "Catrgory"
+msgstr "Thể loại"
 
-#: templates/gogoedu/myuser_detail.html:112
+#: templates/gogoedu/myuser_detail.html:102 templates/header.html:115
+msgid "Vocabulary"
+msgstr "Từ vựng"
+
+#: templates/gogoedu/myuser_detail.html:119
+#: templates/gogoedu/myuser_detail.html:148
+#: templates/gogoedu/myuser_detail.html:177
+#, fuzzy
+#| msgid "Catagory"
+msgid "Category"
+msgstr "Thể loại"
+
+#: templates/gogoedu/myuser_detail.html:123
+#: templates/gogoedu/myuser_detail.html:152
+#: templates/gogoedu/myuser_detail.html:181
+msgid "Percent"
+msgstr "Phần trăm"
+
+#: templates/gogoedu/myuser_detail.html:211
+msgid "Description"
+msgstr ""
+
+#: templates/gogoedu/myuser_detail.html:215
+msgid "Set"
+msgstr "Cài"
+
+#: templates/gogoedu/myuser_detail.html:245
 msgid "Edit profile"
 msgstr "Sửa thông tin"
 
-#: templates/gogoedu/show_results.html:13
+#: templates/gogoedu/readinglesson_detail.html:50
+msgid "reading Level"
+msgstr "cấp độ nghe hiểu"
+
+#: templates/gogoedu/readinglevel_list.html:23
+msgid "readinglevel"
+msgstr "cấp độ đọc hiểu"
+
+#: templates/gogoedu/show_results.html:14
+#: templates/gogoedu/show_results_listening.html:14
+#: templates/gogoedu/show_results_reading.html:14
 msgid "true answers"
 msgstr "Đáp án đúng"
 
-#: templates/gogoedu/show_results.html:15
+#: templates/gogoedu/show_results.html:16
 msgid "Try again"
 msgstr "Thử lại"
 
@@ -232,74 +526,140 @@ msgid "Learned Word"
 msgstr "Từ đã học"
 
 #: templates/gogoedu/summary.html:29
-msgid "Memoried Word"
-msgstr "Từ đã thuộc"
+msgid "Chart"
+msgstr "Biểu đồ"
 
 #: templates/gogoedu/summary.html:32
 msgid "Tests"
 msgstr "Các bài kiểm tra"
 
-#: templates/gogoedu/test_detail.html:29
-msgid "Submit"
-msgstr "Đồng ý"
+#: templates/gogoedu/summary.html:43
+#, fuzzy
+#| msgid "Search"
+msgid "Search Word"
+msgstr "Tìm Kiếm"
 
-#: templates/gogoedu/test_detail.html:47
+#: templates/gogoedu/test_detail.html:48
+msgid "Pause"
+msgstr "Dừng"
+
+#: templates/gogoedu/test_detail.html:137
+#: templates/gogoedu/test_detail.html:210
+#: templates/gogoedu/test_detail.html:283
 msgid "Time off!"
 msgstr "Hết giờoo"
 
-#: templates/header.html:35
+#: templates/header.html:65
 msgid "My profile"
 msgstr "Thông tin của tôi"
 
-#: templates/header.html:38
-msgid "Manage all"
-msgstr "Quản lý tất cả"
-
-#: templates/header.html:41
-msgid "Summary"
-msgstr "Tóm lược"
-
-#: templates/header.html:42
+#: templates/header.html:71
 #, fuzzy
 #| msgid "Logged out!"
 msgid "Log out"
 msgstr "Đã Đăng Xuất"
 
-#: templates/header.html:50
+#: templates/header.html:80
 msgid "Sign in"
 msgstr "Đăng Nhập"
 
-#: templates/header.html:53
+#: templates/header.html:83
 msgid "Register"
 msgstr "Đăng ký"
 
-#: templates/header.html:94
+#: templates/header.html:114
+msgid "Alphabet"
+msgstr "Bảng chữ cái"
+
+#: templates/header.html:126 templates/index.html:104
+msgid "Leaderboard"
+msgstr "Bảng xếp hạng"
+
+#: templates/header.html:189
 msgid "Change language"
 msgstr "Đổi ngôn ngữ"
 
-#: templates/index.html:19 templates/index.html:37 templates/index.html:54
+#: templates/index.html:19 templates/index.html:37 templates/index.html:56
 msgid "The Gogoedu System Education"
 msgstr "Hệ thống giáo dục Gogoedu"
 
-#: templates/index.html:20 templates/index.html:38 templates/index.html:55
+#: templates/index.html:20 templates/index.html:38 templates/index.html:57
 msgid "Future Of Education Technology"
 msgstr "Tương lai của công nghệ giáo dục"
 
-#: templates/index.html:92
+#: templates/index.html:95
 #, fuzzy
 #| msgid "Catagory"
 msgid "Catagories"
 msgstr "Thể loại"
 
-#: templates/index.html:101
+#: templates/leaderboard.html:13
+msgid "Top Points"
+msgstr "Những người có điểm số cao nhất"
+
+#: templates/leaderboard.html:28
+msgid "Points"
+msgstr "Số điểm"
+
+#: templates/leaderboard.html:29
 #, fuzzy
-#| msgid "About"
-msgid "About us"
-msgstr "Thông tin"
+#| msgid "Learned Word"
+msgid "Learned Words"
+msgstr "Từ đã học"
+
+#: templates/leaderboard.html:30
+#, fuzzy
+#| msgid "Tests"
+msgid "Testeds"
+msgstr "Các bài kiểm tra"
+
+#: templates/leaderboard.html:31
+msgid "Badges"
+msgstr "Số huy hiệu"
 
 #: templates/privacy.html:10
 msgid "Privacy policy"
 msgstr "Chính sách"
+
+#~ msgid "We are gogo team"
+#~ msgstr "Chúng mình là gogoedu"
+
+#~ msgid "Team leader"
+#~ msgstr "Nhóm Trưởng"
+
+#~ msgid "Developer"
+#~ msgstr "Đội Viên"
+
+#, fuzzy
+#~| msgid "Contact"
+#~ msgid "Contact us"
+#~ msgstr "Liên hệ"
+
+#~ msgid "Contact"
+#~ msgstr "Liên hệ"
+
+#~ msgid "Lesson "
+#~ msgstr "Bài Học"
+
+#~ msgid "Learned word"
+#~ msgstr "Từ đã học"
+
+#~ msgid "Word"
+#~ msgstr "Từ"
+
+#~ msgid "Memoried Word"
+#~ msgstr "Từ đã thuộc"
+
+#~ msgid "Manage all"
+#~ msgstr "Quản lý tất cả"
+
+#~ msgid "Summary"
+#~ msgstr "Tóm lược"
+
+#, fuzzy
+#~| msgid "About"
+#~ msgid "About us"
+#~ msgstr "Thông tin"
 
 #~ msgid "Register or Login"
 #~ msgstr "Đăng kí hoặc Đăng Nhập"
