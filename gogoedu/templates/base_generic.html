@@ -64,7 +64,7 @@
         <script src="{% static 'js/custom.js'%}"></script>
     {% endblock %}
     <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
-    <!-- {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %} -->
+    {% register_notify_callbacks callbacks='fill_notification_list,fill_notification_badge' %}
     <script>
         $('#mission').on('click',function(){
         var userid = $("#userid").data('id')
@@ -113,6 +113,28 @@
         $("#dailyloginp").attr('aria-valuenow', dailylogin*20).css('width', dailylogin*20+'%');
         $("#dailyloginp").text(dailylogin*20+"%")
     }
+    })
+   
+    $('#form_message').submit(function(e){
+        e.preventDefault();
+        url = $(this).attr('action')
+        data = $(this).serialize();
+        $('#exampleModal').modal('toggle'); 
+        $.post(url, data, function(data){
+            
+        })
+    })
+    $('#input-text').submit(function(e){
+        e.preventDefault();
+        url = $(this).attr('action')
+        data = $(this).serialize();
+        $(this).trigger("reset");
+        $.post(url, data, function(data){
+            
+            $('#todolist').append(data);
+            
+            
+        })
     })
     </script>
     {% block javascript %}

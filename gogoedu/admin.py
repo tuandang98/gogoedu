@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from .models import GrammarLevel, myUser
-from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord,Mission, TestResult,UserGrammar,UserKanji,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar,ExampleKanji,KanjiLevel,KanjiLesson,Kanji,ReadingLevel,ReadingLesson,Reading,Listening,ListeningLesson,ListeningLevel
+from .models import Catagory, Lesson, Word, Test, Question, Choice, UserTest, UserWord,Mission, TestResult,UserGrammar,UserKanji,GrammarLevel,GrammarMean,GrammarLesson,Example,Grammar,ExampleKanji,KanjiLevel,KanjiLesson,Kanji,ReadingLevel,ReadingLesson,Reading,Listening,ListeningLesson,ListeningLevel,todo
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
 from django_gamification.models import GamificationInterface,Badge,BadgeDefinition,Category,PointChange,Unlockable,UnlockableDefinition,Progression
 from django import forms
@@ -254,7 +254,7 @@ admin.site.register(PointChange)
 admin.site.register(Unlockable)
 admin.site.register(UnlockableDefinition)
 admin.site.register(Progression)
-
+admin.site.register(todo)
 class MissionAdmin(NestedModelAdmin):
     list_display = ('user', 'name','updated_at')
     list_filter = ('user',)
