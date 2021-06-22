@@ -101,7 +101,7 @@
                                         </div>
                                     </div>
                                     <div id="wordListTab" class="tab_panel_content">
-                                        <div id="All" class="w3-container city">
+                                        <div id="{% trans 'All'%}" class="w3-container city">
                                             {% for word in object_list %}
                                             <ul class="dropdowns">
                                                 <div class="row">
@@ -144,7 +144,7 @@
                                             </ul>
                                             {% endfor %}
                                         </div>
-										<div id="Learned" class="w3-container city" style="display:none">
+										<div id="{% trans 'Learned'%}" class="w3-container city" style="display:none">
                                             {% for word in marked_word_list %}
                                             <ul class="dropdowns">
                                                 <div class="row">
@@ -185,7 +185,7 @@
                                             </ul>
                                             {% endfor %}
                                         </div>
-										<div id="New" class="w3-container city" style="display:none">
+										<div id="{% trans 'New'%}" class="w3-container city" style="display:none">
                                             {% for word in new_list %}
                                             <ul class="dropdowns">
                                                 <div class="row">

@@ -339,13 +339,22 @@ def check_unlockables(sender, instance=None, **kwargs):
 
     # Find all unlockables for the interface that have less points
     # then the current interface, and update them to be unlocked
-    Unlockable.objects.filter(
+    unlocks = Unlockable.objects.filter(
         interface=instance.interface,
-        points_required__lte=instance.interface.points
-    ).update(
-        acquired=True
+        points_required__lte=instance.interface.points,
+        acquired=False,
     )
-    
+    user = myUser.objects.filter(interface=instance.interface).first()
+    for unlock in unlocks:
+        unlock.acquired= True
+        if unlock.name == 'Mission 20 quests':
+            missionw = Mission.objects.filter(type="W",user=user).update(name="Learn 20 vocabulary",description='Learn 20 vocabulary',target=20,point=75)
+            missionk = Mission.objects.filter(type="K",user=user).update(name="Learn 20 kanji",description='Learn 20 kanji',target=20,point=75)
+            missionr = Mission.objects.filter(type="R",user=user).update(name="Learn 20 reading",description='Learn 20 reading',target=20,point=75)
+            missionl = Mission.objects.filter(type="L",user=user).update(name="Learn 20 listening",description='Learn 20 listening',target=20,point=75)
+            missiong = Mission.objects.filter(type="G",user=user).update(name="Learn 20 grammar",description='Learn 20 grammar',target=20,point=75)
+        unlock.save()
+
     
 # @receiver(post_save, sender=Progression)
 # def check_unlock_badge(sender, instance=None, **kwargs):
@@ -703,25 +712,27 @@ def misson_daily_login(sender, instance, **kwargs):
                         type="G",
                         )      
                 PointChange.objects.create(amount=mission.point,interface=user.interface)
+                message='You get '+str(mission.point)+' points from the login quest'
+                notify.send(user, recipient=user, verb='Notification',description=message)
+                
             else:
                 
                 mission = Mission.objects.filter(user=user,name="DailyLogin").first()
                 if(instance.last_login.date()-user.last_login.date()>=datetime.timedelta(1)):
-                    PointChange.objects.create(amount=mission.point,interface=user.interface)
+                    
                     if(datetime.date.today()-mission.updated_at.date()==datetime.timedelta(1)):
                         if(mission.process<5):
-                            message='You get '+str(mission.point)+'points from the login quest'
                             mission.point=mission.point+50
                             mission.process=mission.process+1
                             mission.save()
-                            
-                            notify.send(user, recipient=user, verb='Notification',description=message)
                     if(datetime.date.today()-mission.updated_at.date()>=datetime.timedelta(2)):
-                        message='You get '+str(mission.point)+'points from the login quest'
+                        
                         mission.point=50
                         mission.process=1
                         mission.save()
-                        notify.send(user, recipient=user, verb='Notification',description=message)
+                    message='You get '+str(mission.point)+' points from the login quest'
+                    notify.send(user, recipient=user, verb='Notification',description=message)
+                    PointChange.objects.create(amount=mission.point,interface=user.interface)
 @receiver(post_save, sender=Mission)
 def complete_misson(sender, instance, created, **kwargs):
     user=myUser.objects.filter(

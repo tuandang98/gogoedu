@@ -49,13 +49,13 @@
                     <div class="form-group row w-70">
                         <div class="col-md-12">
                             <label for="username"><b>Username:</b></label>
-                            <input type="text" id="username" name="username" value="{{ request.user.username }}" class="counter_input" placeholder="Username">
+                            <input type="text" id="username" name="username" value="{{ request.user.username }}" class="counter_input" placeholder="Username" readonly>
                         </div>
                     </div>
                     <div class="form-group row w-70">
                         <div class="col-md-12">
                             <label for="email"><b>Email address:</b></label>
-                            <input type="email" id="email" name="email" value="{{ request.user.email }}" class="counter_input" placeholder="Email">
+                            <input type="email" id="email" name="email" value="{{ request.user.email }}" class="counter_input" placeholder="Email" readonly>
                         </div>
                     </div>
                     <div class="form-group row w-70">
@@ -67,7 +67,7 @@
                     </div>
                     <div class="form-group row w-70">
                         <div class="col-md-3"><button type="submit" class="counter_form_button">Save</button></div>
-                        <div class="col-md-3"><button type="reset"  class="counter_form_button">Cancel</button></div>
+                        <div class="col-md-3"><button type="reset"  class="counter_form_button">Cancel</a></div>
                     </div>
                 </form>
             </div>

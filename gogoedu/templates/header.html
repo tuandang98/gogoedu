@@ -108,7 +108,7 @@
 									<li class="{% if request.path == '/gogoedu/' %}active{% endif %}"><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
 									<li class="{% if request.path == '/gogoedu/catagory/' %}active{% endif %} dropdown">
 										<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #384158;">
-											Learn
+											{% trans 'Learn' %}
 										</a>
 										  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
 											<a class="dropdown-item" href="{% url 'alphabet' %}">{% trans 'Alphabet' %}</a>
@@ -237,10 +237,22 @@
 		</div>
 		<nav class="menu_nav">
 			<ul class="menu_mm">
-				<li class="menu_mm"><a href="index.html">Home</a></li>
-				<li class="menu_mm"><a href="#">Category</a></li>
-				<li class="menu_mm"><a href="#">Flashcard</a></li>
-				<li class="menu_mm"><a href="#">Leaderboard</a></li>
+				<li class="menu_mm"><a href="{% url 'index' %}">{% trans 'Home' %}</a></li>
+				<li class="menu_mm dropdown">
+					<a class="dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="color: #384158;">
+						{% trans 'Learn' %}
+					</a>
+					  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+						<a class="dropdown-item" href="{% url 'alphabet' %}">{% trans 'Alphabet' %}</a>
+						<a class="dropdown-item" href="{% url 'catagory' %}">{% trans 'Vocabulary' %}</a>
+						<a class="dropdown-item" href="{% url 'kanji' %}">{% trans 'Kanji' %}</a>
+						<a class="dropdown-item" href="{% url 'grammar' %}">{% trans 'Grammar' %}</a>
+						<a class="dropdown-item" href="{% url 'reading' %}">{% trans 'Reading' %}</a>
+						<a class="dropdown-item" href="{% url 'listening' %}">{% trans 'Listening' %}</a>
+					  </div>
+				</li>
+			
+				<li class="menu_mm"><a href="{% url 'leaderboard' %}">{% trans 'Leaderboard' %}</a></li>
 			</ul>
 		</nav>
 	</div>

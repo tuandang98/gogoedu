@@ -22,10 +22,10 @@
     <div class="container">
         <div class="course_tabs_container">
             <div class="tabs d-flex flex-row align-items-center justify-content-start">
-                <div class="tab">
+                <div class="tab active">
                     {% trans 'Learned Word' %}
                 </div>
-                <div class="tab active">
+                <div class="tab ">
                     {% trans 'Chart' %}
                 </div>
                 <div class="tab">
@@ -35,10 +35,14 @@
             <div class="tab_panels">
 
             <!-- Learned Word -->
-            <div class="tab_panel ">
+            <div class="tab_panel active">
                 <div class="tab_panel_title">Learned Word &emsp;  Total Learned Word : {{total_learned|length}}</div>
                 
-                <div class="tab_panel_content">
+                <div class="tab_panel_content ">
+                    <form action="" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
+                        <input type="search" class="courses_search_input" placeholder="{% trans 'Search Word'%}"  name ='search' value="{{ request.GET.search }}">
+                        <input type="submit" value="{% trans 'Search' %}" class="courses_search_button ml-auto" />
+                    </form> 
                     <div class="accordions">
                             
                         <div class="elements_accordions">
@@ -49,7 +53,9 @@
                                 </div>
                                 <div class="accordion_panel">
                                     <p> {{word_learned.word.mean}} </p>
+                                    <p> {{word_learned.date}} </p>
                                 </div>
+                               
                             </div>
                         {%endfor%}
                         </div>
@@ -72,18 +78,18 @@
                                     {% if list_learned.number == i %}
                             <li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                                     {% else %}
-                            <li class="mr-1"><a href="?page={{ i }}">{{ i }}</a></li>
+                            <li class="mr-1"><a href="{{ request.path }}?search={{ request.GET.search }}&page={{ i }}">{{ i }}</a></li>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
                             {% endfor %}
 
                             {% if list_learned.number < list_learned.paginator.num_pages|add:"-5" %}
-                            <li class="mr-1"><a href="?page={{ list_learned.paginator.num_pages }}"><i>{{ list_learned.paginator.num_pages }}</i></a></li>
+                            <li class="mr-1"><a href="{{ request.path }}?search={{ request.GET.search }}&page={{ list_learned.paginator.num_pages }}"><i>{{ list_learned.paginator.num_pages }}</i></a></li>
                             {% endif %}
 
                             {% if list_learned.has_next %}
-                            <li><a href="?page={{ list_learned.next_page_number }}">&raquo;</a></li>
+                            <li><a href="{{ request.path }}?search={{ request.GET.search }}&page={{ list_learned.next_page_number }}">&raquo;</a></li>
                             {% else %}
                             <li class="disabled"><span>&raquo;</span></li>
                             {% endif %}
@@ -93,7 +99,7 @@
                 </div>
             </div>
             <!-- Curriculum -->
-            <div class="tab_panel tab_panel_2 active">
+            <div class="tab_panel tab_panel_2">
                 <div class="tab_panel_title">Process &emsp;</div>
                 
                 <div class="tab_panel_content" >
@@ -102,6 +108,14 @@
                     </div>
                     <div class="col-sm-5" style="display: inline-block;">
                         <canvas id="myChart2" width="400" height="400"></canvas>
+                    </div>
+                    <br>
+                    <br>
+                    <div class="col-sm-5" style="display: inline-block;">
+                        <canvas id="myChart3" width="400" height="400"></canvas>
+                    </div>
+                    <div class="col-sm-5" style="display: inline-block;">
+                        <canvas id="myChart4" width="400" height="400"></canvas>
                     </div>
                 </div>
             </div>
@@ -189,6 +203,12 @@
     var datal = []
     var datan = []
     var datag = []
+    var labels_week = []
+    var data_week_w = []
+    var data_week_r = []
+    var data_week_l = []
+    var data_week_k = []
+    var data_week_g = []
     $.ajax({
             method: "GET",
             url: '/gogoedu/summary/chart/',
@@ -202,12 +222,20 @@
                 datal=data.datal
                 datan = data.datan
                 datag = data.datag
+                labels_week = data.labels_week
+                data_week_w = data.data_week_w
+                data_week_r = data.data_week_r
+                data_week_l = data.data_week_l
+                data_week_k = data.data_week_k
+                data_week_g = data.data_week_g
                 setChart()
             },
     })
     function setChart(){
         var ctx = document.getElementById('myChart').getContext('2d');
         var ctx2 = document.getElementById('myChart2').getContext('2d');
+        var ctx3 = document.getElementById('myChart3').getContext('2d');
+        var ctx4 = document.getElementById('myChart4').getContext('2d');
         var myChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -268,6 +296,75 @@
             data: datal,
         }],
         labels: labels,
+    },
+    options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var myChart = new Chart(ctx3, {
+        type: 'bar',
+        data: {
+            labels:labels_week,
+            datasets: [{
+                label: 'Vocabulary',
+                data: data_week_w,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            },{
+            type: 'line',
+            label: 'Kanji',
+            backgroundColor: "#e755ba",
+            data: data_week_k,
+        },{
+            type: 'line',
+            label: 'Grammar',
+            backgroundColor: "green",
+            data: data_week_g,
+        },
+
+        ]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+    var mixedChart = new Chart(ctx4, {
+    data: {
+        datasets: [{
+            type: 'bar',
+            label: 'Reading',
+            backgroundColor:"red",
+            data: data_week_r,
+        }, {
+            type: 'line',
+            label: 'Listening',
+            backgroundColor:"yellow",
+            data: data_week_l,
+        }],
+        labels: labels_week,
     },
     options: {
             scales: {
