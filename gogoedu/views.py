@@ -3,7 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
 from django.core.mail.backends import console
-from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse
+from django.http import HttpResponseRedirect, HttpResponseForbidden, HttpResponse, response
 from django.shortcuts import render, redirect, get_object_or_404
 from django.template.loader import render_to_string
 from django.urls import reverse
@@ -30,10 +30,11 @@ from django.forms.models import model_to_dict
 from json import dumps
 from .forms import RegisterForm, UserUpdateForm
 from gogoedu.models import Grammar, GrammarLevel, myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
-    TestResult,GrammarLevel,GrammarLesson,GrammarMean,UserGrammar,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji,Mission
-
+    TestResult,GrammarLevel,GrammarLesson,GrammarMean,UserGrammar,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji,Mission,todo
+from rest_framework.decorators import api_view, renderer_classes
+from rest_framework.renderers import JSONRenderer, TemplateHTMLRenderer,StaticHTMLRenderer
 from PIL import Image
-
+from notifications.signals import notify
 from django.shortcuts import get_object_or_404
 from django.db import transaction
 
@@ -50,7 +51,8 @@ from datetime import timedelta
 import datetime
 
 def index(request):
-    return render(request, 'index.html')
+    list_todo = todo.objects.filter(user=request.user,status=False)
+    return render(request, 'index.html', {'list_todo': list_todo})
 
 
 def change_language(request):
@@ -1232,3 +1234,39 @@ def listtest(request):
     test = Test.objects.all()
     context = {"test": test,}  
     return render(request, 'gogoedu/listtest.html', context)
+@api_view(('POST',))
+@renderer_classes((TemplateHTMLRenderer, JSONRenderer))
+def message(request):
+    is_authenticated(request)
+    try:
+        if request.method == 'POST':
+            sender = myUser.objects.get(username=request.user)
+            receiver = myUser.objects.get(username=request.POST.get('username'))
+            notify.send(sender, recipient=receiver, verb='Message', description=request.POST.get('message'))
+            data={
+            "learned":'learned',
+            
+            }
+            return Response(data,template_name='base_generic.html')
+        else:
+            return HttpResponse("Invalid request")
+    except Exception as e:
+        print(e)
+        return HttpResponse("Please login from admin site for sending messages")
+def mark_as_done(request, id):
+    is_authenticated(request)
+    obj = todo.objects.get(pk=id)
+    obj.status = True
+    obj.save()
+    list_todo = todo.objects.filter(user=request.user,status=False)
+    return render(request, 'index.html', {'list_todo': list_todo})
+
+@api_view(('POST',))
+@renderer_classes([StaticHTMLRenderer])
+def new_todo(request):
+    is_authenticated(request)
+    if request.method == "POST":
+        new=todo.objects.create(user=request.user,name=request.POST.get('todo-name'))
+        data = '<div class="well"><h4>'+str(new.name)+'</h4><a href="/gogoedu/mark-as-done/'+str(new.id)+'">Mark as Done  &#9996;</a></div>'
+        return Response(data)
+

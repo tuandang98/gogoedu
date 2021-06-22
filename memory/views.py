@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.views.decorators.http import last_modified
 from django.utils.decorators import classonlymethod
 from .models import Game, Player, Card,Image
-from gogoedu.models import Word, myUser,Lesson,Catagory
+from gogoedu.models import KanjiLesson, KanjiLevel, Word, myUser,Lesson,Catagory,Kanji
 import random 
 def get_player(request):
     """
@@ -133,36 +133,66 @@ class Welcome(View):
         '''create a new game and redict to it'''
         name = request.POST.get("name", "")
         lessonid = request.POST.get("lesson", "")
+        kanjilessonid = request.POST.get("kanjilesson", "")
         if not name:
             return render(request, 'memory/newgame.html', {'error': 'please enter a name'})
-        lesson = get_object_or_404(Lesson, id = 1)
-        game = Game()
-        game.save()
-        player = Player(game=game, name=name)
-        player.save()
-        lesson = get_object_or_404(Lesson, id = lessonid)
-        word_list = lesson.word_set.all()
-        images = Image.objects.all()
-        
-        id_list = word_list.values_list('id', flat=True)
-        
-        random_profiles_id_list = random.sample(list(id_list), min(len(id_list), images.count()))
-        x=images.count()
-        for image in images:
-            x=x-1
-            image.word=Word.objects.get(id=random_profiles_id_list[x])
-            image.save()
-        
-        
+        if not lessonid:
+            if kanjilessonid:
+                game = Game()
+                game.save()
+                player = Player(game=game, name=name)
+                player.save()
+                kanjilesson = get_object_or_404(KanjiLesson, id = kanjilessonid)
+                word_list = kanjilesson.kanji_set.all()
+                images = Image.objects.all()
+                print("zo kanji")
+                id_list = word_list.values_list('id', flat=True)
+                
+                random_profiles_id_list = random.sample(list(id_list), min(len(id_list), images.count()))
+                x=images.count()
+                for image in images:
+                    x=x-1
+                    image.kanji=Kanji.objects.get(id=random_profiles_id_list[x])
+                    image.status=2
+                    image.save()
+                
+                
 
-        response = HttpResponseRedirect(game.get_absolute_url())
-        response.set_cookie('player_id', player.secretid, path=game.get_absolute_url())
+                response = HttpResponseRedirect(game.get_absolute_url())
+                response.set_cookie('player_id', player.secretid, path=game.get_absolute_url())
+            else:
+                return render(request, 'memory/newgame.html', {'error': 'please enter a lesson'})
+        else:
+            print("zo tu vung")
+            game = Game()
+            game.save()
+            player = Player(game=game, name=name)
+            player.save()
+            lesson = get_object_or_404(Lesson, id = lessonid)
+            word_list = lesson.word_set.all()
+            images = Image.objects.all()
+            
+            id_list = word_list.values_list('id', flat=True)
+            
+            random_profiles_id_list = random.sample(list(id_list), min(len(id_list), images.count()))
+            x=images.count()
+            for image in images:
+                x=x-1
+                image.word=Word.objects.get(id=random_profiles_id_list[x])
+                image.status=1
+                image.save()
+            
+            
+
+            response = HttpResponseRedirect(game.get_absolute_url())
+            response.set_cookie('player_id', player.secretid, path=game.get_absolute_url())
         return response
 
     def get(self, request):
         category = Catagory.objects.all()
-       
+        kanjilevel= KanjiLevel.objects.all()
         context={
             'category':category,
+            'kanjilevel':kanjilevel,
         }
         return render(request, 'memory/newgame.html',context)

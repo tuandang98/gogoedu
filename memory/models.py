@@ -1,7 +1,7 @@
 from django.db import models
 from django.urls import reverse
 import random
-from gogoedu.models import Word,Lesson
+from gogoedu.models import Word,Lesson,Kanji
 def random_id(length):
     """return a random string of given length
 
@@ -64,8 +64,13 @@ class Game(models.Model):
         self.current_player = random.choice(self.players.all())
         self.save()
         self.cards.all().delete()
-        self.cards.set((Card(image=image,word=image.word) for image in query_set1), bulk=False)
-        self.cards.set((Card(image=image,word=image.word.mean) for image in query_set2), bulk=False)
+        status = Image.objects.order_by('?')[0]
+        if status.status==1:
+            self.cards.set((Card(image=image,word=image.word) for image in query_set1), bulk=False)
+            self.cards.set((Card(image=image,word=image.word.mean) for image in query_set2), bulk=False)
+        else:
+            self.cards.set((Card(image=image,word=image.kanji) for image in query_set1), bulk=False)
+            self.cards.set((Card(image=image,word=image.kanji.reading) for image in query_set2), bulk=False)
 
     def show_card(self, card):
         assert card.game == self
@@ -171,6 +176,8 @@ class Image(models.Model):
     offset_y = models.IntegerField()
     """the offset of the image in the image map"""
     word = models.ForeignKey(Word,on_delete=models.CASCADE,null=True,blank=True)
+    kanji = models.ForeignKey(Kanji,on_delete=models.CASCADE,null=True,blank=True)
+    status = models.IntegerField(null=True,blank=True)
     def __str__(self):
         return 'Image%d' % self.id
 

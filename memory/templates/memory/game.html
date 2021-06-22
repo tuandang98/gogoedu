@@ -7,7 +7,9 @@
 .card {
 	width: 140px; 
 	height: 140px; 
+	background-color: transparent;
 	background-image: url({% static 'memory/cards_alphabet.png' %}); 
+	
 }
 .cardcell {
 	width: 150px; 
@@ -17,23 +19,26 @@
 <script src="{% static 'memory/gamen.js' %}"></script>
 </head>
 <body onload="main()">
-<p>This is game {{ game }}.</p>
+
+<p ><h3>This is game {{ game }}.</h3></p>
 
 {% if game.state == 0 %} 
-<p>Please wait for other player</p>
-<p>Send him this link to join: <a href="{{ game.get_absolute_url }}">{{ game.get_absolute_url }}</a></p>
+<p >Please wait for other player</p>
+<p >Send him this link to join: <a href="{{ game.get_absolute_url }}">{{ game.get_absolute_url }}</a></p>
+
 {% else %}
+{% if player %}
+<p>You are {{ player }}.</p>
+{% endif %}
 <table>
 <tr>
 {% for aplayer in game.players.all %}
-<td id="player{{ aplayer.id }}" {% if aplayer.is_current_player %}style="background: yellow"{% endif %}>{{ aplayer.name }} - {{ aplayer.score }}</td>
+<td id="player{{ aplayer.id }}" {% if aplayer.is_current_player %}style="background: yellow "{% endif %}>{{ aplayer.name }} - {{ aplayer.score }}</td>
 {% endfor %}
 </tr>
 </table>
 
-{% if player %}
-<p>You are {{ player }}.</p>
-{% endif %}
+
 <p id="message">{{game.message}}</p>
 
 <form method='post' id="game-form">
@@ -44,7 +49,7 @@
 </div>
 <table>
 {% for card in game.cards.all %}
-    {% if forloop.counter0|divisibleby:6 %}<tr>{% endif %}
+    {% if forloop.counter0|divisibleby:4 %}<tr>{% endif %}
 	<td class="cardcell">
 	{% if card.shown %}
 		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}">{{ card.word}}</button>
@@ -54,7 +59,7 @@
 		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}" style="visibility: hidden"></button>
 	{% endif %}
 	</td>
-    {% if forloop.counter|divisibleby:6 %}</tr>{% endif %}
+    {% if forloop.counter|divisibleby:4 %}</tr>{% endif %}
 {% endfor %}
 </table>
 </form>

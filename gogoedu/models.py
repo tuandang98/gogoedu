@@ -417,6 +417,12 @@ class UserGrammar(models.Model):
 
     class Meta:
         unique_together = (("user", "grammar"),)
+class todo(models.Model):
+    name = models.TextField(max_length=255)
+    user = models.ForeignKey(myUser, on_delete=models.CASCADE)
+    status = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 @receiver(post_save, sender=GamificationInterface)
 def create_badges_and_unlockables_from_new_interface(
         sender, instance, created, **kwargs):

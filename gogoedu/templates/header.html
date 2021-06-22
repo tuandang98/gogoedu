@@ -34,15 +34,22 @@
 												
 												  {% for notification in  user.notifications.unread|slice:":5"  %}
 													  <div>
-													  Message from <b>GogoEdu</b>
-													<button class="dropdown-item" type="button">{{ notification.description }}</button>			
+													  Message from 
+													  {%if notification.actor.is_superuser %}
+													  <b>GogoEdu</b>
+													  {%else%}
+													  <b>{{ notification.actor }}</b>
+													  {%endif%}
+													<button class="dropdown-item" type="button">{{ notification.description }}</button>	
+													<p>{{ notification.timestamp }}</p>	
+													<a href="delete/{{notification.id}}">Mark as read</a>	
 													</div>
 													<div class="dropdown-divider"></div>
 												{% endfor %}
 												<a href="{% url 'notifications:unread' %}">See All</a>
 												</div>
-										
-												<!-- {% live_notify_list list_class="live_notify_list dropdown-menu" %} -->
+												
+												{% live_notify_list list_class="live_notify_list dropdown-menu" %}
 										<li class="nav-item avatar dropdown" style="color: white; cursor: pointer;">
 											
 											<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
@@ -66,8 +73,15 @@
 												{% if request.user.is_superuser or request.user|has_group:"Teacher" %}
 													<a class="dropdown-item" href="/admin">Admin site</a>
 												{% endif %}
-												<a class="dropdown-item" href="{% url 'show_summary'%}">Summary</a>
-												<a class="dropdown-item" href="{% url 'memory:welcome'%}">Play quiz with friend</a>
+												<!-- Button trigger modal -->
+												<a class="dropdown-item" data-toggle="modal" data-target="#exampleModal">
+													{%trans 'Send message'%}
+												</a>
+												<a class="dropdown-item" data-toggle="modal" data-target="#exampleModalLong">
+													{%trans 'To do'%}
+												</a>
+												<a class="dropdown-item" href="{% url 'show_summary'%}">{% trans 'Summary'%}</a>
+												<a class="dropdown-item" href="{% url 'memory:welcome'%}">{% trans 'Play quiz with friend'%}</a>
 											  <a class="dropdown-item" href="{% url 'logout' %}">{% trans 'Log out' %}</a>
 											</div>
 										</li>
@@ -200,7 +214,7 @@
 				</div>
 			</div>
 		</div>
-
+		
 		<!-- Header Search Panel -->
 		<div class="header_search_container">
 			<div class="container">
@@ -219,9 +233,117 @@
 			</div>
 		</div>
 	</header>
+	<!-- Modal -->
+	<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLabel">Send Message</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<form action="{% url 'message' %}"  id="form_message" method="post" enctype="multipart/form-data">
+				{% csrf_token %}
+			<div class="modal-body">
+				<table class="table">
+					<thead>
+					  <tr>
+						
+						<th scope="col">Username</th>
+						<th scope="col">Message</th>
+						
+					  </tr>
+					</thead>
+						  <tbody>
+							<tr>
+								
+								<td><input type="text" name='username'></td>
+								<td>
 
+								<input type="text" name="message" >
+								</td>								
+								
+							</tr> 
+						  </tbody>
+				  </table>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			  <button type="submit" value="Submit" class="btn btn-primary">Send message</button>
+			</div>
+		</form>
+		  </div>
+		</div>
+	  </div>
 	<!-- Menu -->
-
+	<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog" aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+		  <div class="modal-content">
+			<div class="modal-header">
+			  <h5 class="modal-title" id="exampleModalLongTitle">{% trans "List of todo's"%}</h5>
+			  <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+				<span aria-hidden="true">&times;</span>
+			  </button>
+			</div>
+			<div class="modal-body">
+				<div class="container">
+					<div class="container">
+					  <p>
+					  </p>
+					</div>
+				  </div>
+				  <div class="col-sm-7">
+					  <div class="row">
+						<div>
+						  <div class="panel panel-default text-left">
+							<div class="panel-body">
+							  <h4 contenteditable="true">Make sure you do it. &#129304; &#9200; &#127947; &#128074; &#128079;</h4>
+							</div>
+						  </div>
+						</div>
+					  </div>
+			  
+					  <div class="row">      
+						<div id="todolist" class="col-sm-9">
+						{% for todo in list_todo %}        
+						  {% if not todo.status %}
+							  <div class="well">
+								<h4>{{ todo.name }}</h4>
+								<a href="{% url 'mark_as_done' todo.id  %}">Mark as Done  &#9996;</a>  
+							  </div>
+						  {% endif %}
+						{% endfor %}
+						</div>            
+					  </div>
+			  
+					  <h4>
+						Make new ones
+					  </h4>
+					</div>
+			  
+					  <div class="col-sm-9">
+						<div class="well">
+						  <form method="POST" action="{% url 'new_todo' %}" id="input-text" method="post" enctype="multipart/form-data">
+							{% csrf_token %}
+							<input type="textarea" style="width: 450px;" name="todo-name">
+							<button type="submit" value="Submit" class="btn btn-primary">Make a new one </button>
+						  </form>
+						</div>
+					  </div>  
+			  
+			  
+				</div>
+				</div>
+			  </div>
+			</div>
+			<div class="modal-footer">
+			  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			  
+			</div>
+		  </div>
+		</div>
+	  </div>
 	<div class="menu d-flex flex-column align-items-end justify-content-start text-right menu_mm trans_400">
 		<div class="menu_close_container">
 			<div class="menu_close">
