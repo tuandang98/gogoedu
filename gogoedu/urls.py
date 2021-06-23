@@ -53,6 +53,7 @@ urlpatterns = [
 	path('alphabet/getfinish', views.CheckAlphabet.as_view()),
 	path('listtest/', views.listtest, name='listtest'),
 	path('message/',views.message,name='message'),
+	path('todo/',views.todolist, name='todo'),	
 	path('new-todo/', views.new_todo, name="new_todo"),
     path('mark-as-done/<int:id>', views.mark_as_done, name="mark_as_done"),
 ]
