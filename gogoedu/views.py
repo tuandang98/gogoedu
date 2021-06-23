@@ -51,8 +51,7 @@ from datetime import timedelta
 import datetime
 
 def index(request):
-    list_todo = todo.objects.filter(user=request.user,status=False)
-    return render(request, 'index.html', {'list_todo': list_todo})
+    return render(request, 'base_generic.html')
 
 
 def change_language(request):
@@ -489,15 +488,26 @@ def summary_detail_view(request):
     is_authenticated(request)
     template = loader.get_template('gogoedu/summary.html')
     list_learned = UserWord.objects.filter(user=request.user.id)
+    list_word_learned_date = UserWord.objects.filter(user=request.user.id).values_list('date__date',flat=True).order_by('date__date').distinct()
+    list_kanji_learned_date = UserKanji.objects.filter(user=request.user.id).values_list('date__date',flat=True).order_by('date__date').distinct()
+    list_grammar_learned_date = UserGrammar.objects.filter(user=request.user.id).values_list('date__date',flat=True).order_by('date__date').distinct()
+    listdate = list(list_word_learned_date)+list(list_kanji_learned_date)+list(list_grammar_learned_date)
+    d = {}
+    my_set = set(listdate)
+    my_new_list = list(my_set)
+   
+    my_new_list.sort(key=lambda x: x, reverse=True)
+    for list1 in my_new_list:
+        dateword=UserWord.objects.filter(user=request.user.id,date__date=list1)
+        datekanji=UserKanji.objects.filter(user=request.user.id,date__date=list1)
+        dategrammar=UserGrammar.objects.filter(user=request.user.id,date__date=list1)
+        d.update({list1:[dateword,datekanji,dategrammar]})
+        
+    
+  
     list_memoried = UserWord.objects.filter(user=request.user.id, memoried=True)
     list_tested = TestResult.objects.filter(user=request.user.id)
-    # results = UserWord.objects.filter(user=request.user.id,).order_by('date__date')
     
-    # print(results)
-    search = request.GET.get('search')
-    print(search)
-    if search:
-        list_learned = UserWord.objects.filter(word__word__icontains=search)
         
     page = request.GET.get('page', 1)
     paginator1 = Paginator(list_tested, 5)
@@ -530,6 +540,7 @@ def summary_detail_view(request):
                'total_learned': list_learned,
                'total_memoried': list_memoried,
                'total_tested': list_tested,
+               'dict_date':d,
                }
     return HttpResponse(template.render(context, request))
 
@@ -1253,13 +1264,7 @@ def message(request):
     except Exception as e:
         print(e)
         return HttpResponse("Please login from admin site for sending messages")
-def mark_as_done(request, id):
-    is_authenticated(request)
-    obj = todo.objects.get(pk=id)
-    obj.status = True
-    obj.save()
-    list_todo = todo.objects.filter(user=request.user,status=False)
-    return render(request, 'index.html', {'list_todo': list_todo})
+
 
 @api_view(('POST',))
 @renderer_classes([StaticHTMLRenderer])
@@ -1267,6 +1272,28 @@ def new_todo(request):
     is_authenticated(request)
     if request.method == "POST":
         new=todo.objects.create(user=request.user,name=request.POST.get('todo-name'))
-        data = '<div class="well"><h4>'+str(new.name)+'</h4><a href="/gogoedu/mark-as-done/'+str(new.id)+'">Mark as Done  &#9996;</a></div>'
+        data = '<form action="/gogoedu/mark-as-done/'+str(new.id)+'" class="well" id="markdone'+str(new.id)+'" method="get" enctype="multipart/form-data"><h4>'+str(new.name)+'</h4><input type="submit" value="Mark as Done &#9996"></form>'
         return Response(data)
-
+@api_view(('GET',))
+@renderer_classes([StaticHTMLRenderer])
+def todolist(request):
+    is_authenticated(request)
+   
+    if request.method == 'GET':
+        list_todo = todo.objects.filter(user=request.user,status=False)
+        data = []
+        for new in list_todo:
+            data.append('<form action="/gogoedu/mark-as-done/'+str(new.id)+'" class="well" id="markdone'+str(new.id)+'" method="get" enctype="multipart/form-data"><h4>'+str(new.name)+'</h4><input type="submit" value="Mark as Done &#9996"></form>')
+        return Response(data)
+@api_view(('GET',))
+@renderer_classes([StaticHTMLRenderer])
+def mark_as_done(request, id):
+    is_authenticated(request)
+    if request.method == 'GET':
+        obj = todo.objects.get(pk=id)
+        obj.status = True
+        obj.save()
+        list_todo = todo.objects.filter(user=request.user,status=False)
+        data='<div>'+str(obj.name)+' has deleted</div>'
+       
+        return Response(data)

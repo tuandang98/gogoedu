@@ -55,7 +55,7 @@ INSTALLED_APPS = [
     'memory',
     'ckeditor',
     'ckeditor_uploader',
-
+    'notifications_rest',
 ]
 
 MIDDLEWARE = [
@@ -205,3 +205,4 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = 'gogoedu'
 BACKGROUND_TASK_RUN_ASYNC = True
+DJANGO_NOTIFICATIONS_CONFIG = { 'SOFT_DELETE': True}

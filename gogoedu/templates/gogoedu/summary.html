@@ -39,27 +39,44 @@
                 <div class="tab_panel_title">Learned Word &emsp;  Total Learned Word : {{total_learned|length}}</div>
                 
                 <div class="tab_panel_content ">
-                    <form action="" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
-                        <input type="search" class="courses_search_input" placeholder="{% trans 'Search Word'%}"  name ='search' value="{{ request.GET.search }}">
-                        <input type="submit" value="{% trans 'Search' %}" class="courses_search_button ml-auto" />
-                    </form> 
+                  
                     <div class="accordions">
                             
                         <div class="elements_accordions">
-                        {%for word_learned in list_learned%}
+                            {% for key, value_list  in dict_date.items %}
                             <div class="accordion_container">
                                 <div class="accordion d-flex flex-row align-items-center">
-                                <div>{{word_learned.word}}</div>
+                                <div>{{key}}</div>
                                 </div>
                                 <div class="accordion_panel">
-                                    <p> {{word_learned.word.mean}} </p>
-                                    <p> {{word_learned.date}} </p>
+                                    {% for value in value_list %}
+                                        {%for value1 in value%}
+                                        {%if value1.word%}
+                                        <div class="row">
+                                            <p class="col" style="display: inline-block;">{%trans 'Word'%}: {{value1.word}}</p>
+                                            <p class="col" style="display: inline-block;">{%trans 'Kanji'%}:{{value1.word.kanji}} </p>
+                                            <p class="col" style="display: inline-block;">{%trans 'Mean'%}:{{value1.word.mean}} </p>
+                                            {% for lesson in value1.word.lesson.all %}
+                                            <a class="col" style="display: inline-block;" href="{{lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{lesson}} </a>
+                                            {% endfor %}
+                                        </div>
+                                        {%endif%}
+                                        {%if value1.kanji%}
+                                        <div class="row">
+                                            <p class="col" style="display: inline-block;">{%trans 'Kanji'%}: {{value1.kanji}}</p>
+                                            <p class="col" style="display: inline-block;">{%trans 'Reading'%}:{{value1.kanji.reading}} </p>
+                                            <p class="col" style="display: inline-block;">{%trans 'Mean'%}:{{value1.kanji.definition}} </p> 
+                                            <a class="col" style="display: inline-block;" href="{{value1.kanji.kanji_lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{value1.kanji.kanji_lesson}} </a>
+                                        </div>
+                                        {%endif%}
+                                        {% endfor %}
+                                    {% endfor %}
                                 </div>
                                
                             </div>
-                        {%endfor%}
+                            {%endfor%}
                         </div>
-                        <nav aria-label="Page navigation example">
+                        <!-- <nav aria-label="Page navigation example">
                         <ul class="pagination">
 
                             {% if list_learned.has_previous %}
@@ -94,7 +111,7 @@
                             <li class="disabled"><span>&raquo;</span></li>
                             {% endif %}
                         </ul>
-                        </nav>
+                        </nav> -->
                     </div>
                 </div>
             </div>
