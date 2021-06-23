@@ -23,7 +23,7 @@
         <div class="course_tabs_container">
             <div class="tabs d-flex flex-row align-items-center justify-content-start">
                 <div class="tab active">
-                    {% trans 'Learned Word' %}
+                    {% trans 'Learned' %}
                 </div>
                 <div class="tab ">
                     {% trans 'Chart' %}
@@ -36,10 +36,13 @@
 
             <!-- Learned Word -->
             <div class="tab_panel active">
-                <div class="tab_panel_title">Learned Word &emsp;  Total Learned Word : {{total_learned|length}}</div>
+                <div class="tab_panel_title">Learned  &emsp;</div>
                 
                 <div class="tab_panel_content ">
-                  
+                    <form action="" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
+                        <input type="search" class="courses_search_input" placeholder="{% trans 'Search Date format %Y-%m-%d'%}"  name ='search' value="{{ request.GET.search }}"style="width: 30%;">
+                        <input type="submit" value="{% trans 'Search' %}" class="courses_search_button ml-auto" />
+                    </form> 
                     <div class="accordions">
                             
                         <div class="elements_accordions">
@@ -53,20 +56,28 @@
                                         {%for value1 in value%}
                                         {%if value1.word%}
                                         <div class="row">
-                                            <p class="col" style="display: inline-block;">{%trans 'Word'%}: {{value1.word}}</p>
+                                            <p class="col" style="display: inline-block; color: black;">{%trans 'Word'%}: {{value1.word}}</p>
                                             <p class="col" style="display: inline-block;">{%trans 'Kanji'%}:{{value1.word.kanji}} </p>
                                             <p class="col" style="display: inline-block;">{%trans 'Mean'%}:{{value1.word.mean}} </p>
                                             {% for lesson in value1.word.lesson.all %}
-                                            <a class="col" style="display: inline-block;" href="{{lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{lesson}} </a>
+                                            <a class="col" style="display: inline-block;" href="{{lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{lesson}}(Level:{{lesson.catagory.level}}) </a>
                                             {% endfor %}
                                         </div>
                                         {%endif%}
                                         {%if value1.kanji%}
                                         <div class="row">
-                                            <p class="col" style="display: inline-block;">{%trans 'Kanji'%}: {{value1.kanji}}</p>
+                                            <p class="col" style="display: inline-block; color: blue;">{%trans 'Kanji'%}: {{value1.kanji}}</p>
                                             <p class="col" style="display: inline-block;">{%trans 'Reading'%}:{{value1.kanji.reading}} </p>
                                             <p class="col" style="display: inline-block;">{%trans 'Mean'%}:{{value1.kanji.definition}} </p> 
-                                            <a class="col" style="display: inline-block;" href="{{value1.kanji.kanji_lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{value1.kanji.kanji_lesson}} </a>
+                                            <a class="col" style="display: inline-block;" href="{{value1.kanji.kanji_lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{value1.kanji.kanji_lesson}}(Level:{{value1.kanji.kanji_lesson.kanji_level.level}}) </a>
+                                        </div>
+                                        {%endif%}
+                                        {%if value1.grammar%}
+                                        <div class="row">
+                                            <p class="col" style="display: inline-block; color: gray;">{%trans 'Grammar'%}: {{value1.grammar}}</p>
+                                            <p class="col" style="display: inline-block;">{%trans 'Combining'%}:{{value1.grammar.connect}} </p>
+                                            <p class="col" style="display: inline-block;"></p>
+                                            <a class="col" style="display: inline-block;" href="{{value1.grammar.grammar_lesson.get_absolute_url}}">{%trans 'Lesson'%}:{{value1.grammar.grammar_lesson}}(Level:{{value1.grammar.grammar_lesson.grammar_level.level}}) </a>
                                         </div>
                                         {%endif%}
                                         {% endfor %}
@@ -76,42 +87,6 @@
                             </div>
                             {%endfor%}
                         </div>
-                        <!-- <nav aria-label="Page navigation example">
-                        <ul class="pagination">
-
-                            {% if list_learned.has_previous %}
-                            <li class="mr-1"><a href="?page={{ list_learned.previous_page_number }}">&laquo;</a></li>
-                            {% else %}
-                            <li class="disabled mr-1"><span>&laquo;</span></li>
-                            {% endif %}
-
-                            {% if list_learned.number > 5 %}
-                            <li><a href="?page=1"><i>1</i></a></li>
-                            {% endif %}
-
-                            {% for i in list_learned.paginator.page_range %}
-                            {% if i > list_learned.number|add:"-5" %}
-                                {% if i < list_learned.number|add:"5" %}
-                                    {% if list_learned.number == i %}
-                            <li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
-                                    {% else %}
-                            <li class="mr-1"><a href="{{ request.path }}?search={{ request.GET.search }}&page={{ i }}">{{ i }}</a></li>
-                                    {% endif %}
-                                {% endif %}
-                            {% endif %}
-                            {% endfor %}
-
-                            {% if list_learned.number < list_learned.paginator.num_pages|add:"-5" %}
-                            <li class="mr-1"><a href="{{ request.path }}?search={{ request.GET.search }}&page={{ list_learned.paginator.num_pages }}"><i>{{ list_learned.paginator.num_pages }}</i></a></li>
-                            {% endif %}
-
-                            {% if list_learned.has_next %}
-                            <li><a href="{{ request.path }}?search={{ request.GET.search }}&page={{ list_learned.next_page_number }}">&raquo;</a></li>
-                            {% else %}
-                            <li class="disabled"><span>&raquo;</span></li>
-                            {% endif %}
-                        </ul>
-                        </nav> -->
                     </div>
                 </div>
             </div>
