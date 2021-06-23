@@ -487,7 +487,7 @@ class MarkLearnedGrammar(generic.View):
 def summary_detail_view(request):
     is_authenticated(request)
     template = loader.get_template('gogoedu/summary.html')
-    list_learned = UserWord.objects.filter(user=request.user.id)
+    
     list_word_learned_date = UserWord.objects.filter(user=request.user.id).values_list('date__date',flat=True).order_by('date__date').distinct()
     list_kanji_learned_date = UserKanji.objects.filter(user=request.user.id).values_list('date__date',flat=True).order_by('date__date').distinct()
     list_grammar_learned_date = UserGrammar.objects.filter(user=request.user.id).values_list('date__date',flat=True).order_by('date__date').distinct()
@@ -502,10 +502,25 @@ def summary_detail_view(request):
         datekanji=UserKanji.objects.filter(user=request.user.id,date__date=list1)
         dategrammar=UserGrammar.objects.filter(user=request.user.id,date__date=list1)
         d.update({list1:[dateword,datekanji,dategrammar]})
-        
+    search = request.GET.get('search')
     
+    try:
+        if search:
+            searchdate=datetime.datetime.strptime(search, "%Y-%m-%d").date()
+            if searchdate in d:
+                listd=d[searchdate]
+                d={
+                    searchdate:listd
+                }
+    except ValueError:
+        pass
+       
+        # dateword=UserWord.objects.filter(user=request.user.id,date__date__icontains=search)
+        # datekanji=UserKanji.objects.filter(user=request.user.id,date__date__icontains=search)
+        # dategrammar=UserGrammar.objects.filter(user=request.user.id,date__date__icontains=search)
+        
   
-    list_memoried = UserWord.objects.filter(user=request.user.id, memoried=True)
+  
     list_tested = TestResult.objects.filter(user=request.user.id)
     
         
@@ -519,26 +534,9 @@ def summary_detail_view(request):
     except EmptyPage:
         tested_paged = paginator1.page(paginator1.num_pages)
 
-    paginator2 = Paginator(list_memoried, 2)
-    try:
-        memoried_paged = paginator2.page(page)
-    except PageNotAnInteger:
-        memoried_paged = paginator2.page(1)
-    except EmptyPage:
-        memoried_paged = paginator2.page(paginator2.num_pages)
-
-    paginator3 = Paginator(list_learned, 10)
-    try:
-        learned_paged = paginator3.page(page)
-    except PageNotAnInteger:
-        learned_paged = paginator3.page(1)
-    except EmptyPage:
-        learned_paged = paginator3.page(paginator3.num_pages)
+  
+   
     context = {"list_tested": tested_paged,
-               'list_learned': learned_paged,
-               'list_memoried': memoried_paged,
-               'total_learned': list_learned,
-               'total_memoried': list_memoried,
                'total_tested': list_tested,
                'dict_date':d,
                }
