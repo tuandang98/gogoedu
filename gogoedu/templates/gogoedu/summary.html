@@ -22,6 +22,17 @@
     <div class="container">
         <div class="course_tabs_container">
             <div class="tabs d-flex flex-row align-items-center justify-content-start">
+                {%if request.GET.test or request.GET.page%}
+                <div class="tab">
+                    {% trans 'Learned' %}
+                </div>
+                <div class="tab ">
+                    {% trans 'Chart' %}
+                </div>
+                <div class="tab active">
+                    {% trans 'Tests' %}
+                </div>
+                {%else%}
                 <div class="tab active">
                     {% trans 'Learned' %}
                 </div>
@@ -31,11 +42,16 @@
                 <div class="tab">
                     {% trans 'Tests' %}
                 </div>
+                {%endif%}
             </div>
             <div class="tab_panels">
 
             <!-- Learned Word -->
+            {%if request.GET.test or request.GET.page%}
+            <div class="tab_panel">
+            {%else%}
             <div class="tab_panel active">
+            {%endif%}
                 <div class="tab_panel_title">Learned  &emsp;</div>
                 
                 <div class="tab_panel_content ">
@@ -113,21 +129,117 @@
             </div>
 
             <!-- Reviews -->
-            <div class="tab_panel tab_panel_3">
+            {%if request.GET.test or request.GET.page %}
+            <div class="tab_panel tab_panel_3 active">
+                {%else%}
+                <div class="tab_panel tab_panel_3">
+                {%endif%}
+            
                 <div class="tab_panel_title">Test  &emsp;  Total Tested Tests : {{total_tested|length}}</div>
                 
                 <div class="tab_panel_content">
+                    <form action="" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
+                        <input type="search" class="courses_search_input" placeholder="{% trans 'Search Test'%}"  name ='test' value="{{ request.GET.search }}"style="width: 30%;">
+                        <input type="submit" value="{% trans 'Search' %}" class="courses_search_button ml-auto" />
+                    </form> 
                     <div class="accordions">
                             
                         <div class="elements_accordions">
                         {%for test in list_tested%}
                             <div class="accordion_container">
+                                {%if test.test%}
                                 <div class="accordion d-flex flex-row align-items-center">
-                                    <div>{{test.test}}</div>
+                                    <div class="row">
+                                        <div class="col">{{test.test}}</div>
+                                        <p class="col">
+                                            {%if test.test.lesson%}
+                                            Vocabulary : {{test.test.lesson}}({{test.test.lesson.catagory}}:{{test.test.lesson.catagory.level}})
+                                            {%endif%}
+                                            {%if test.test.kanji_lesson%}
+                                            Kanji: {{test.test.kanji_lesson}}({{test.test.kanji_lesson.kanji_level}}:{{test.test.kanji_lesson.kanji_level.level}})
+                                            {%endif%}
+                                            {% if test.test.grammar_lesson%}
+                                            Grammar: {{test.test.grammar_lesson}}({{test.test.grammar_lesson.grammar_level}}:{{test.test.grammar_lesson.grammar_level.level}})
+                                            {%endif%}
+                                        </p>
+                                       
+                                    </div>
                                 </div>
                                 <div class="accordion_panel">
-                                    <p>Correct Answers : {{test.correct_answer_num}}</p>
+                                    <div class="row">
+                                        <p class="col" style="display: inline-block; color: black;">{%trans 'Correct Answers '%}:{{test.correct_answer_num}} of {{test.test.question_set.all|length}}</p>
+                                        <p class="col" style="display: inline-block;">{%trans 'Date time: '%}:{{test.date}} </p>
+                                        
+                                        {%if test.test.lesson%}
+                                        <a class="col-2" style="display: inline-block;" href="{{test.test.get_absolute_url}}">
+                                            {%trans 'Link test '%}
+                                        </a>
+                                        <a class="col" style="display: inline-block;" href="{{test.test.lesson.get_absolute_url}}">
+                                            {%trans 'Link Lesson '%}:{{test.test.lesson}}(Level:{{test.test.lesson.catagory.level}})
+                                        </a>
+                                        {%endif%}
+                                        {%if test.test.kanji_lesson%}
+                                        <a class="col-2" style="display: inline-block;" href="{{test.test.get_absolute_url}}">
+                                            {%trans 'Link test '%}
+                                        </a>
+                                        <a class="col" style="display: inline-block;" href="{{test.test.kanji_lesson.get_absolute_url}}">
+                                            {%trans 'Link test '%}:{{test.test.kanji_lesson}}(Level:{{test.test.kanji_lesson.kanji_level.level}})
+                                        </a>
+                                        {%endif%}
+                                        {% if test.test.grammar_lesson%}
+                                        <a class="col-2" style="display: inline-block;" href="{{test.test.get_absolute_url}}">
+                                            {%trans 'Link test '%}
+                                        </a>
+                                        <a class="col" style="display: inline-block;" href="{{test.test.grammar_lesson.get_absolute_url}}">
+                                            {%trans 'Link test '%}:{{test.test.grammar_lesson}}(Level:{{test.test.grammar_lesson.grammar_level.level}})
+                                        </a>
+                                        {%endif%}
+                                        
+
+                                    </div>
                                 </div>
+                                {%endif%}
+
+                                {%if test.reading or test.listening%}
+                                {% if test.reading%}
+                                <div class="accordion d-flex flex-row align-items-center">
+                                    <div class="row">
+                                        <div class="col">{{test.reading.reading_lesson}}</div>
+                                        <p class="col">{% trans 'Reading'%}:{{test.reading.reading_lesson.reading_level}}({{test.reading.reading_lesson.reading_level.level}})</p>
+                                    </div>
+                                </div>
+                                <div class="accordion_panel">
+                                    <div class="row">
+                                        <p class="col" style="display: inline-block; color: black;">{%trans 'Correct Answers '%}:{{test.correct_answer_num}} of {{test.reading.question_set.all|length}}</p>
+                                        <p class="col" style="display: inline-block;">{%trans 'Date time: '%}:{{test.date}} </p>
+                                        <a class="col" style="display: inline-block;" href="{{test.reading.reading_lesson.get_absolute_url}}">
+                                            {%trans 'Link'%}:
+                                            {{test.reading.reading_lesson}}(Level:{{test.reading.reading_lesson.reading_level.level}})
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                {%endif%}
+                                {% if test.listening%}
+                                <div class="accordion d-flex flex-row align-items-center">
+                                    <div class="row">
+                                        <div class="col">{{test.listening.listening_lesson}}</div>
+                                        <p class="col">{% trans 'Listening'%}:{{test.listening.listening_lesson.listening_level}}({{test.listening.listening_lesson.listening_level.level}})</p>
+                                    </div>
+                                </div>
+                                <div class="accordion_panel">
+                                    <div class="row">
+                                        <p class="col" style="display: inline-block; color: black;">{%trans 'Correct Answers'%}:{{test.correct_answer_num}} of {{test.listening.question_set.all|length}}</p>
+                                        <p class="col" style="display: inline-block;">{%trans 'Date time: '%}:{{test.date}} </p>
+                                        <a class="col" style="display: inline-block;" href="{{test.listening.listening_lesson.get_absolute_url}}">
+                                            {%trans 'Link'%}:
+                                            {{test.listening.listening_lesson}}(Level:{{test.listening.listening_lesson.listening_level.level}})
+                                        </a>
+                                    </div>
+                                </div>
+                                {%endif%}
+                             {%endif%}
+
                             </div>
                         {%endfor%}
                         </div>
@@ -150,18 +262,18 @@
                                     {% if list_tested.number == i %}
                             <li class="active mr-1"><span>{{ i }} <span class="sr-only">(current)</span></span></li>
                                     {% else %}
-                            <li class="mr-1"><a href="?page={{ i }}">{{ i }}</a></li>
+                            <li class="mr-1"><a href="{{ request.path }}?test={{ request.GET.test }}&page={{ i }}">{{ i }}</a></li>
                                     {% endif %}
                                 {% endif %}
                             {% endif %}
                             {% endfor %}
 
                             {% if list_tested.number < list_tested.paginator.num_pages|add:"-5" %}
-                            <li class="mr-1"><a href="?page={{ list_tested.paginator.num_pages }}"><i>{{ list_tested.paginator.num_pages }}</i></a></li>
+                            <li class="mr-1"><a href="{{ request.path }}?test={{ request.GET.test }}&page={{ list_tested.paginator.num_pages }}"><i>{{ list_tested.paginator.num_pages }}</i></a></li>
                             {% endif %}
 
                             {% if list_tested.has_next %}
-                            <li ><a href="?page={{ list_tested.next_page_number }}">&raquo;</a></li>
+                            <li ><a href="{{ request.path }}?test={{ request.GET.test }}&page={{ list_tested.next_page_number }}">&raquo;</a></li>
                             {% else %}
                             <li class="disabled"><span>&raquo;</span></li>
                             {% endif %}
