@@ -1,4 +1,4 @@
-
+from django.middleware.csrf import get_token
 from django.contrib.auth.decorators import login_required
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import send_mail
@@ -1275,29 +1275,39 @@ def message(request):
 def new_todo(request):
     is_authenticated(request)
     if request.method == "POST":
-        new=todo.objects.create(user=request.user,name=request.POST.get('todo-name'))
-        data = '<form action="/gogoedu/mark-as-done/'+str(new.id)+'" class="well" id="markdone'+str(new.id)+'" method="get" enctype="multipart/form-data"><h4>'+str(new.name)+'</h4><input type="submit" value="Mark as Done &#9996"></form>'
-        return Response(data)
+        csrf_token = get_token(request)
+        csrf_token_html = '<input type="hidden" name="csrfmiddlewaretoken" value="{}" />'.format(csrf_token)
+        if request.POST.get('todo-name') and not request.POST.get('todo-name').isspace():
+            new=todo.objects.create(user=request.user,name=request.POST.get('todo-name'))
+            
+            data = '<form class="well" id="markdone'+str(new.id)+'"data-id="'+str(new.id)+'" method="post" enctype="multipart/form-data">'+csrf_token_html+'<h4>'+str(new.name)+'</h4><div>'+str(timezone.now().hour-new.created_at.hour)+' hours ago</div><input type="button" value="Mark as Done &#9996"></form>'
+            return Response(data)
+        else:
+            return Response('')
+            
 @api_view(('GET',))
 @renderer_classes([StaticHTMLRenderer])
 def todolist(request):
     is_authenticated(request)
    
     if request.method == 'GET':
+        csrf_token = get_token(request)
+        csrf_token_html = '<input type="hidden" name="csrfmiddlewaretoken" value="{}" />'.format(csrf_token)
         list_todo = todo.objects.filter(user=request.user,status=False)
         data = []
         for new in list_todo:
-            data.append('<form action="/gogoedu/mark-as-done/'+str(new.id)+'" class="well" id="markdone'+str(new.id)+'" method="get" enctype="multipart/form-data"><h4>'+str(new.name)+'</h4><input type="submit" value="Mark as Done &#9996"></form>')
+            data.append('<form class="well" id="markdone'+str(new.id)+'"data-id="'+str(new.id)+'" method="post" enctype="multipart/form-data">'+csrf_token_html+'<h4>'+str(new.name)+'</h4><div>'+str(timezone.now().hour-new.created_at.hour)+' hours ago</div><input type="button" value="Mark as Done &#9996"></form>')
         return Response(data)
-@api_view(('GET',))
+@api_view(('POST',))
 @renderer_classes([StaticHTMLRenderer])
 def mark_as_done(request, id):
     is_authenticated(request)
-    if request.method == 'GET':
+    if request.method == 'POST':
+        
         obj = todo.objects.get(pk=id)
         obj.status = True
         obj.save()
         list_todo = todo.objects.filter(user=request.user,status=False)
-        data='<div>'+str(obj.name)+' has deleted</div>'
+        data = 'ok'
        
         return Response(data)
