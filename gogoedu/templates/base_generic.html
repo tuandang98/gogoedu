@@ -637,16 +637,21 @@
             
         })
     })
-    $('#todolist .well').submit(function(e){
-        e.preventDefault();
-        url = $(this).attr('action')
-        data = $(this).serialize();
-
-        $.get(url, data, function(data){
-            $('#todolist').html(data);
-            
-            
-        })
+    $('#todolist').on('click', '.well', function () {
+        var id = $(this).data('id')
+        var csrfToken = $("input[name=csrfmiddlewaretoken]").val();
+        $(this).remove();
+        $.ajax({
+                url: '/gogoedu/mark-as-done/' + id,
+                data: {
+                    csrfmiddlewaretoken: csrfToken,
+                    id:id,
+                },
+                type: 'post',
+                success: function (response) {
+                    
+                }
+            })
         
     })
     </script>
