@@ -521,9 +521,15 @@ def summary_detail_view(request):
         
   
   
-    list_tested = TestResult.objects.filter(user=request.user.id)
-    
-        
+    list_tested = TestResult.objects.filter(user=request.user.id).order_by('-date')
+    test = request.GET.get('test')
+    try:
+        if test:
+            searchdate=datetime.datetime.strptime(test, "%Y-%m-%d").date()
+            list_tested = TestResult.objects.filter(user=request.user.id,date__icontains=searchdate)
+    except ValueError:
+        pass
+       
     page = request.GET.get('page', 1)
     paginator1 = Paginator(list_tested, 5)
     
