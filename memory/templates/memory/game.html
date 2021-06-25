@@ -18,9 +18,9 @@
 </style>
 <script src="{% static 'memory/gamen.js' %}"></script>
 </head>
-<body onload="main()">
+<body onload="main()" style="margin-left: 30%;">
 
-<p ><h3>This is game {{ game }}.</h3></p>
+<p ><h3 style="margin-left: 20%;">This is game {{ game }}.</h3></p>
 
 {% if game.state == 0 %} 
 <p >Please wait for other player</p>
@@ -52,7 +52,7 @@
     {% if forloop.counter0|divisibleby:4 %}<tr>{% endif %}
 	<td class="cardcell">
 	{% if card.shown %}
-		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}">{{ card.word}}</button>
+		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}"></button>
 	{% elif card.visible %}
 		<button type="submit" name="card" value="{{ card.id }}" class="card" id="card{{card.id}}"></button>
 	{% else %}

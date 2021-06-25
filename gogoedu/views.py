@@ -1296,7 +1296,7 @@ def todolist(request):
         list_todo = todo.objects.filter(user=request.user,status=False)
         data = []
         for new in list_todo:
-            data.append('<form class="well" id="markdone'+str(new.id)+'"data-id="'+str(new.id)+'" method="post" enctype="multipart/form-data">'+csrf_token_html+'<h4>'+str(new.name)+'</h4><div>'+str(timezone.now().hour-new.created_at.hour)+' hours ago</div><input type="button" value="Mark as Done &#9996"></form>')
+            data.append('<form class="well" id="markdone'+str(new.id)+'"data-id="'+str(new.id)+'" method="post" enctype="multipart/form-data">'+csrf_token_html+'<h4>'+str(new.name)+'</h4><div>'+str(new.created_at.strftime('%d-%m-%Y %H:%M:%S'))+'</div><input type="button" value="Mark as Done &#9996"></form>')
         return Response(data)
 @api_view(('POST',))
 @renderer_classes([StaticHTMLRenderer])

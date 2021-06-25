@@ -609,6 +609,7 @@
         e.preventDefault();
         url = $(this).attr('action')
         data = $(this).serialize();
+        $(this).trigger("reset");
         $('#exampleModal').modal('toggle'); 
         $.post(url, data, function(data){
             
