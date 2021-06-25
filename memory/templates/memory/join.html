@@ -6,6 +6,6 @@
 <input type="submit" value="Join the game"/> 
 </form>
 {%else%}
-<div class="login_button "><a href="{% url 'login' %}?next={% url 'index' %}">Sign in</a></div>
+<div class="login_button "><a href="{% url 'login' %}?next={{request.path}}">Sign in</a></div>
 {%endif%}
 <p>{{ error }}</p>

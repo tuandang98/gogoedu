@@ -32,25 +32,16 @@
 										</a>
 											  <div class="dropdown-menu" aria-labelledby="dropdownMenu2" style="text-align: center;">
 												
-												  {% for notification in  user.notifications.unread|slice:":5"  %}
-													  <div>
-													  Message from 
-													  {%if notification.actor.is_superuser %}
-													  <b>GogoEdu</b>
-													  {%else%}
-													  <b>{{ notification.actor }}</b>
-													  {%endif%}
-													<button class="dropdown-item" type="button">{{ notification.description }}</button>	
-													<p>{{ notification.timestamp }}</p>	
-													<a href="{% url 'notifications:mark_as_read' notification.slug%}">Mark as read</a>
-													
+												  
+													<div class="live_notify_list">
+													  
 													</div>
-													<div class="dropdown-divider"></div>
-												{% endfor %}
+													
+												
 												<a href="{% url 'notifications:all' %}">See All</a>
 												</div>
 												
-												{% live_notify_list list_class="live_notify_list dropdown-menu" %}
+												
 										<li class="nav-item avatar dropdown" style="color: white; cursor: pointer;">
 											
 											<a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink-55" data-toggle="dropdown"
