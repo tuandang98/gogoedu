@@ -52,10 +52,17 @@
                             <input type="text" id="username" name="username" value="{{ request.user.username }}" class="counter_input" placeholder="Username" readonly>
                         </div>
                     </div>
+                    
                     <div class="form-group row w-70">
                         <div class="col-md-12">
                             <label for="email"><b>Email address:</b></label>
                             <input type="email" id="email" name="email" value="{{ request.user.email }}" class="counter_input" placeholder="Email" readonly>
+                        </div>
+                    </div>
+                    <div class="form-group row w-70">
+                        <div class="col-md-12">
+                            <label for="password"><b>Password:</b></label>
+                            <a class="counter_input" href="{% url 'change_password'%}">Change Password</a>
                         </div>
                     </div>
                     <div class="form-group row w-70">

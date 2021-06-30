@@ -17,7 +17,7 @@ from .forms import RegisterForm
 from django.views import generic
 from django.conf import settings
 from django.template import loader
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate,update_session_auth_hash
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.views.generic.edit import FormMixin
 from django.views.generic.list import MultipleObjectMixin
@@ -29,6 +29,7 @@ from django.http import JsonResponse
 from django.forms.models import model_to_dict
 from json import dumps
 from .forms import RegisterForm, UserUpdateForm
+from django.contrib.auth.forms import PasswordChangeForm
 from gogoedu.models import Grammar, GrammarLevel, myUser, Lesson, Word, Catagory, Test, UserTest, Question, Choice, UserAnswer, UserWord, \
     TestResult,GrammarLevel,GrammarLesson,GrammarMean,UserGrammar,Example,KanjiLesson,KanjiLevel,Kanji,Reading,ReadingLesson,ReadingLevel,ListeningLevel,ListeningLesson,Listening,UserKanji,Mission,todo
 from rest_framework.decorators import api_view, renderer_classes
@@ -279,7 +280,7 @@ def profile_update(request, pk):
             form = UserUpdateForm(request.POST, request.FILES, instance=user)
             if form.is_valid():
                 form.save()
-                messages.success(request, f'Your account was updated!')
+               
                 return redirect('profile-detail', pk)
         else:
             form = UserUpdateForm(instance=user)
@@ -287,7 +288,21 @@ def profile_update(request, pk):
         return render(request, 'gogoedu/myuser_update.html', {'form': form, 'avatar': avatar})
     else:
         return redirect('index')
-
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user) 
+            return redirect('index')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'gogoedu/change_password.html', {
+        'form': form
+    })
 
 def is_authenticated(request):
     if not request.user.is_authenticated:
