@@ -91,6 +91,7 @@
                                             {%endif%}
                                             <form class="mt-5" action="" method="POST" id="quiz" data-id="{{test.id}}">
                                                 {% csrf_token %}
+                                                <ol>
                                                 {%for question in reading.question_set.all%}
                                                 <li style="font-size: 1.2rem;">
                                                     <h3 class="mb-2"><strong>{{question.question|safe}}</strong></h3>
@@ -107,6 +108,7 @@
                                                     {% endfor %}
                                                 </li>
                                                 {% endfor %}
+                                                </ol>
                                                 <div class="row mt-5 d-flex justify-content-between">
                                                     <input type="submit" class="btn btn-primary" value="{% trans 'Submit'%}">
                                                 </div>

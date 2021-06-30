@@ -43,31 +43,32 @@
 						<form action="{% url 'catagory'%}" method="get" id="courses_search_form" class="courses_search_form d-flex flex-row align-items-center justify-content-start">
 							<input type="search" class="courses_search_input" placeholder="{% trans 'Search Category' %}"  name ='name' value="{{ request.GET.name }}">
 							<input type="submit" value="{% trans 'Search'%}" class="courses_search_button ml-auto" />
+							<div class="col">
+								<select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
+										role="button" aria-haspopup="true" aria-expanded="false">
+									<optgroup label="{% trans 'Level' %}">
+										<option>{% trans 'All' %}</option>
+										<option>{% trans 'N5' %}</option>
+										<option>{% trans 'N4' %}</option>
+										<option>{% trans 'N3' %}</option>
+										<option>{% trans 'N2' %}</option>
+										<option>{% trans 'N1' %}</option>
+									</optgroup>
+									<!-- <optgroup label="{% trans 'Word type' %}">
+										<option>{% trans 'Noun' %}</option>
+										<option>{% trans 'Verb' %}</option>
+										<option>{% trans 'Adjective' %}
+										</option>
+									</optgroup> -->
+								</select>
+							</div>
 						</form>
 						{% endblock %}
 					</div>
 					<div class="courses_container">
 						
 						{%block content2%}
-						<div class="col-md-3">
-							<select class="nav-link dropdown-toggle" id="filter-list" onchange="openCity()"
-									role="button" aria-haspopup="true" aria-expanded="false">
-								<optgroup label="{% trans 'Level' %}">
-									<option>{% trans 'All' %}</option>
-									<option>{% trans 'N5' %}</option>
-									<option>{% trans 'N4' %}</option>
-									<option>{% trans 'N3' %}</option>
-									<option>{% trans 'N2' %}</option>
-									<option>{% trans 'N1' %}</option>
-								</optgroup>
-								<!-- <optgroup label="{% trans 'Word type' %}">
-									<option>{% trans 'Noun' %}</option>
-									<option>{% trans 'Verb' %}</option>
-									<option>{% trans 'Adjective' %}
-									</option>
-								</optgroup> -->
-							</select>
-						</div>
+						
 						<div id="All" class="row courses_row city">
 						
 							{% if catagory_list %}

@@ -25,8 +25,8 @@
 					<div class="team_image"><img src="{{user.avatar.url}}" alt=""></div>
 					<div class="team_body">
 						<div class="team_title"><a href="#">{{user}}{%if user.badge%}({{user.badge.name}}){%endif%}</a></div>
-						<div class="team_subtitle">{% trans 'Points' %}:{{user.interface.points }}</div>
-						<div class="team_subtitle">{% trans 'Learned Words' %}:{{user.num_words}}</div>
+						<div class="team_subtitle">{% trans 'Points' %}: <span class="badge badge-success">{{user.interface.points}}</span></div>
+						<!-- <div class="team_subtitle">{% trans 'Learned Words' %}:{{user.num_words}}</div> -->
 						<div class="team_subtitle">{% trans 'Testeds' %}:{{user.num_tests}}</div>
 						<div class="team_subtitle">{% trans 'Badges' %}:{{user.num_badges }}</div>
 						<div class="social_list">
