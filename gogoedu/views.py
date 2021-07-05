@@ -297,7 +297,7 @@ def change_password(request):
             update_session_auth_hash(request, user) 
             return redirect('index')
         else:
-            messages.error(request, 'Please correct the error below.')
+            pass
     else:
         form = PasswordChangeForm(request.user)
     return render(request, 'gogoedu/change_password.html', {
@@ -648,10 +648,11 @@ def viewkanjiflash(request,pk):
 def leaderboard_view(request):
     template = loader.get_template('leaderboard.html')
     top_points = myUser.objects.annotate(average_correct=Avg('testresult__correct_answer_num', distinct=True),num_tests=Count('testresult', distinct=True),num_words=Count('userword', distinct=True),num_badges=Count('interface__badge',filter=Q(interface__badge__acquired=True, interface__badge__revoked=False), distinct=True)).exclude(interface=None)
+    top = sorted(top_points,  key=lambda p: p.interface.points,reverse=True)
     
 
-    context = {"top_points": sorted(top_points,  key=lambda p: p.interface.points,reverse=True)[:3],
-                
+    context = {"top_points": top[:3],
+                "user_current_pos":top.index(request.user)+1,
                }
     return HttpResponse(template.render(context, request))
 
@@ -1250,13 +1251,12 @@ class CheckAlphabet(APIView):
         if badge.acquired is False:
             badge.progression.progress=badge.progression.target
             badge.increment()
-            PointChange.objects.create(amount=badge.point,interface=user.interface)
+            PointChange.objects.create(amount=badge.points,interface=user.interface)
             badge.save()
-            learned=False
-        else:
-            learned=True
+            message='Congratulations you get '+str(badge.points)+' points title of finished learning the alphabet'
+            notify.send(user, recipient=user, verb='Notification',description=message)
         data={
-            "learned":learned,
+            "learned":True,
             
         }
         return Response(data)

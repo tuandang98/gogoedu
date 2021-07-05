@@ -385,7 +385,7 @@
     <br>
     <br>
     <!-- Button trigger modal -->
-    <button id="userid" data-id="{{request.user.id}}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" style="margin-left: 20px; margin-right: auto;">
+    <button id="userid1" data-id="{{request.user.id}}" type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter" style="margin-left: 20px; margin-right: auto;">
         Play quiz
     </button>
     <br>
@@ -442,8 +442,9 @@
     {% endblock %}
 {% block javascript %}
     <script>
+        
         $(document).ready(function (){
-            var userid = $("#userid").data('id')
+            var userid = $("#userid1").data('id')
             $("table a").on("click", function(ev){
             let sound=new Audio($(this).attr("href"))
             sound.play()
@@ -451,7 +452,8 @@
             ev.stopPropagation();
             
         });
-        $('#userid').on('click', '#allearned', function () {
+        $('#allearned').on('click', function () {
+        
         $.ajax({
             method: "GET",
             url: '/gogoedu/alphabet/getfinish',

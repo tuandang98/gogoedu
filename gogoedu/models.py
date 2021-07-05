@@ -531,7 +531,8 @@ def add_progress_test_result(sender, instance, created, **kwargs):
         badge.increment()
         badge.progression.save()
         if badge.progression.finished:
-            message='Congratulations you get '+str(badge.point)+' points title of '+ str(badge.name)
+            message='Congratulations you get '+str(badge.points)+' points title of '+ str(badge.name)
+            PointChange.objects.create(amount=badge.points,interface=user.interface)
             notify.send(user, recipient=user, verb='Notification',description=message)
         if badge.progression.finished and badge.next_badge:
             badge.next_badge.progression.progress=badge.progression.target+1
@@ -567,7 +568,8 @@ def add_point_learned_word(sender, instance, created, **kwargs):
         badge.increment()
         badge.progression.save()
         if badge.progression.finished:
-            message='Congratulations you get '+str(badge.point)+' points title of '+ str(badge.name)
+            message='Congratulations you get '+str(badge.points)+' points title of '+ str(badge.name)
+            PointChange.objects.create(amount=badge.points,interface=user.interface)
             notify.send(user, recipient=user, verb='Notification',description=message)
         if badge.progression.finished and badge.next_badge:
             badge.next_badge.progression.progress=badge.progression.target+1
@@ -606,7 +608,8 @@ def add_point_learned_kanji(sender, instance, created, **kwargs):
         badge.increment()
         badge.progression.save()
         if badge.progression.finished:
-            message='Congratulations you get '+str(badge.point)+' points title of '+ str(badge.name)
+            message='Congratulations you get '+str(badge.points)+' points title of '+ str(badge.name)
+            PointChange.objects.create(amount=badge.points,interface=user.interface)
             notify.send(user, recipient=user, verb='Notification',description=message)
         if badge.progression.finished and badge.next_badge:
             badge.next_badge.progression.progress=badge.progression.target+1
